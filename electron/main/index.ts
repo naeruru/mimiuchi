@@ -107,15 +107,53 @@ ipcMain.handle('open-win', (event, arg) => {
   }
 })
 
-// event listener that listens to the event emitted by Vue component
-ipcMain.on("typing-text-event", (event, args) => {
-  let bundle = new Bundle(['/chatbox/typing', args])
+
+function emit_osc (value) {
+  const bundle = new Bundle(value)
   const client = new Client('127.0.0.1', 9000)
   client.send(bundle)
+}
+
+// event listener that listens to the event emitted by Vue component
+ipcMain.on("typing-text-event", (event, args) => {
+  emit_osc(['/chatbox/typing', args])
 })
 
 ipcMain.on("send-text-event", (event, args) => {
   let bundle = new Bundle(['/chatbox/input', args, true])
   const client = new Client('127.0.0.1', 9000)
   client.send(bundle)
+})
+
+
+// websocket server test
+const WebSocket = require('ws')
+const wss = new WebSocket.Server({ port: 8999 })
+wss.on('connection', ws => {
+  ws.on('message', message => {
+    message = JSON.parse(message)
+
+    console.log(`Received message => ${message.type}`)
+
+    if (message.type === 'command') {
+      console.log(`Received command: ${message.data}`)
+      switch(message.data) {
+        case 'stop':
+          win.webContents.send('websocket-connect', false)
+          break
+        case 'speechstart':
+          emit_osc(['/chatbox/typing', true])
+          break
+        case 'speechend':
+          emit_osc(['/chatbox/typing', false])
+          break
+        default:
+          break
+      }
+    } else if (message.type === 'text') {
+      win.webContents.send('receive-text-event', message.data)
+    }
+  })
+  ws.send('Hello! Message From Server!!')
+  win.webContents.send('websocket-connect', true)
 })

@@ -7,7 +7,7 @@
             size="32"
         ><v-img :src="logo"></v-img></v-avatar>
 
-        <v-app-bar-title>VRC Chatbox Tools</v-app-bar-title>
+        <v-app-bar-title>Chatbox Tools</v-app-bar-title>
 
         <!-- <v-btn
           v-for="link in links"
