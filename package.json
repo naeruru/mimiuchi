@@ -30,7 +30,7 @@
     "vite-plugin-vuetify": "^1.0.0-alpha.12",
     "vue": "^3.2.37",
     "vue-cli-plugin-vuetify": "~2.5.5",
-    "vue-tsc": "^0.40.1"
+    "vue-tsc": "^0.40.13"
   },
   "debug": {
     "env": {
