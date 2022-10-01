@@ -16,7 +16,7 @@
     "osc-js": "^2.3.2",
     "roboto-fontface": "*",
     "vue-router": "^4.1.5",
-    "vuetify": "^3.0.0-beta.0",
+    "vuetify": "^3.0.0-beta.11",
     "webfontloader": "^1.0.0"
   },
   "devDependencies": {
