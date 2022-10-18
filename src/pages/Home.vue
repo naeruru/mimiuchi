@@ -37,6 +37,11 @@
 
                         <v-spacer></v-spacer>
 
+                        <v-btn @click="toggleRandomMsg" class="mr-2" :color="(jokeTimer !== null) ? 'success' : '#095C51'" variant="flat">
+                            <v-icon v-if="!jokeTimer">mdi-cat</v-icon>
+                            <v-progress-circular v-else class="mr-1" :size="14" :width="1" indeterminate></v-progress-circular>
+                            Jokes
+                        </v-btn>
                         <v-btn @click="toggleListen" class="mr-2" :color="(listening) ? 'success' : '#095C51'" variant="flat">
                             <v-icon v-if="!listening">mdi-microphone</v-icon>
                             <v-progress-circular v-else class="mr-1" :size="14" :width="1" indeterminate></v-progress-circular>
@@ -58,6 +63,7 @@
 
 <script lang="ts">
 // import {ipcRenderer} from "electron"
+import jokes from './jokes.json'
 
 const SpeechRecognition = window.SpeechRecognition || webkitSpeechRecognition
 const SpeechGrammarList = window.SpeechGrammarList || webkitSpeechGrammarList
@@ -92,6 +98,8 @@ export default {
             x: 0,
             y: 0,
         },
+
+        jokeTimer: null,
     }),
     watch: {
         input_text(prev_val, new_val) {
@@ -100,6 +108,19 @@ export default {
         }
     },
     methods: {
+        toggleRandomMsg() {
+            if (this.jokeTimer !== null) {
+                clearInterval(this.jokeTimer)
+                this.jokeTimer = null
+            } else {
+                this.jokeTimer = setInterval(() => this.sendRandomMsg(), 1000 * jokes.timer)
+            }
+        },
+        sendRandomMsg() {
+            const rand_joke = jokes.jokes[Math.floor(Math.random() * jokes.jokes.length)]
+            this.input_text = rand_joke
+            this.onSubmit(null)
+        },
         toggleListen () {
             this.listening = !this.listening
             if (this.listening) {
@@ -202,7 +223,12 @@ export default {
             window.ipcRenderer.receive('receive-text-event', (event, data) => {
                 this.onSubmit(event)
             })
+
+            // this.jokeTimer = setInterval(() => this.sendRandomMsg(), 1000 * jokes.timer)
         }
+    },
+    beforeDestroy() {
+        clearInterval(this.jokeTimer)
     }
 }
 </script>
