@@ -108,10 +108,11 @@ ipcMain.handle('open-win', (event, arg) => {
 })
 
 
-function emit_osc (value) {
+function emit_osc (value, ip='127.0.0.1', port='9000') {
   const bundle = new Bundle(value)
-  const client = new Client('127.0.0.1', 9000)
+  const client = new Client(ip, port)
   client.send(bundle)
+  console.log(`${value[0]} -> ${value[1]}`)
 }
 
 // event listener that listens to the event emitted by Vue component
@@ -119,10 +120,14 @@ ipcMain.on("typing-text-event", (event, args) => {
   emit_osc(['/chatbox/typing', args])
 })
 
+
 ipcMain.on("send-text-event", (event, args) => {
-  let bundle = new Bundle(['/chatbox/input', args, true])
-  const client = new Client('127.0.0.1', 9000)
-  client.send(bundle)
+  emit_osc(['/chatbox/input', args, true])
+})
+
+
+ipcMain.on("send-param-event", (event, args) => {
+  emit_osc([args.route, args.value], args.ip, args.port)
 })
 
 

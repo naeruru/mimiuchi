@@ -9,8 +9,22 @@
 
 <script lang="ts">
 
+import { useSettingsStore } from  './stores/settings'
+
 export default {
   name: 'App',
+
+  setup() {
+    const settingsStore = useSettingsStore()
+
+    settingsStore.increment()
+
+    // console.log(settingsStore.count)
+    
+    return {
+      settingsStore
+    }
+  },
 
   data: () => ({
     //

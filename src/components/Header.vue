@@ -7,7 +7,7 @@
             size="32"
         ><v-img :src="logo"></v-img></v-avatar>
 
-        <v-app-bar-title>Chatbox Tools</v-app-bar-title>
+        <v-app-bar-title>name pending （＾＾）</v-app-bar-title>
 
         <!-- <v-btn
           v-for="link in links"
@@ -19,10 +19,10 @@
 
         <v-spacer></v-spacer>
 
-        <v-btn icon>
-            <v-icon>mdi-help-circle-outline</v-icon>
+        <v-btn icon @click="$router.push({ path: '/' })" :color="$route.name === 'home' ? 'secondary' : 'white'">
+            <v-icon>mdi-home</v-icon>
         </v-btn>
-        <v-btn icon>
+        <v-btn icon @click="$router.push({ path: '/settings/general' })" :color="$route.fullPath.startsWith('/settings') ? 'secondary' : 'white'">
             <v-icon>mdi-cog</v-icon>
         </v-btn>
       </v-container>

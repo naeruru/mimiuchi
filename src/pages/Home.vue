@@ -1,12 +1,23 @@
 
 <template>
     <div>
+        <v-snackbar
+            v-model="snackbar"
+            color="secondary"
+            location="top"
+            :timeout="5000"
+            max-height="20px"
+        >
+            <v-icon class="mr-2">mdi-send</v-icon>
+            <code>{{ sent_param }}</code>
+        </v-snackbar>
+
         <v-card
             v-resize="onResize"
             class="d-flex align-end pa-4"
             color="black"
             flat
-            :height="windowSize.y - 100"
+            :height="windowSize.y - 105"
             tile
         >
             <div class="d-flex flex-column">
@@ -59,6 +70,8 @@
 <script lang="ts">
 // import {ipcRenderer} from "electron"
 
+import { useSettingsStore } from  '../stores/settings'
+
 const SpeechRecognition = window.SpeechRecognition || webkitSpeechRecognition
 const SpeechGrammarList = window.SpeechGrammarList || webkitSpeechGrammarList
 const SpeechRecognitionEvent = window.SpeechRecognitionEvent || webkitSpeechRecognitionEvent
@@ -88,6 +101,9 @@ export default {
 
         input_text: '',
 
+        snackbar: false,
+        sent_param: '', // for custom param snackbar
+
         windowSize: {
             x: 0,
             y: 0,
@@ -95,7 +111,7 @@ export default {
     }),
     watch: {
         input_text(prev_val, new_val) {
-            if (this.isElectron())
+            if (this.isElectron() && new_val.length === 1)
                 window.ipcRenderer.send("typing-text-event", !!new_val)
         }
     },
@@ -138,10 +154,53 @@ export default {
 
             // console.log(window.process.type)
             if (this.broadcasting) {
+                // send text via osc
                 if (this.isElectron()) {
-                    window.ipcRenderer.send("send-text-event", input)
+                    if (this.settingsStore.osc_settings.osc_text)
+                        window.ipcRenderer.send("send-text-event", input)
                 } else {
                     this.ws.send(`{"type": "text", "data": "${input}"}`)
+                }
+
+                // if custom params
+                // potential addition:
+                // use https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/search
+                // to see which assign is the closest to the keyword found
+                // unless switch to nlp first.....
+                if (this.isElectron()) {
+                    if (this.settingsStore.osc_params.length) {
+                        this.settingsStore.osc_params.forEach(custom_param => {
+                            let matchesKey = null
+
+                            custom_param.keywords.forEach(keyword => {
+                                const key_check = `(^|\\s)(${keyword.text})($|[^a-zA-Z\\d])`
+                                const reKey = new RegExp(key_check, "ig")
+                                matchesKey = reKey.exec(input)
+                                console.log(matchesKey)
+                            })
+
+                            if (matchesKey) {
+                                // console.log(`matched keyword!`)
+                                custom_param.assigns.forEach(assign => {
+                                    const assign_check = `(^|\\s)(${assign.keyword})($|[^a-zA-Z\\d])`
+                                    const reAssign = new RegExp(assign_check, "ig")
+                                    console.log(reAssign)
+                                    const matchesAssign = reAssign.exec(input)
+                                    if (matchesAssign) {
+                                        // console.log(`matched keyword and assign!`)
+
+                                        let value = assign.set
+
+                                        if (value === 'false') value = false // todo: fix
+
+                                        this.sent_param = `${custom_param.route} ${value}`
+                                        this.snackbar = true
+                                        window.ipcRenderer.send("send-param-event", { ip: custom_param.ip, port: custom_param.port, route: custom_param.route, value: value})
+                                    }
+                                })
+                            }
+                        })
+                    }
                 }
             }
             
@@ -202,6 +261,13 @@ export default {
             window.ipcRenderer.receive('receive-text-event', (event, data) => {
                 this.onSubmit(event)
             })
+        }
+    },
+    setup() {
+        const settingsStore = useSettingsStore()
+
+        return {
+            settingsStore
         }
     }
 }
