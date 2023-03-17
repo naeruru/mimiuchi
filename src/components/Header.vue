@@ -1,8 +1,8 @@
 <template>
     <v-app-bar color="primary" app flat height="50">
-      <v-container class="fill-height d-flex align-center">
+      <v-container class="mb-7 fill-height d-flex align-center">
         <v-avatar
-            class="mr-10 ml-4"
+            class="me-10 ms-4"
             color="white"
             size="32"
         ><v-img :src="logo"></v-img></v-avatar>
