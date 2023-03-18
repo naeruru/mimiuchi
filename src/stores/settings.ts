@@ -3,7 +3,8 @@ import { defineStore } from 'pinia'
 
 export const useSettingsStore = defineStore('settings', {
     state: () => ({
-        count: 0,
+
+        welcome: true,
 
         stt_Settings: {
             language: '',
@@ -23,8 +24,6 @@ export const useSettingsStore = defineStore('settings', {
 
     },
     actions: {
-        increment() {
-            this.count++
-        }
+
     }
 })

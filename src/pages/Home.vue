@@ -17,14 +17,16 @@
             class="d-flex align-end pa-4"
             color="black"
             flat
-            :height="windowSize.y - 105"
+            :height="windowSize.y - 55"
             tile
         >
             <div class="d-flex flex-column">
                 <code v-for="log in logs" class="text-h2 mt-6">{{ log.text }}</code>
             </div>
-        </v-card>
 
+
+            <WelcomeOverlay :overlay="overlay_main" :page="overlay_page"></WelcomeOverlay>
+        </v-card>
 
         <v-footer app class="d-flex flex-column" height="55">
             <div class="d-flex w-100 align-center">
@@ -48,15 +50,17 @@
 
                         <v-spacer></v-spacer>
 
-                        <v-btn @click="toggleListen" class="mr-2" :color="(listening) ? 'success' : '#095C51'" variant="flat">
-                            <v-icon v-if="!listening">mdi-microphone</v-icon>
-                            <v-progress-circular v-else class="mr-1" :size="14" :width="1" indeterminate></v-progress-circular>
-                            Listen
+                        <v-btn v-if="!isElectron()" @click="toggleListen" class="mr-4" :color="(listening) ? 'success' : 'error'" size="small"  icon variant="outlined">
+                            <v-icon v-if="!listening">mdi-microphone-off</v-icon>
+                            <v-icon v-else>mdi-microphone</v-icon>
                         </v-btn>
-                        <v-btn @click="toggleBroadcast" :loading="loadingWebsocket" :disabled="loadingWebsocket" :color="(broadcasting) ? 'success' : '#095C51'" variant="flat" width="150">
-                            <v-icon v-if="!broadcasting">mdi-broadcast</v-icon>
-                            <v-progress-circular v-else class="mr-1" :size="14" :width="1" indeterminate></v-progress-circular>
-                            Broadcast
+                        <v-btn @click="toggleBroadcast" :loading="loadingWebsocket" :disabled="loadingWebsocket" class="mr-4" :color="(broadcasting) ? 'success' : 'error'" size="small" icon variant="outlined">
+                            <v-icon v-if="!broadcasting">mdi-broadcast-off</v-icon>
+                            <v-icon v-else>mdi-broadcast</v-icon>
+                        </v-btn>
+                        <v-divider class="mr-4" vertical></v-divider>
+                        <v-btn @click="$router.push({ path: '/settings/general' })" color="transparent"  size="small" icon flat>
+                            <v-icon>mdi-cog</v-icon>
                         </v-btn>
                     </div>
 
@@ -69,7 +73,9 @@
 
 <script lang="ts">
 // import {ipcRenderer} from "electron"
+import WelcomeOverlay from "../components/overlays/WelcomeOverlay.vue"
 
+import { useWordReplaceStore } from  '../stores/word_replace'
 import { useSettingsStore } from  '../stores/settings'
 
 const SpeechRecognition = window.SpeechRecognition || webkitSpeechRecognition
@@ -87,28 +93,35 @@ recognition.maxAlternatives = 1
 
 export default {
     name: 'Home',
-    data: () => ({
-        // oscClient: client,
+    components: {
+        WelcomeOverlay
+    },
+    data() {
+            return {
+            // oscClient: client,
+            overlay_main: this.settingsStore.welcome,
+            overlay_page: 0,
 
-        ws: null,
+            ws: null,
 
-        listening: false,
+            listening: false,
 
-        loadingWebsocket: false,
-        broadcasting: false,
+            loadingWebsocket: false,
+            broadcasting: false,
 
-        logs: [], // { text: '' }
+            logs: [], // { text: '' }
 
-        input_text: '',
+            input_text: '',
 
-        snackbar: false,
-        sent_param: '', // for custom param snackbar
+            snackbar: false,
+            sent_param: '', // for custom param snackbar
 
-        windowSize: {
-            x: 0,
-            y: 0,
-        },
-    }),
+            windowSize: {
+                x: 0,
+                y: 0,
+            },
+        }
+    },
     watch: {
         input_text(prev_val, new_val) {
             if (this.isElectron() && new_val.length === 1)
@@ -149,8 +162,18 @@ export default {
                 recognition.stop()
             }
         },
+        replace_words(input: string) {
+            if (!this.wordReplaceStore.enabled || !Object.keys(this.wordReplaceStore.word_replacements).length) return input
+            const replace_re = new RegExp(Object.keys(this.wordReplaceStore.word_replacements).join("|"),"gi")
+            return input.replace(replace_re, (matched) => {
+                return this.wordReplaceStore.word_replacements[matched.toLowerCase()]
+            })
+        },
         onSubmit (input_override) {
-            const input = (input_override) ? input_override : this.input_text
+            let input = (input_override) ? input_override : this.input_text
+
+            // word replace
+            input = this.replace_words(input)
 
             // console.log(window.process.type)
             if (this.broadcasting) {
@@ -251,6 +274,10 @@ export default {
             return false
         }
     },
+    unmounted () {
+        if (this.listening) this.toggleListen()
+        if (this.broadcasting) this.toggleBroadcast()
+    },
     mounted () {
         this.onResize()
 
@@ -264,11 +291,17 @@ export default {
         }
     },
     setup() {
+        const wordReplaceStore = useWordReplaceStore()
         const settingsStore = useSettingsStore()
 
         return {
+            wordReplaceStore,
             settingsStore
         }
     }
 }
 </script>
+
+<style>
+  html { overflow-y: auto }
+</style>

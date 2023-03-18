@@ -8,15 +8,15 @@
             <!-- <v-sheet color="transparent" class="d-flex flex-wrap"> -->
             <v-row>
                 <v-col :cols="12" :md="6">
-                    <v-text-field v-model="osc_settings.ip" label="Default OSC IP" hide-details></v-text-field>
+                    <v-text-field v-model="settingsStore.osc_settings.ip" label="Default OSC IP" hide-details></v-text-field>
                 </v-col>
                 <v-col>
-                    <v-text-field v-model="osc_settings.port" label="Default OSC Port" hide-details></v-text-field>
+                    <v-text-field v-model="settingsStore.osc_settings.port" label="Default OSC Port" hide-details></v-text-field>
                 </v-col>
                 <v-col :cols="12">
                     <v-card>
                         <v-switch
-                            v-model="osc_settings.osc_text"
+                            v-model="settingsStore.osc_settings.osc_text"
                             label="Send all text with OSC (when broadcasting)"
                             color="primary"
                             hide-details
@@ -27,8 +27,8 @@
 
                     <v-card class="mt-2">
                         <v-switch
-                            v-model="osc_settings.text_typing"
-                            :disabled="!osc_settings.osc_text"
+                            v-model="settingsStore.osc_settings.text_typing"
+                            :disabled="!settingsStore.osc_settings.osc_text"
                             label="Enable typing indicator when typing"
                             color="primary"
                             hide-details
@@ -39,8 +39,8 @@
 
                     <v-card class="mt-2">
                         <v-switch
-                            v-model="osc_settings.stt_typing"
-                            :disabled="!osc_settings.osc_text"
+                            v-model="settingsStore.osc_settings.stt_typing"
+                            :disabled="!settingsStore.osc_settings.osc_text"
                             label="Enable typing indicator for speech-to-text (!! experimental !!)"
                             color="primary"
                             hide-details
@@ -71,14 +71,12 @@ export default {
     setup() {
         const settingsStore = useSettingsStore()
 
-        const { osc_settings } = settingsStore
-
         // Object.keys(osc_settings).forEach((setting, i) => this.settings.push({ [setting]: osc_settings[setting]}))
 
-        // console.log(this.settings)
+        console.log(settingsStore.osc_settings)
 
         return {
-            osc_settings
+            settingsStore
         }
     }
 }

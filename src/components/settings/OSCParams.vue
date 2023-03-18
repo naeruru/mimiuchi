@@ -51,7 +51,6 @@
             <p v-else>Use the + button to add a new custom param trigger!</p>
             <v-card class="mt-2" color="transparent" flat>
                 <v-card-actions>
-                    <v-spacer></v-spacer>
                     <v-btn color="primary" variant="outlined" size="small" icon="mdi-plus" @click="openAddDialog"></v-btn>
                 </v-card-actions>
             </v-card>

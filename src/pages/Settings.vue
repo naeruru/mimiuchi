@@ -57,6 +57,11 @@ export default {
                 value: "appearance",
                 icon: "mdi-palette"
             },
+            {
+                title: "Word Replace",
+                value: "wordreplace",
+                icon: "mdi-swap-horizontal"
+            },
         ],
 
         settings_osc: [

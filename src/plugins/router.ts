@@ -7,6 +7,7 @@ import Settings from '../pages/Settings.vue'
 import SettingsGeneral from '../components/settings/General.vue'
 import STT from '../components/settings/STT.vue'
 import Appearance from '../components/settings/Appearance.vue'
+import WordReplace from '../components/settings/WordReplace.vue'
 import OSC from '../components/settings/OSC.vue'
 import OSCParams from '../components/settings/OSCParams.vue'
 
@@ -16,7 +17,7 @@ const routes = [
     name: 'home',
     components: {
       default: Home,
-      Header
+      // Header
     }
   },
   {
@@ -52,6 +53,15 @@ const routes = [
         components: {
           default: Settings,
           panel: Appearance,
+          Header
+        },
+      },
+      {
+        path: 'wordreplace',
+        name: 'wordreplace',
+        components: {
+          default: Settings,
+          panel: WordReplace,
           Header
         },
       },
