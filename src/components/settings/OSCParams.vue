@@ -123,7 +123,7 @@
                                 <v-select v-model="new_assign.type" :items="var_types" hide-details label="Value type"></v-select>
                             </v-col>
                             <v-col :cols="12" :lg="8">
-                                <v-text-field v-if="new_assign.type !== 'bool'" v-model="new_assign.set" hide-details label="Value"></v-text-field>
+                                <v-text-field v-if="new_assign.type !== 'bool'" v-model="new_assign.set" hide-details label="Value" type="number"></v-text-field>
                                 <v-select v-else v-model="new_assign.set" :items="['true', 'false']" hide-details label="Value"></v-select>
                             </v-col>
                             <v-col :cols="12">
@@ -142,8 +142,8 @@
                     <v-divider class="mt-4"></v-divider>
                     <div v-if="new_param.keywords.length && new_param.assigns.length" class="ma-2">
                         <v-list-item
-                            :title="`Example phrase: 'set ${new_param.keywords[0].text } to ${ new_param.assigns[0].keyword }'`"
-                            :subtitle="`${new_param.route} -> ${new_param.assigns[0].set}`"
+                            :title="`Example phrase: 'set ${new_param.keywords[0]?.text } to ${ new_param.assigns[0]?.keyword }'`"
+                            :subtitle="`${new_param.route} -> ${new_param.assigns[0]?.set}`"
                         ></v-list-item>
                     </div>
                     <v-card-actions>
@@ -158,9 +158,24 @@
 </template>
 
 
+
 <script lang="ts">
 
 import { useSettingsStore } from  '../../stores/settings'
+
+
+interface Param {
+    route: string
+}
+interface Keyword {
+    enabled: boolean,
+    text: string
+}
+interface Assign {
+    keyword: string,
+    type: string,
+    set: boolean | number | string
+}
 
 export default {
     name: 'SettingsGeneral',
@@ -173,7 +188,7 @@ export default {
         new_assign: {
             keyword: '',
             type: 'bool',
-            set: true
+            set: true as (boolean | number | string)
         },
 
         new_param: {
@@ -181,8 +196,8 @@ export default {
             ip: '',
             port: '',
             route: '/avatar/parameters/',
-            keywords: [], // { enabled: true, text: '' }
-            assigns: []
+            keywords: [] as Keyword[], // [{enabled: boolean, text: string}?],
+            assigns: [] as Assign[] // [{keyword: string, type: string, set: boolean}?]
         }
     }),
     methods: {
@@ -197,7 +212,7 @@ export default {
                 this.trigger_phrase = ''
             }
         },
-        remove_trigger(i) {
+        remove_trigger(i: number) {
             this.new_param.keywords.splice(i, 1)
         },
         add_assign() {

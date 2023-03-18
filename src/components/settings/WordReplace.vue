@@ -32,7 +32,7 @@
                         </v-col>
                 </v-row>
             </div>
-            <p v-else class="mt-6">Use the + button to add a new custom param trigger!</p>
+            <p v-else class="mt-6">Use the + button to add a new replacement!</p>
             <v-card class="mt-4" color="transparent" flat>
                 <v-card-actions>
                     <v-btn color="primary" variant="outlined" size="small" icon="mdi-plus" @click="add_entry()"></v-btn>

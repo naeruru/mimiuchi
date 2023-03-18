@@ -19,14 +19,16 @@
         </v-snackbar>
 
         <v-card
+            id="loglist"
             v-resize="onResize"
-            class="d-flex align-end pa-4"
+            class="d-flex pa-4 overflow-auto loglist"
             color="black"
             flat
             :height="windowSize.y - 55"
             tile
         >
-            <div class="d-flex flex-column">
+
+            <div class="d-flex flex-column loglist">
                 <code v-for="log in logs" class="text-h2 mt-6">{{ log.text }}</code>
             </div>
 
@@ -38,7 +40,7 @@
             <div class="d-flex w-100 align-center">
                 
                 <v-form
-                        @submit.prevent="onSubmit(null)"
+                        @submit.prevent="onSubmit('')"
                         class="d-flex w-100 align-center"
                 >
                     <div class="d-flex w-100 align-center">
@@ -84,9 +86,11 @@ import WelcomeOverlay from "../components/overlays/WelcomeOverlay.vue"
 import { useWordReplaceStore } from  '../stores/word_replace'
 import { useSettingsStore } from  '../stores/settings'
 
-const SpeechRecognition = window.SpeechRecognition || webkitSpeechRecognition
-const SpeechGrammarList = window.SpeechGrammarList || webkitSpeechGrammarList
-const SpeechRecognitionEvent = window.SpeechRecognitionEvent || webkitSpeechRecognitionEvent
+declare const window: any
+
+const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition
+const SpeechGrammarList = window.SpeechGrammarList || window.webkitSpeechGrammarList
+const SpeechRecognitionEvent = window.SpeechRecognitionEvent || window.webkitSpeechRecognitionEvent
 
 const recognition = new SpeechRecognition();
 // const speechRecognitionList = new SpeechGrammarList()
@@ -97,6 +101,10 @@ recognition.lang = 'en-US'
 recognition.interimResults = false
 recognition.maxAlternatives = 1
 
+interface Log {
+    text: string
+}
+
 export default {
     name: 'Home',
     components: {
@@ -105,10 +113,10 @@ export default {
     data() {
             return {
             // oscClient: client,
-            overlay_main: this.settingsStore.welcome,
+            overlay_main: false,
             overlay_page: 0,
 
-            ws: null,
+            ws: null as any,
 
             listening: false,
             listening_error: false,
@@ -116,7 +124,7 @@ export default {
             loadingWebsocket: false,
             broadcasting: false,
 
-            logs: [], // { text: '' }
+            logs: [] as Log[], // { text: '' }
 
             input_text: '',
 
@@ -189,7 +197,7 @@ export default {
                 return this.wordReplaceStore.word_replacements[matched.toLowerCase()]
             })
         },
-        onSubmit (input_override) {
+        onSubmit (input_override: string) {
             let input = (input_override) ? input_override : this.input_text
 
             // word replace
@@ -202,6 +210,7 @@ export default {
                     if (this.settingsStore.osc_settings.osc_text)
                         window.ipcRenderer.send("send-text-event", input)
                 } else {
+                    if (this.ws)
                     this.ws.send(`{"type": "text", "data": "${input}"}`)
                 }
 
@@ -232,15 +241,13 @@ export default {
                                     if (matchesAssign) {
                                         // console.log(`matched keyword and assign!`)
 
-                                        let value = assign.set
+                                        // let value = assign.set
 
-                                        if (value === 'false') value = false // todo: fix
-
-                                        this.snackbar_desc = `<code>${custom_param.route} = ${value}</code>`
+                                        this.snackbar_desc = `<code>${custom_param.route} = ${assign.set}</code>`
                                         this.snackbar_color = "secondary"
                                         this.snackbar_icon = "mdi-send"
                                         this.snackbar = true
-                                        window.ipcRenderer.send("send-param-event", { ip: custom_param.ip, port: custom_param.port, route: custom_param.route, value: value})
+                                        window.ipcRenderer.send("send-param-event", { ip: custom_param.ip, port: custom_param.port, route: custom_param.route, value: assign.set})
                                     }
                                 })
                             }
@@ -249,6 +256,8 @@ export default {
                 }
             }
             
+            const loglist = document.getElementById("loglist")
+            if (loglist) loglist.scrollTop = loglist.scrollHeight
             this.logs.push({text: input})
             this.input_text = ''
         },
@@ -303,11 +312,13 @@ export default {
     mounted () {
         this.onResize()
 
+        this.overlay_main = this.settingsStore.welcome
+
         if (this.isElectron()) {
-            window.ipcRenderer.receive('websocket-connect', (event, data) => {
+            window.ipcRenderer.receive('websocket-connect', (event: any, data: any) => {
                 this.broadcasting = event
             })
-            window.ipcRenderer.receive('receive-text-event', (event, data) => {
+            window.ipcRenderer.receive('receive-text-event', (event: any, data: any) => {
                 this.onSubmit(event)
             })
         }
@@ -325,5 +336,14 @@ export default {
 </script>
 
 <style>
-  html { overflow-y: auto }
+html {
+    overflow-y: auto
+}
+.loglist{
+    display: flex;
+    flex-direction: column-reverse;
+}
+.loglist::-webkit-scrollbar {
+    display: none; /* for Chrome, Safari and Opera */
+}
 </style>

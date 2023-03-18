@@ -146,7 +146,7 @@ export default {
     },
     mounted() {
         if (!this.isElectron())
-            this.settings_osc = null
+            this.settings_osc = []
     }
 }
 </script>

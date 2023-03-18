@@ -116,7 +116,7 @@ ipcMain.handle('open-win', (_, arg) => {
 })
 
 
-function emit_osc (value, ip='127.0.0.1', port='9000') {
+function emit_osc (value, ip='127.0.0.1', port=9000) {
   const bundle = new Bundle(value)
   const client = new Client(ip, port)
   client.send(bundle)

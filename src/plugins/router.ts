@@ -1,4 +1,4 @@
-import { createRouter, createWebHashHistory, createWebHistory } from 'vue-router'
+import { createRouter, createWebHashHistory, createWebHistory, RouteRecordRaw } from 'vue-router'
 
 import Header from '../components/Header.vue'
 import Home from '../pages/Home.vue'
@@ -91,5 +91,5 @@ const routes = [
 export default createRouter({
   history: createWebHashHistory(),
   // history: (import.meta.env.IS_ELECTRON) ?  createWebHashHistory() : createWebHistory(import.meta.env.NODE_ENV === 'production' ? './' : './'),
-  routes,
+  routes: routes as RouteRecordRaw[],
 })

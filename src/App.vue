@@ -26,8 +26,9 @@ export default {
     })
 
 
-    settingsStore.$patch(JSON.parse(localStorage.getItem('settings')))
-    wordReplaceStore.$patch(JSON.parse(localStorage.getItem('word_replace')))
+    
+    settingsStore.$patch(JSON.parse(localStorage.getItem('settings') || '{}'))
+    wordReplaceStore.$patch(JSON.parse(localStorage.getItem('word_replace') || '{}'))
 
 
     

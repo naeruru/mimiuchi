@@ -8,11 +8,11 @@
             meow {{ $route.fullPath }}
             <v-row>
                 <v-col :cols="12" :md="6">
-                    <v-combobox
+                    <!-- <v-combobox
                         v-model="language_choice"
                         :items="languages"
                         label="Language"
-                    ></v-combobox>
+                    ></v-combobox> -->
                 </v-col>
             </v-row>
         </v-card-text>
@@ -41,7 +41,7 @@ export default {
 
     },
     computed: {
-        
+
     },
     mounted() {
         

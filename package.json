@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "description": "customizable, osc enabled text interface for relaying text to different types of applications",
-  "author": "naexris",
+  "author": "naeris",
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc --noEmit && vite build && electron-builder",
@@ -12,6 +12,7 @@
   "main": "dist-electron/main/index.js",
   "dependencies": {
     "@mdi/font": "5.9.55",
+    "@types/node-osc": "^6.0.0",
     "node-osc": "^8.0.5",
     "pinia": "^2.0.33",
     "roboto-fontface": "*",

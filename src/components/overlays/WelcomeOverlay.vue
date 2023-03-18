@@ -67,14 +67,20 @@ export default {
         }
     },
     watch: {
-        overlay_state(old_value, new_val) {
-            if (new_val == true && this.overlay_page === 0) {
+        overlay(new_val) {
+            this.overlay_state = new_val
+        },
+        overlay_state(new_val) {
+            if (new_val == false && this.overlay_page === 0) {
                 this.overlay_state = true
                 this.overlay_page++
             } else if (this.overlay_page === 1) {
                 this.settingsStore.welcome = false
             }
         },
+        // overlay_state(new_val) {
+        //     if (new_val === false) this.$emit("close")
+        // }
     },
     setup() {
         const settingsStore = useSettingsStore()
