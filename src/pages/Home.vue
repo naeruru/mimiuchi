@@ -3,13 +3,19 @@
     <div>
         <v-snackbar
             v-model="snackbar"
-            color="secondary"
+            :color="snackbar_color"
             location="top"
-            :timeout="5000"
             max-height="20px"
         >
-            <v-icon class="mr-2">mdi-send</v-icon>
-            <code>{{ sent_param }}</code>
+            <v-row class="align-center justify-center ma-1">
+                <v-icon class="mr-2">{{ snackbar_icon }}</v-icon>
+                <p v-html="snackbar_desc"></p>
+            </v-row>
+            <template v-slot:actions>
+                <v-btn variant="text" @click="snackbar = false">
+                    Close
+                </v-btn>
+            </template>
         </v-snackbar>
 
         <v-card
@@ -105,6 +111,7 @@ export default {
             ws: null,
 
             listening: false,
+            listening_error: false,
 
             loadingWebsocket: false,
             broadcasting: false,
@@ -114,7 +121,12 @@ export default {
             input_text: '',
 
             snackbar: false,
-            sent_param: '', // for custom param snackbar
+            snackbar_color: "error",
+            snackbar_icon: "",
+            snackbar_desc: '',
+
+            error_snackbar: false,
+            error_message: '',
 
             windowSize: {
                 x: 0,
@@ -143,7 +155,7 @@ export default {
                 //     console.log('Speech has ended')
                 //     this.ws.send(`{"type": "command", "data": "speechend"}`)
                 // }
-                recognition.onresult = (event) => {
+                recognition.onresult = (event: any) => {
                     console.log(event.results[event.results.length - 1])
                     console.log(event.results[event.results.length - 1][0].confidence)
                     if (event.results[event.results.length - 1][0].confidence > 0.3)
@@ -151,12 +163,20 @@ export default {
                         // this.ws.send(`{"type": "command", "data": "speechend"}`)
                         // recognition.stop()
                 }
-                recognition.onend = (event) => {
+                recognition.onend = () => {
                     console.log('speech recognition stopped')
 
                     // restart if auto stopped
                     if (this.listening)
                         recognition.start()
+                }
+                recognition.onerror = () => {
+                    this.listening = false
+                    this.listening_error = true
+                    this.snackbar_desc = "Error enabling microphone. You must give permission to use it."
+                    this.snackbar_icon = "mdi-alert-circle-outline"
+                    this.snackbar_color = "error"
+                    this.snackbar = true
                 }
             } else {
                 recognition.stop()
@@ -216,7 +236,9 @@ export default {
 
                                         if (value === 'false') value = false // todo: fix
 
-                                        this.sent_param = `${custom_param.route} ${value}`
+                                        this.snackbar_desc = `<code>${custom_param.route} = ${value}</code>`
+                                        this.snackbar_color = "secondary"
+                                        this.snackbar_icon = "mdi-send"
                                         this.snackbar = true
                                         window.ipcRenderer.send("send-param-event", { ip: custom_param.ip, port: custom_param.port, route: custom_param.route, value: value})
                                     }
