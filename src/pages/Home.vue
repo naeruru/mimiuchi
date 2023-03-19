@@ -92,14 +92,16 @@ const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecogni
 const SpeechGrammarList = window.SpeechGrammarList || window.webkitSpeechGrammarList
 const SpeechRecognitionEvent = window.SpeechRecognitionEvent || window.webkitSpeechRecognitionEvent
 
-const recognition = new SpeechRecognition();
+const recognition = (SpeechRecognition) ? new SpeechRecognition() : null;
 // const speechRecognitionList = new SpeechGrammarList()
 
 // recognition.grammars = speechRecognitionList
-recognition.continuous = true
-recognition.lang = 'en-US'
-recognition.interimResults = false
-recognition.maxAlternatives = 1
+if (recognition) {
+    recognition.continuous = true
+    recognition.lang = 'en-US'
+    recognition.interimResults = true
+    recognition.maxAlternatives = 1
+}
 
 interface Log {
     text: string
@@ -120,6 +122,7 @@ export default {
 
             listening: false,
             listening_error: false,
+            talking: false,
 
             loadingWebsocket: false,
             broadcasting: false,
@@ -152,9 +155,17 @@ export default {
         toggleListen () {
             this.listening = !this.listening
             if (this.listening) {
+                if (!recognition) {
+                    this.listening = false
+                    this.listening_error = true
+                    this.snackbar_desc = 'Your browswer does not support Web Speech API.'
+                    this.snackbar_icon = 'mdi-alert-circle-outline'
+                    this.snackbar_color = 'error'
+                    this.snackbar = true
+                    return
+                }
                 recognition.start()
 
-                // too sensitive, needs testing
                 // recognition.onspeechstart = () => {
                 //     console.log('Speech has been detected')
                 //     this.ws.send(`{"type": "command", "data": "speechstart"}`)
@@ -164,10 +175,19 @@ export default {
                 //     this.ws.send(`{"type": "command", "data": "speechend"}`)
                 // }
                 recognition.onresult = (event: any) => {
-                    console.log(event.results[event.results.length - 1])
-                    console.log(event.results[event.results.length - 1][0].confidence)
-                    if (event.results[event.results.length - 1][0].confidence > 0.3)
-                        this.onSubmit(event.results[event.results.length - 1][0].transcript)
+                    const results = event.results[event.results.length - 1]
+                    // if (event.results[event.results.length - 1][0].confidence >= 0.0)
+                    if (results.isFinal) {
+                        this.onSubmit(results[0].transcript)
+                        this.talking = false
+                        if (this.ws && this.settingsStore.osc_settings.stt_typing)
+                            this.ws.send(`{"type": "command", "data": "speechend"}`)
+                    } else if (!results.isFinal && !this.talking) {
+                        console.log('Speech has been detected')
+                        this.talking = true
+                        if (this.ws && this.settingsStore.osc_settings.stt_typing)
+                            this.ws.send(`{"type": "command", "data": "speechstart"}`)
+                    }
                         // this.ws.send(`{"type": "command", "data": "speechend"}`)
                         // recognition.stop()
                 }
@@ -264,25 +284,31 @@ export default {
         toggleBroadcast () {
             if (this.broadcasting) {
                 this.broadcasting = false
-                this.ws.send('{"type": "command", "data": "stop"}')
-                this.ws.close()
-                this.ws = null
+                if (this.ws) {
+                    this.ws.send('{"type": "command", "data": "stop"}')
+                    this.ws.close()
+                    this.ws = null
+                }
                 return
             }
 
-            this.loadingWebsocket = true
-            this.ws = new WebSocket('ws://localhost:8999/')
-            this.ws.onopen = () => {
-                console.log('websocket connected')
-                this.broadcasting = true
-                this.loadingWebsocket = false
-            }
+            if (!this.isElectron()) {
+                this.loadingWebsocket = true
+                this.ws = new WebSocket('ws://localhost:8999/')
+                this.ws.onopen = () => {
+                    console.log('websocket connected')
+                    this.broadcasting = true
+                    this.loadingWebsocket = false
+                }
 
-            this.ws.onclose = () => {
-                console.log('websocket closed')
-                this.broadcasting = false
-                this.loadingWebsocket = false
-                this.ws = null
+                this.ws.onclose = () => {
+                    console.log('websocket closed')
+                    this.broadcasting = false
+                    this.loadingWebsocket = false
+                    this.ws = null
+                }
+            } else {
+                this.broadcasting = true
             }
 
         },
