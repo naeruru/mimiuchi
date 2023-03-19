@@ -2,7 +2,7 @@
  * @see https://www.electron.build/configuration/configuration
  */
 {
-  "appId": "YourAppID",
+  "appId": "ChatboxTools",
   "asar": true,
   "icon": "public/favicon.ico",
   "directories": {
@@ -17,6 +17,9 @@
     "target": [
       "dmg"
     ]
+  },
+  "linux": {
+      "icon": "public/logo-256x256.png"
   },
   "win": {
     "target": [

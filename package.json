@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "description": "customizable, osc enabled text interface for relaying text to different types of applications",
-  "author": "naeris",
+  "author": "naeris <support@risu.dev>",
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc --noEmit && vite build && electron-builder",
