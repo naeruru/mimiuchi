@@ -1,8 +1,9 @@
 <template>
     <v-card color="transparent" flat>
         <v-card-title>OSC Settings</v-card-title>
+        <v-card-subtitle class="overflow-hidden">Settings for customizing OSC connection.</v-card-subtitle>
         <v-divider></v-divider>
-        <v-card-text>
+        <v-card-text v-if="isElectron()">
             <!-- <div>meow meow {{ $route.fullPath }}</div> -->
             meow {{ $route.fullPath }}
             <!-- <v-sheet color="transparent" class="d-flex flex-wrap"> -->
@@ -41,7 +42,7 @@
                         <v-switch
                             v-model="settingsStore.osc_settings.stt_typing"
                             :disabled="!settingsStore.osc_settings.osc_text"
-                            label="Enable typing indicator for speech-to-text (!! experimental !!)"
+                            label="Enable typing indicator for speech-to-text"
                             color="primary"
                             hide-details
                             inset
@@ -51,6 +52,9 @@
                 </v-col>
             </v-row>
             <!-- </v-sheet> -->
+        </v-card-text>
+        <v-card-text v-else>
+            <h2>OSC settings are available on the desktop app version.</h2>
         </v-card-text>
     </v-card>
 </template>
@@ -66,14 +70,24 @@ export default {
         // settings: {}
     }),
     methods: {
-
+        isElectron() {
+            // Renderer process
+            if (typeof window !== 'undefined' && typeof window.process === 'object' && window.process.type === 'renderer') {
+                return true
+            }
+            // Main process
+            if (typeof process !== 'undefined' && typeof process.versions === 'object' && !!process.versions.electron) {
+                return true
+            }
+            // Detect the user agent when the `nodeIntegration` option is set to true
+            if (typeof navigator === 'object' && typeof navigator.userAgent === 'string' && navigator.userAgent.indexOf('Electron') >= 0) {
+                return true
+            }
+            return false
+        }
     },
     setup() {
         const settingsStore = useSettingsStore()
-
-        // Object.keys(osc_settings).forEach((setting, i) => this.settings.push({ [setting]: osc_settings[setting]}))
-
-        console.log(settingsStore.osc_settings)
 
         return {
             settingsStore

@@ -76,56 +76,6 @@ export default {
                 icon: "mdi-format-list-bulleted-square"
             }
         ],
-
-
-        // settings_list: [
-        //     {
-        //         type: "subheader",
-        //         title: "General",
-        //     },
-        //     {
-        //         title: "General",
-        //         props: {
-        //             prependIcon: 'mdi-home',
-        //         },
-        //         value: 1,
-        //     },
-        //     {
-        //         title: "Speech-to-Text",
-        //         props: {
-        //             prependIcon: 'mdi-microphone-outline',
-        //         },
-        //         value: 2,
-        //     },
-        //     {
-        //         title: "Appearance",
-        //         props: {
-        //             prependIcon: 'mdi-palette',
-        //         },
-        //         value: 3,
-        //     },
-        //     {
-        //         type: "divider",
-        //     },
-        //     {
-        //         type: "subheader",
-        //         title: "OSC",
-        //     },
-        //     {
-        //         title: "General",
-        //         props: {
-        //             prependIcon: 'mdi-transit-connection-variant',
-        //         },
-        //         value: 4,
-        //     },
-        //     {
-        //         title: "Custom Params",
-        //         props: {
-        //             prependIcon: 'mdi-format-list-bulleted-square',
-        //         },
-        //         value: 5,
-        //     },
-        // ]
     }),
     methods: {
         isElectron() {
@@ -146,7 +96,7 @@ export default {
     },
     mounted() {
         if (!this.isElectron())
-            this.settings_osc = []
+            this.settings_osc = [this.settings_osc[0]]
     }
 }
 </script>

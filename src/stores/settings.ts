@@ -34,7 +34,7 @@ export const useSettingsStore = defineStore('settings', {
             port: '9000',
             osc_text: true,
             text_typing: true, // typing indicator
-            stt_typing: false,
+            stt_typing: true, // talking indicator
         },
         osc_params: [] as Param[]
     }),

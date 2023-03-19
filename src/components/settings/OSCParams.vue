@@ -2,52 +2,53 @@
 
     <v-card color="transparent" flat>
         <v-card-title>Custom Params</v-card-title>
+        <v-card-subtitle class="overflow-hidden">Add custom param triggers here.</v-card-subtitle>
         <v-divider></v-divider>
         <v-card-text>
-            <v-list v-if="osc_params.length">
-                <v-list-item v-for="(param, i) in osc_params">
-                    <v-card color="rgba(0, 0, 0, 0)">
-                        <v-card-title class="d-flex align-center">
-                            {{ param.route }}
-                            <v-btn class="ml-4" flat variant="text" size="small" color="primary" append-icon="mdi-pencil">Edit</v-btn>
-                        </v-card-title>
-                        <v-divider></v-divider>
-                        <v-card-text>
-                            <v-row>
-                                <!-- <v-col :cols="12">
-                                    <v-text-field v-model="param.name" label="Name" hide-details></v-text-field>
-                                </v-col> -->
-                                <v-col :cols="12" :md="6">
-                                    <v-text-field v-model="param.ip" label="Default OSC IP" variant="outlined" hide-details readonly></v-text-field>
-                                </v-col>
-                                <v-col>
-                                    <v-text-field v-model="param.port" label="Default OSC Port" variant="outlined" hide-details readonly></v-text-field>
-                                </v-col>
+            <v-card v-if="osc_params.length" v-for="(param, i) in osc_params" class="mb-4">
+                <v-card color="rgba(0, 0, 0, 0)">
+                    <v-card-title class="d-flex align-center">
+                        {{ param.route }}
+                        <v-spacer></v-spacer>
+                        <v-btn disabled class="ml-4" flat variant="text" size="small" color="primary" append-icon="mdi-pencil">Edit</v-btn>
+                        <v-btn class="ml-4" flat variant="text" size="small" color="error" append-icon="mdi-delete" @click="delete_param(i)">Delete</v-btn>
+                    </v-card-title>
+                    <v-divider></v-divider>
+                    <v-card-text>
+                        <v-row>
+                            <!-- <v-col :cols="12">
+                                <v-text-field v-model="param.name" label="Name" hide-details></v-text-field>
+                            </v-col> -->
+                            <v-col :cols="12" :md="6">
+                                <v-text-field v-model="param.ip" label="Default OSC IP" variant="outlined" hide-details readonly></v-text-field>
+                            </v-col>
+                            <v-col>
+                                <v-text-field v-model="param.port" label="Default OSC Port" variant="outlined" hide-details readonly></v-text-field>
+                            </v-col>
 
-                                <v-col :cols="12">
-                                    <strong>Trigger phrases:</strong>
-                                </v-col>
-                                <v-col :cols="12">
-                                    <v-chip v-model="keyword.enabled" v-for="(keyword, i) in param.keywords" class="mx-1 mb-2" label color="secondary" size="small">
-                                        {{ keyword.text }}
-                                    </v-chip>
-                                </v-col>
-                                <v-col :cols="12">
-                                    <strong>Assign phrases:</strong>
-                                    <v-list density="compact">
-                                        <v-list-item
-                                            v-for="(assign, i) in param.assigns"
-                                            :value="assign"
-                                            :title="assign.keyword"
-                                            :subtitle="`set ${assign.type} to ${assign.set}`"
-                                        ></v-list-item>
-                                    </v-list>
-                                </v-col>
-                            </v-row>
-                        </v-card-text>
-                    </v-card>
-                </v-list-item>
-            </v-list>
+                            <v-col :cols="12">
+                                <strong>Trigger phrases:</strong>
+                            </v-col>
+                            <v-col :cols="12">
+                                <v-chip v-model="keyword.enabled" v-for="(keyword, i) in param.keywords" class="mx-1 mb-2" label color="secondary" size="small">
+                                    {{ keyword.text }}
+                                </v-chip>
+                            </v-col>
+                            <v-col :cols="12">
+                                <strong>Assign phrases:</strong>
+                                <v-list density="compact">
+                                    <v-list-item
+                                        v-for="(assign, i) in param.assigns"
+                                        :value="assign"
+                                        :title="assign.keyword"
+                                        :subtitle="`set ${assign.type} to ${assign.set}`"
+                                    ></v-list-item>
+                                </v-list>
+                            </v-col>
+                        </v-row>
+                    </v-card-text>
+                </v-card>
+            </v-card>
             <p v-else>Use the + button to add a new custom param trigger!</p>
             <v-card class="mt-2" color="transparent" flat>
                 <v-card-actions>
@@ -233,6 +234,9 @@ export default {
                 keywords: [],
                 assigns: []
             }
+        },
+        delete_param(i: number) {
+            this.osc_params.splice(i, 1)
         }
     },
     setup() {
