@@ -5,15 +5,15 @@
         :contained="overlay_page === 0 ? false : true"
         :class="overlay_page === 0 ? 'align-center justify-center' : 'align-end justify-end'"
     >
-        <v-card v-if="overlay_page == 0" title="Welcome to Caption Tools!" class="pa-2" max-width="500">
+        <v-card v-if="overlay_page == 0" title="Welcome to Chatbox Tools!" class="pa-2" max-width="500">
             <template v-slot:prepend>
                 <v-avatar
                     color="transparent"
                 ><v-img :src="logo"></v-img></v-avatar>
             </template>
             <v-card-text class="text-subtitle-1 py-2">
-                Caption tools is a customizable, osc enabled, text interface for displaying spoken (or typed) words as text or relaying it to other applications (like VRChat).
-                Its customizability (WIP) also allows you to effortlessly display the resulting text log in applications like OBS at the same time.
+                Chatbox tools is a captioning tool that can display spoken or typed text onto a customizable window so that you can effortlessly display the results in applications like OBS.
+                It also supports relaying text and commands to other applications (like VRChat).
             </v-card-text>
             <v-card-actions>
                 <v-btn color="secondary" @click="overlay_state = false">next</v-btn>
@@ -77,10 +77,7 @@ export default {
             } else if (this.overlay_page === 1) {
                 this.settingsStore.welcome = false
             }
-        },
-        // overlay_state(new_val) {
-        //     if (new_val === false) this.$emit("close")
-        // }
+        }
     },
     setup() {
         const settingsStore = useSettingsStore()
