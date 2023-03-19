@@ -198,7 +198,8 @@ export default {
                     if (this.listening)
                         recognition.start()
                 }
-                recognition.onerror = () => {
+                recognition.onerror = (event: any) => {
+                    if (event.error === 'no-speech') return
                     this.listening = false
                     this.listening_error = true
                     this.snackbar_desc = "Error enabling microphone. You must give permission to use it."
