@@ -362,6 +362,8 @@ export default {
         const wordReplaceStore = useWordReplaceStore()
         const settingsStore = useSettingsStore()
 
+        recognition.lang = settingsStore.stt_Settings.language
+
         return {
             wordReplaceStore,
             settingsStore

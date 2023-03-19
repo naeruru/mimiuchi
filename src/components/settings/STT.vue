@@ -8,11 +8,11 @@
             meow {{ $route.fullPath }}
             <v-row>
                 <v-col :cols="12" :md="6">
-                    <!-- <v-combobox
+                    <v-combobox
                         v-model="language_choice"
                         :items="languages"
                         label="Language"
-                    ></v-combobox> -->
+                    ></v-combobox>
                 </v-col>
             </v-row>
         </v-card-text>
@@ -21,6 +21,7 @@
 
 
 <script lang="ts">
+import { useSettingsStore } from  '../../stores/settings'
 
 export default {
     name: 'STT',
@@ -28,15 +29,22 @@ export default {
         language_choice: "",
         languages: [
             {
-                name: "English (United States)",
-                code: "en-US"
+                title: "English (United States)",
+                value: "en-US"
             },
             {
-                name: "日本語（日本）",
-                code: "ja-JP"
+                title: "日本語（日本）",
+                value: "ja-JP"
             }
         ]
     }),
+    watch: {
+        language_choice(new_val) {
+            console.log(new_val) // settingsStore
+            if (new_val.value)
+                this.settingsStore.stt_Settings.language = new_val.value
+        }
+    },
     methods: {
 
     },
@@ -44,7 +52,17 @@ export default {
 
     },
     mounted() {
-        
+        this.languages.map(language => {
+            if (language.value === this.settingsStore.stt_Settings.language)
+                this.language_choice = language.title
+        })
+    },
+    setup() {
+        const settingsStore = useSettingsStore()
+
+        return {
+            settingsStore
+        }
     }
 }
 </script>

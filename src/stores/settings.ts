@@ -25,7 +25,7 @@ export const useSettingsStore = defineStore('settings', {
         welcome: true,
 
         stt_Settings: {
-            language: '',
+            language: 'en-US',
             confidence: 0.9
         },
 
