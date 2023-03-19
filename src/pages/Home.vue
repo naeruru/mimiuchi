@@ -300,12 +300,21 @@ export default {
                     this.broadcasting = true
                     this.loadingWebsocket = false
                 }
-
                 this.ws.onclose = () => {
                     console.log('websocket closed')
                     this.broadcasting = false
                     this.loadingWebsocket = false
                     this.ws = null
+                }
+                this.ws.onerror = () => {
+                    console.log('websocket error')
+                    this.broadcasting = false
+                    this.loadingWebsocket = false
+                    this.ws = null
+                    this.snackbar_desc = `Error enabling broadcast. Make sure the desktop app is running.`
+                    this.snackbar_color = "error"
+                    this.snackbar_icon = "mdi-alert-circle-outline"
+                    this.snackbar = true
                 }
             } else {
                 this.broadcasting = true
