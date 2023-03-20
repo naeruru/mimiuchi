@@ -5,11 +5,15 @@
             v-model="snackbar"
             :color="snackbar_color"
             location="top"
-            max-height="20px"
+            max-height="60"
         >
-            <v-row class="align-center justify-center ma-1">
-                <v-icon class="mr-2">{{ snackbar_icon }}</v-icon>
-                <p v-html="snackbar_desc"></p>
+            <v-row class="align-center justify-center">
+                <v-col :cols="2">
+                    <v-icon :cols="2">{{ snackbar_icon }}</v-icon>
+                </v-col>
+                <v-col :cols="10">
+                    <p v-html="snackbar_desc"></p>
+                </v-col>
             </v-row>
             <template v-slot:actions>
                 <v-btn variant="text" @click="snackbar = false">
@@ -104,7 +108,8 @@ if (recognition) {
 }
 
 interface Log {
-    text: string
+    text: string,
+    isFinal: boolean,
 }
 
 export default {
@@ -146,7 +151,7 @@ export default {
         }
     },
     watch: {
-        input_text(prev_val, new_val) {
+        input_text(new_val) {
             if (this.isElectron() && new_val.length === 1)
                 window.ipcRenderer.send("typing-text-event", !!new_val)
         }
@@ -177,16 +182,25 @@ export default {
                 recognition.onresult = (event: any) => {
                     const results = event.results[event.results.length - 1]
                     // if (event.results[event.results.length - 1][0].confidence >= 0.0)
+                    // result is final
                     if (results.isFinal) {
-                        this.onSubmit(results[0].transcript)
+                        console.log(results)
+                        this.onSubmit(results[0].transcript, results.isFinal)
                         this.talking = false
-                        if (this.ws && this.settingsStore.osc_settings.stt_typing)
-                            this.ws.send(`{"type": "command", "data": "speechend"}`)
+                        // if (this.ws && this.settingsStore.osc_settings.stt_typing)
+                        //     this.ws.send(`{"type": "command", "data": "speechend"}`)
+                    // user started talking
                     } else if (!results.isFinal && !this.talking) {
                         console.log('Speech has been detected')
                         this.talking = true
-                        if (this.ws && this.settingsStore.osc_settings.stt_typing)
-                            this.ws.send(`{"type": "command", "data": "speechstart"}`)
+                        // if (this.ws && this.settingsStore.osc_settings.stt_typing)
+                        //     this.ws.send(`{"type": "command", "data": "speechstart"}`)
+                    }
+
+                    // continually track changes
+                    if (!results.isFinal && this.talking) {
+                        console.log(results)
+                        this.onSubmit(results[0].transcript, results.isFinal)
                     }
                         // this.ws.send(`{"type": "command", "data": "speechend"}`)
                         // recognition.stop()
@@ -218,7 +232,7 @@ export default {
                 return this.wordReplaceStore.word_replacements[matched.toLowerCase()]
             })
         },
-        onSubmit (input_override: string) {
+        onSubmit (input_override: string, isFinal: boolean = true) {
             let input = (input_override) ? input_override : this.input_text
 
             // word replace
@@ -226,14 +240,6 @@ export default {
 
             // console.log(window.process.type)
             if (this.broadcasting) {
-                // send text via osc
-                if (this.isElectron()) {
-                    if (this.settingsStore.osc_settings.osc_text)
-                        window.ipcRenderer.send("send-text-event", input)
-                } else {
-                    if (this.ws)
-                    this.ws.send(`{"type": "text", "data": "${input}"}`)
-                }
 
                 // if custom params
                 // potential addition:
@@ -249,7 +255,7 @@ export default {
                                 const key_check = `(^|\\s)(${keyword.text})($|[^a-zA-Z\\d])`
                                 const reKey = new RegExp(key_check, "ig")
                                 matchesKey = reKey.exec(input)
-                                console.log(matchesKey)
+                                // console.log(matchesKey)
                             })
 
                             if (matchesKey) {
@@ -277,9 +283,35 @@ export default {
                 }
             }
             
+            // scroll to bottom
             const loglist = document.getElementById("loglist")
             if (loglist) loglist.scrollTop = loglist.scrollHeight
-            this.logs.push({text: input})
+
+            const toSend = {text: input, isFinal: isFinal}
+
+            // overwrite last log
+            if (this.logs.length && !this.logs[this.logs.length - 1].isFinal) {
+                if (input.startsWith(this.logs[this.logs.length - 1].text.slice(0, 5)) || isFinal) {
+                    this.logs[this.logs.length - 1] = toSend
+                }
+            // push to log
+            } else {
+                this.logs.push(toSend)
+                if (this.isElectron() && this.settingsStore.osc_settings.stt_typing) {
+                    window.ipcRenderer.send("typing-text-event", true)
+                }
+            }
+
+
+            // send text via osc
+            if (this.isElectron() && isFinal && this.settingsStore.osc_settings.osc_text) {
+                window.ipcRenderer.send("send-text-event", input)
+                // window.ipcRenderer.send("typing-text-event", false)
+            } else if (this.ws) {
+                this.ws.send(`{"type": "text", "data": ${JSON.stringify(toSend)}}`)
+            }
+
+            // clear chatbox
             this.input_text = ''
         },
         toggleBroadcast () {
@@ -355,7 +387,8 @@ export default {
                 this.broadcasting = event
             })
             window.ipcRenderer.receive('receive-text-event', (event: any, data: any) => {
-                this.onSubmit(event)
+                event = JSON.parse(event)
+                this.onSubmit(event.text, event.isFinal)
             })
         }
     },

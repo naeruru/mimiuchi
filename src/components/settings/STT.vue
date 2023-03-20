@@ -40,7 +40,6 @@ export default {
     }),
     watch: {
         language_choice(new_val) {
-            console.log(new_val) // settingsStore
             if (new_val.value)
                 this.settingsStore.stt_Settings.language = new_val.value
         }

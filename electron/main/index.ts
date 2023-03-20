@@ -164,7 +164,7 @@ wss.on('connection', ws => {
           break
       }
     } else if (message.type === 'text') {
-      win.webContents.send('receive-text-event', message.data)
+      win.webContents.send('receive-text-event', JSON.stringify(message.data))
     }
   })
   ws.send('Hello! Message From Server!!')
