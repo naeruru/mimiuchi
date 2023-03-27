@@ -1,4 +1,3 @@
-
 <template>
     <div>
         <v-navigation-drawer permanent>
@@ -58,7 +57,7 @@
 export default {
     name: 'Settings',
     data: () => ({
-        APP_VERSION: APP_VERSION,
+        APP_VERSION: __APP_VERSION__,
         settings_general: [
             {
                 title: "General",

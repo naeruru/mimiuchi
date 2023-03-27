@@ -7,4 +7,4 @@ declare module '*.vue' {
 }
 
 
-declare const APP_VERSION: string;
+declare const __APP_VERSION__: string;
