@@ -17,6 +17,9 @@ export default defineConfig(({ command }) => {
   const sourcemap = isServe || !!process.env.VSCODE_DEBUG
 
   return {
+    define: {
+      APP_VERSION: JSON.stringify(process.env.npm_package_version)
+    },
     plugins: [
       vue(),
       vuetify({ autoImport: true }),
