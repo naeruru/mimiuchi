@@ -8,6 +8,7 @@
 </template>
 
 <script lang="ts">
+import { useAppearanceStore } from  './stores/appearance'
 import { useWordReplaceStore } from  './stores/word_replace'
 import { useSettingsStore } from  './stores/settings'
 
@@ -15,9 +16,13 @@ export default {
   name: 'App',
 
   setup() {
+    const appearanceStore = useAppearanceStore()
     const wordReplaceStore = useWordReplaceStore()
     const settingsStore = useSettingsStore()
 
+    appearanceStore.$subscribe((_, state) => {
+        localStorage.setItem('appearance', JSON.stringify(state))
+    })
     settingsStore.$subscribe((_, state) => {
         localStorage.setItem('settings', JSON.stringify(state))
     })
@@ -26,24 +31,19 @@ export default {
     })
 
 
-    
+    appearanceStore.$patch(JSON.parse(localStorage.getItem('appearance') || '{}'))
     settingsStore.$patch(JSON.parse(localStorage.getItem('settings') || '{}'))
     wordReplaceStore.$patch(JSON.parse(localStorage.getItem('word_replace') || '{}'))
-
-
-    
-    // settingsStore.increment()
-
-    // console.log(settingsStore.count)
     
     return {
+      appearanceStore,
       wordReplaceStore,
       settingsStore
     }
-  },
-
-  data: () => ({
-    //
-  })
+  }
 }
 </script>
+
+<style>
+.pointer {cursor: pointer;}
+</style>

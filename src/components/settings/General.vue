@@ -41,6 +41,7 @@
 
 
 <script lang="ts">
+import { useAppearanceStore } from  '../../stores/appearance'
 import { useWordReplaceStore } from  '../../stores/word_replace'
 import { useSettingsStore } from  '../../stores/settings'
 
@@ -48,6 +49,7 @@ export default {
     name: 'SettingsGeneral',
     data: () => ({
         reset_dialog: false,
+        appearance: true,
         settings: true,
         word_replace: true,
     }),
@@ -56,16 +58,19 @@ export default {
             
         },
         reset_settings() {
+            if (this.appearance) this.appearanceStore.$reset()
             if (this.word_replace) this.wordReplaceStore.$reset()
             if (this.settings) this.settingsStore.$reset()
             this.reset_dialog = false
         }
     },
     setup() {
+        const appearanceStore = useAppearanceStore()
         const wordReplaceStore = useWordReplaceStore()
         const settingsStore = useSettingsStore()
         
         return {
+            appearanceStore,
             wordReplaceStore,
             settingsStore
         }

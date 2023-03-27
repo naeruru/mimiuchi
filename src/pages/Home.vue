@@ -25,15 +25,21 @@
         <v-card
             id="loglist"
             v-resize="onResize"
-            class="d-flex pa-4 overflow-auto loglist"
-            color="black"
+            class="d-flex pa-4 overflow-auto log-list"
+            :color="appearanceStore.ui.color"
             flat
             :height="windowSize.y - 55"
             tile
         >
 
-            <div class="d-flex flex-column loglist">
-                <code v-for="log in logs" class="text-h2 mt-6">{{ log.text }}</code>
+            <div class="d-flex flex-column">
+                <a
+                    v-for="log in logs"
+                    class="font-weight-light"
+                    :class="{'fade-out': log.hide, 'final-text': log.isFinal, 'interim-text': !log.isFinal }"
+                >
+                    <a v-if="log.hide !== 2">{{ log.text }}</a>
+                </a>
             </div>
 
 
@@ -89,6 +95,7 @@ import WelcomeOverlay from "../components/overlays/WelcomeOverlay.vue"
 
 import { useWordReplaceStore } from  '../stores/word_replace'
 import { useSettingsStore } from  '../stores/settings'
+import { useAppearanceStore } from '../stores/appearance'
 
 declare const window: any
 
@@ -110,6 +117,7 @@ if (recognition) {
 interface Log {
     text: string,
     isFinal: boolean,
+    hide: number
 }
 
 export default {
@@ -147,7 +155,7 @@ export default {
             windowSize: {
                 x: 0,
                 y: 0,
-            },
+            }
         }
     },
     watch: {
@@ -232,12 +240,7 @@ export default {
                 return this.wordReplaceStore.word_replacements[matched.toLowerCase()]
             })
         },
-        onSubmit (input_override: string, isFinal: boolean = true) {
-            let input = (input_override) ? input_override : this.input_text
-
-            // word replace
-            input = this.replace_words(input)
-
+        paramTrigger(input: string) {
             // console.log(window.process.type)
             if (this.broadcasting) {
 
@@ -282,26 +285,47 @@ export default {
                     }
                 }
             }
+        },
+        onSubmit (input_override: string, isFinal: boolean = true) {
+            let input = (input_override) ? input_override : this.input_text
+
+            // word replace
+            input = this.replace_words(input)
+
+            // check for param triggers
+            this.paramTrigger(input)
             
             // scroll to bottom
             const loglist = document.getElementById("loglist")
             if (loglist) loglist.scrollTop = loglist.scrollHeight
 
-            const toSend = {text: input, isFinal: isFinal}
+            const toSend = {
+                text: input, 
+                isFinal: isFinal, 
+                hide: 0 // 1 = fade, 2 = hide
+            }
 
             // overwrite last log
-            if (this.logs.length && !this.logs[this.logs.length - 1].isFinal) {
-                if (input.startsWith(this.logs[this.logs.length - 1].text.slice(0, 5)) || isFinal) {
-                    this.logs[this.logs.length - 1] = toSend
+            let i = this.logs.length - 1 // track current index
+            if (i >= 0 && !this.logs[i].isFinal) {
+                if (input.startsWith(this.logs[i].text.slice(0, 5)) || isFinal) {
+                    this.logs[i] = toSend
                 }
             // push to log
             } else {
                 this.logs.push(toSend)
+                i++;
                 if (this.isElectron() && this.settingsStore.osc_settings.stt_typing) {
                     window.ipcRenderer.send("typing-text-event", true)
                 }
             }
 
+            // fadeout text
+            if (isFinal && this.appearanceStore.text.enable_fade) 
+                setTimeout(() => {
+                    this.logs[i].hide = 1
+                    setTimeout(() => this.logs[i].hide = 2, this.appearanceStore.text.fade_time * 1000)
+                }, this.appearanceStore.text.hide_after * 1000)
 
             // send text via osc
             if (this.isElectron() && isFinal && this.settingsStore.osc_settings.osc_text) {
@@ -399,12 +423,19 @@ export default {
     setup() {
         const wordReplaceStore = useWordReplaceStore()
         const settingsStore = useSettingsStore()
+        const appearanceStore = useAppearanceStore()
 
         recognition.lang = settingsStore.stt_Settings.language
 
+        let font_size = `${appearanceStore.text.font_size}px`
+        let fade_time = `${appearanceStore.text.fade_time}s`
+
         return {
             wordReplaceStore,
-            settingsStore
+            settingsStore,
+            appearanceStore,
+            font_size,
+            fade_time
         }
     }
 }
@@ -414,11 +445,72 @@ export default {
 html {
     overflow-y: auto
 }
-.loglist{
+.log-list {
     display: flex;
     flex-direction: column-reverse;
+    font-size: v-bind('font_size');
 }
-.loglist::-webkit-scrollbar {
+.log-list::-webkit-scrollbar {
     display: none; /* for Chrome, Safari and Opera */
+}
+
+.final-text {
+    color: v-bind('appearanceStore.text.color');
+}
+.interim-text {
+    color: v-bind('appearanceStore.text.interim_color');
+}
+
+.fade-out {
+  animation: fadeOut ease v-bind(fade_time);
+  -webkit-animation: fadeOut ease v-bind(fade_time);
+  -moz-animation: fadeOut ease v-bind(fade_time);
+  -o-animation: fadeOut ease v-bind(fade_time);
+  -ms-animation: fadeOut ease v-bind(fade_time);
+  animation-fill-mode: forwards;
+}
+@keyframes fadeOut {
+  0% {
+    opacity:1;
+  }
+  100% {
+    opacity:0;
+  }
+}
+
+@-moz-keyframes fadeOut {
+  0% {
+    opacity:1;
+  }
+  100% {
+    opacity:0;
+  }
+}
+
+@-webkit-keyframes fadeOut {
+  0% {
+    opacity:1;
+  }
+  100% {
+    opacity:0;
+  }
+}
+
+@-o-keyframes fadeOut {
+  0% {
+    opacity:1;
+  }
+  100% {
+    opacity:0;
+  }
+}
+
+@-ms-keyframes fadeOut {
+  0% {
+    opacity:1;
+  }
+  100% {
+    opacity:0;
+}
 }
 </style>

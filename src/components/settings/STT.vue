@@ -4,7 +4,7 @@
             Speech-to-text
         </v-card-title>
         <v-divider></v-divider>
-        <v-card-text>
+        <v-card-text v-if="!isElectron()">
             meow {{ $route.fullPath }}
             <v-row>
                 <v-col :cols="12" :md="6">
@@ -15,6 +15,12 @@
                     ></v-combobox>
                 </v-col>
             </v-row>
+        </v-card-text>
+        <v-card-text v-else>
+            <h2>
+                Speech-to-text is only available on the 
+                <a @click="openURL('https://captions.naeris.net/')" class="text-primary pointer">website version</a> (^・ω・^)
+            </h2>
         </v-card-text>
     </v-card>
 </template>
@@ -45,7 +51,24 @@ export default {
         }
     },
     methods: {
-
+        openURL(url: string) {
+            window.open(url, '_blank')
+        },
+        isElectron() {
+            // Renderer process
+            if (typeof window !== 'undefined' && typeof window.process === 'object' && window.process.type === 'renderer') {
+                return true
+            }
+            // Main process
+            if (typeof process !== 'undefined' && typeof process.versions === 'object' && !!process.versions.electron) {
+                return true
+            }
+            // Detect the user agent when the `nodeIntegration` option is set to true
+            if (typeof navigator === 'object' && typeof navigator.userAgent === 'string' && navigator.userAgent.indexOf('Electron') >= 0) {
+                return true
+            }
+            return false
+        }
     },
     computed: {
 

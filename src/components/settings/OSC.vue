@@ -5,7 +5,6 @@
         <v-divider></v-divider>
         <v-card-text v-if="isElectron()">
             <!-- <div>meow meow {{ $route.fullPath }}</div> -->
-            meow {{ $route.fullPath }}
             <!-- <v-sheet color="transparent" class="d-flex flex-wrap"> -->
             <v-row>
                 <v-col :cols="12" :md="6">
