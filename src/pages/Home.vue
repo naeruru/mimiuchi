@@ -376,6 +376,10 @@ export default {
     unmounted () {
         if (this.listening) this.toggleListen()
         if (this.broadcasting) this.toggleBroadcast()
+        if (this.isElectron()) {
+            window.ipcRenderer.removeListener('websocket-connect')
+            window.ipcRenderer.removeListener('receive-text-event')
+        }
     },
     mounted () {
         this.onResize()

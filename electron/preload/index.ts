@@ -95,19 +95,27 @@ setTimeout(removeLoading, 4999)
 // added to differentiate electron and website version
 import { contextBridge, ipcRenderer } from 'electron'
 
+let validChannels = ['typing-text-event', 'send-text-event', 'send-param-event', 'receive-text-event', 'websocket-connect']
+
 // Expose ipcRenderer to the client
 contextBridge.exposeInMainWorld('ipcRenderer', {
   send: (channel, data) => {
-    let validChannels = ['typing-text-event', 'send-text-event', 'send-param-event', 'receive-text-event', 'websocket-connect'] // <-- Array of all ipcRenderer Channels used in the client
+    // let validChannels = ['typing-text-event', 'send-text-event', 'send-param-event', 'receive-text-event', 'websocket-connect']
     if (validChannels.includes(channel)) {
       ipcRenderer.send(channel, data)
     }
   },
   receive: (channel, func) => {
-    let validChannels = ['typing-text-event', 'send-text-event', 'send-param-event', 'receive-text-event', 'websocket-connect'] // <-- Array of all ipcMain Channels used in the electron
+    // let validChannels = ['typing-text-event', 'send-text-event', 'send-param-event', 'receive-text-event', 'websocket-connect']
     if (validChannels.includes(channel)) {
       // Deliberately strip event as it includes `sender`
       ipcRenderer.on(channel, (event, ...args) => func(...args))
+    }
+  },
+  removeListener: (channel) => {
+    // let validChannels = ['typing-text-event', 'send-text-event', 'send-param-event', 'receive-text-event', 'websocket-connect']
+    if (validChannels.includes(channel)) {
+      ipcRenderer.removeAllListeners(channel)
     }
   }
 })
