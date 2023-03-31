@@ -4,6 +4,10 @@ import { join } from 'node:path'
 
 import { emit_osc } from './modules/osc'
 
+import { NLP } from './modules/nlp'
+
+const nlp = new NLP()
+
 // The built directory structure	
 //	
 // ├─┬ dist-electron	

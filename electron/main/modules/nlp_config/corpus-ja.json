@@ -1,0 +1,30 @@
+{
+    "name": "Corpus",
+    "locale": "ja",
+    "entities": {
+        "variable": {
+            "options": {
+                "Marker": ["マーカー", "ペン"]
+            }
+        },
+        "value": {
+            "options": {
+                "true": ["だし", "だす", "出し", "出す"]
+            }
+        }
+    },
+    "data": [
+        {
+            "intent": "setvariable",
+            "utterances": [
+                "@variable を %value%",
+                "@variable を @value に 設定"
+            ],
+            "answers": [
+                {
+                    "answer": "{{value}}"
+                }
+            ]
+        }
+    ]
+}

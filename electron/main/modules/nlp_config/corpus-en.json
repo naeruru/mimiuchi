@@ -1,0 +1,30 @@
+{
+    "name": "Corpus",
+    "locale": "en",
+    "entities": {
+        "variable": {
+            "options": {
+                "Marker": ["marker", "pen"],
+                "Jacket": ["jacket"]
+            }
+        },
+        "value": {
+            "options": {
+                "true": ["on", "true"],
+                "false": ["off", "false"]
+            }
+        }
+    },
+    "data": [
+        {
+            "intent": "setvariable",
+            "utterances": [
+                "turn my @variable @value",
+                "turn my @variable to @value",
+                "turn @variable to @value",
+                "set @variable to @value"
+            ],
+            "answers": ["test"]
+        }
+    ]
+}
