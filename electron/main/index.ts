@@ -2,9 +2,9 @@ import { app, BrowserWindow, shell, ipcMain } from 'electron'
 import { release } from 'node:os'
 import { join } from 'node:path'
 
-import { Bundle, Client } from 'node-osc'
+import { emit_osc } from './modules/osc'
 
-	// The built directory structure	
+// The built directory structure	
 //	
 // ├─┬ dist-electron	
 // │ ├─┬ main	
@@ -116,30 +116,28 @@ ipcMain.handle('open-win', (_, arg) => {
 })
 
 
-function emit_osc (value, ip='127.0.0.1', port=9000) {
-  const bundle = new Bundle(value)
-  const client = new Client(ip, port)
-  client.send(bundle)
-  console.log(`${value[0]} -> ${value[1]}`)
-}
-
-// event listener that listens to the event emitted by Vue component
+/*
+ * event listeners that listens to the event emitted by Vue component
+ */
+// event for text typing indicator
 ipcMain.on("typing-text-event", (event, args) => {
   emit_osc(['/chatbox/typing', args])
 })
 
-
+// event for sending text
 ipcMain.on("send-text-event", (event, args) => {
   emit_osc(['/chatbox/input', args, true])
 })
 
-
+// event for sending custom osc param
 ipcMain.on("send-param-event", (event, args) => {
   emit_osc([args.route, args.value], args.ip, args.port)
 })
 
 
-// websocket server test
+/*
+ * websocket control
+ */
 const WebSocket = require('ws')
 const wss = new WebSocket.Server({ port: 8999 })
 wss.on('connection', ws => {
@@ -167,6 +165,6 @@ wss.on('connection', ws => {
       win.webContents.send('receive-text-event', JSON.stringify(message.data))
     }
   })
-  ws.send('Hello! Message From Server!!')
+  ws.send('connected to websocket (^・ω・^)')
   win.webContents.send('websocket-connect', true)
 })
