@@ -425,17 +425,23 @@ export default {
         const settingsStore = useSettingsStore()
         const appearanceStore = useAppearanceStore()
 
-        recognition.lang = settingsStore.stt_Settings.language
+        if (recognition)
+            recognition.lang = settingsStore.stt_Settings.language
 
-        let font_size = `${appearanceStore.text.font_size}px`
-        let fade_time = `${appearanceStore.text.fade_time}s`
+
+        const font_size = `${appearanceStore.text.font_size}px`
+        const fade_time = `${appearanceStore.text.fade_time}s`
+        const text_color = appearanceStore.text.color
+        const interim_color = appearanceStore.text.interim_color
 
         return {
             wordReplaceStore,
             settingsStore,
             appearanceStore,
             font_size,
-            fade_time
+            fade_time,
+            text_color,
+            interim_color
         }
     }
 }
@@ -448,17 +454,17 @@ html {
 .log-list {
     display: flex;
     flex-direction: column-reverse;
-    font-size: v-bind('font_size');
+    font-size: v-bind(font_size);
 }
 .log-list::-webkit-scrollbar {
     display: none; /* for Chrome, Safari and Opera */
 }
 
 .final-text {
-    color: v-bind('appearanceStore.text.color');
+    color: v-bind(text_color);
 }
 .interim-text {
-    color: v-bind('appearanceStore.text.interim_color');
+    color: v-bind(interim_color);
 }
 
 .fade-out {
