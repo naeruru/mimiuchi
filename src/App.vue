@@ -3,6 +3,7 @@
     <v-main>
       <router-view name="Header"></router-view>
       <router-view></router-view>
+      <router-view name="Footer"></router-view>
     </v-main>
   </v-app>
 </template>
@@ -14,7 +15,6 @@ import { useSettingsStore } from  './stores/settings'
 
 export default {
   name: 'App',
-
   setup() {
     const appearanceStore = useAppearanceStore()
     const wordReplaceStore = useWordReplaceStore()

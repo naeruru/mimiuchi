@@ -5,7 +5,7 @@ export const useAppearanceStore = defineStore('appearance', {
     state: () => ({
         text: {
             color: '#FFFFFF',
-            interim_color: '#FFFFFF',
+            interim_color: '#BC96FF', //⑅•ᴗ•⑅)◜..°♡
             font_size: 64,
             enable_fade: true,
             hide_after: 10, // seconds

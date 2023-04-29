@@ -35,20 +35,6 @@
         </v-navigation-drawer>
 
         <router-view name="panel" />
-
-        <v-footer app class="d-flex flex-column" height="55">
-            <div class="d-flex w-100 align-center">
-                    <div class="d-flex w-100 align-center">
-
-                        <v-spacer></v-spacer>
-                        <v-divider class="mr-4" vertical></v-divider>
-                        <v-btn @click="$router.push({ path: '/' })" color="transparent"  size="small" icon flat>
-                            <v-icon>mdi-home</v-icon>
-                        </v-btn>
-                    </div>
-
-            </div>
-        </v-footer>
     </div>
 </template>
 

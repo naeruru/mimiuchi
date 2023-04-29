@@ -1,6 +1,7 @@
 import { createRouter, createWebHashHistory, createWebHistory, RouteRecordRaw } from 'vue-router'
 
 import Header from '../components/Header.vue'
+import Footer from '../components/Footer.vue'
 import Home from '../pages/Home.vue'
 
 import Settings from '../pages/Settings.vue'
@@ -17,7 +18,8 @@ const routes = [
     name: 'home',
     components: {
       default: Home,
-      // Header
+      // Header,
+      Footer
     }
   },
   {
@@ -26,7 +28,8 @@ const routes = [
     components: {
       default: Settings,
       panel: SettingsGeneral,
-      Header
+      Header,
+      Footer
     },
     children: [
       {

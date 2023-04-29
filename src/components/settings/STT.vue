@@ -5,7 +5,6 @@
         </v-card-title>
         <v-divider></v-divider>
         <v-card-text v-if="!isElectron()">
-            meow {{ $route.fullPath }}
             <v-row>
                 <v-col :cols="12" :md="6">
                     <v-combobox
