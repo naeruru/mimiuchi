@@ -1,5 +1,4 @@
 <template>
-    <div>
         <v-navigation-drawer permanent>
             <v-list density="compact" nav>
                 <v-list-subheader>Settings</v-list-subheader>
@@ -34,8 +33,11 @@
 
         </v-navigation-drawer>
 
-        <router-view name="panel" />
-    </div>
+        <router-view name="panel" v-slot="{ Component, route }">
+            <transition name="slide-up">
+                <component :is="Component" />
+            </transition>
+        </router-view>
 </template>
 
 <script lang="ts">
@@ -103,3 +105,24 @@ export default {
     }
 }
 </script>
+
+
+<style>
+.slide-up-enter-active {
+  transition: all 0.25s ease-out;
+}
+
+.slide-up-leave-active {
+  transition: all 0s ease-out;
+}
+
+.slide-up-enter-from {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.slide-up-leave-to {
+  opacity: 0;
+  transform: translateY(-20px);
+}
+</style>
