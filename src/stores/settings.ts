@@ -23,6 +23,8 @@ export const useSettingsStore = defineStore('settings', {
     state: () => ({
 
         welcome: true,
+        
+        drawer: true,
 
         stt_Settings: {
             language: 'en-US',

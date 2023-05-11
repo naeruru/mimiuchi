@@ -1,5 +1,6 @@
 <template>
     <v-app-bar color="primary" app flat height="50">
+      <v-app-bar-nav-icon variant="text" @click.stop="settingsStore.drawer = !settingsStore.drawer"></v-app-bar-nav-icon>
       <v-container class="mb-7 fill-height d-flex align-center">
         <v-avatar
             class="me-10 ms-4"
@@ -36,17 +37,24 @@
   </template>
   
 <script lang='ts'>
-    import logo from "../assets/naelogo2.png"
+import { useSettingsStore } from  '../stores/settings'
+import logo from "../assets/naelogo2.png"
 
-    export default {
-        name: 'Header',
-        data: () => ({
-            logo: logo
-        }),
-        methods: {
-          open_external(link: string) {
-            window.open(link, '_blank')
-          }
-        }
+export default {
+    name: 'Header',
+    data: () => ({
+        logo: logo
+    }),
+    methods: {
+      open_external(link: string) {
+        window.open(link, '_blank')
+      }
+    },
+    setup() {
+      const settingsStore = useSettingsStore()
+      return {
+        settingsStore
+      }
     }
+}
 </script>

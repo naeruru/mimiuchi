@@ -1,5 +1,5 @@
 <template>
-        <v-navigation-drawer permanent>
+        <v-navigation-drawer v-model="settingsStore.drawer" :permanent="!smAndDown">
             <v-list density="compact" nav>
                 <v-list-subheader>Settings</v-list-subheader>
                 <v-list-item
@@ -27,13 +27,17 @@
 
             <!-- <v-list :items="settings_list" density="compact" nav></v-list> -->
             <template v-slot:append>
-                <v-col class="d-flex justify-right"><strong>v{{ APP_VERSION }}</strong></v-col>
+                <v-divider></v-divider>
+                <v-col class="d-flex justify-right mt-1">
+                    <v-spacer></v-spacer>
+                    <v-btn size="small" variant="flat" prepend-icon="mdi-tag" @click="open_external('https://github.com/naexris/chatbox-tools/releases')">v{{ APP_VERSION }}</v-btn>
+                </v-col>
                 
             </template>
 
         </v-navigation-drawer>
 
-        <router-view name="panel" v-slot="{ Component, route }">
+        <router-view name="panel" v-slot="{ Component }">
             <transition name="slide-up">
                 <component :is="Component" />
             </transition>
@@ -41,6 +45,8 @@
 </template>
 
 <script lang="ts">
+import { useSettingsStore } from  '../stores/settings'
+import { useDisplay } from 'vuetify'
 
 export default {
     name: 'Settings',
@@ -83,6 +89,9 @@ export default {
         ],
     }),
     methods: {
+        open_external(link: string) {
+            window.open(link, '_blank')
+        },
         isElectron() {
             // Renderer process
             if (typeof window !== 'undefined' && typeof window.process === 'object' && window.process.type === 'renderer') {
@@ -102,7 +111,19 @@ export default {
     mounted() {
         if (!this.isElectron())
             this.settings_osc = [this.settings_osc[0]]
-    }
+    },
+    setup() {
+        const settingsStore = useSettingsStore()
+        const { smAndDown } = useDisplay()
+
+        console.log(!smAndDown.value)
+        settingsStore.drawer = !smAndDown.value
+
+        return {
+            settingsStore,
+            smAndDown
+        }
+    } 
 }
 </script>
 
