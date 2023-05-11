@@ -50,7 +50,7 @@
                         <v-icon v-else>mdi-broadcast</v-icon>
                     </v-btn>
                     <v-divider class="mr-4" vertical></v-divider>
-                    <v-btn v-if="$route.name === 'home'" @click="$router.push({ path: '/settings/general' })" color="transparent"  size="small" icon flat>
+                    <v-btn v-if="$route.name === 'home'" @click="$router.push({ path: last_setting })" color="transparent"  size="small" icon flat>
                         <v-icon>mdi-cog</v-icon>
                     </v-btn>
                     <v-btn v-else @click="$router.push({ path: '/' })" color="transparent"  size="small" icon flat>
@@ -58,7 +58,6 @@
                     </v-btn>
                 </div>
             </v-form>
-
         </div>
     </v-footer>
 </template>
@@ -101,10 +100,12 @@ export default {
         WelcomeOverlay
     },
     data() {
-            return {
+        return {
             // oscClient: client,
             overlay_main: false,
             overlay_page: 0,
+
+            last_route: null as any,
 
             ws: null as any,
 
@@ -389,6 +390,11 @@ export default {
             }
         }
     },
+    computed: {
+        last_setting () {
+            return (this.last_route && this.last_route.startsWith('/settings')) ? this.last_route : '/settings/general'
+        }
+    },
     unmounted () {
         if (this.listening) this.toggleListen()
         if (this.broadcasting) this.toggleBroadcast()
@@ -399,6 +405,7 @@ export default {
     },
     updated() {
         this.reloadEvents()
+        this.last_route = this.$router.options.history.state.back
     },
     mounted () {
         this.onResize()
