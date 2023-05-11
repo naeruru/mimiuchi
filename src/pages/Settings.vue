@@ -116,7 +116,6 @@ export default {
         const settingsStore = useSettingsStore()
         const { smAndDown } = useDisplay()
 
-        console.log(!smAndDown.value)
         settingsStore.drawer = !smAndDown.value
 
         return {

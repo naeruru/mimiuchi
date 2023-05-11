@@ -48,4 +48,17 @@ export default {
 .pointer {
   cursor: pointer;
 }
+html::-webkit-scrollbar {
+      width: 10px; 
+      height: 120px;
+   }
+
+html::-webkit-scrollbar-track {
+    background-color: black;
+  }
+
+html::-webkit-scrollbar-thumb {
+    background: #4e4e4e; /* #a9a4e5 */
+    border-radius: 10px;
+  }
 </style>

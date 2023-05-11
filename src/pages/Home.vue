@@ -1,30 +1,28 @@
 
 <template>
-    <div>
-        <v-card
-            id="loglist"
-            v-resize="onResize"
-            class="d-flex pa-4 overflow-auto log-list"
-            :color="appearanceStore.ui.color"
-            flat
-            :height="windowSize.y - 55"
-            tile
-        >
+    <v-card
+        id="loglist"
+        v-resize="onResize"
+        class="d-flex pa-4 overflow-auto log-list"
+        :color="appearanceStore.ui.color"
+        flat
+        :height="windowSize.y - 55"
+        tile
+    >
 
-            <div class="d-flex flex-column">
-                <a
-                    v-for="log in logs"
-                    class="font-weight-light"
-                    :class="{'fade-out': log.hide, 'final-text': log.isFinal, 'interim-text': !log.isFinal }"
-                >
-                    <a v-if="log.hide !== 2">{{ log.text }}</a>
-                </a>
-            </div>
+        <div class="d-flex flex-column">
+            <a
+                v-for="log in logs"
+                class="font-weight-light"
+                :class="{'fade-out': log.hide, 'final-text': log.isFinal, 'interim-text': !log.isFinal }"
+            >
+                <a v-if="log.hide !== 2">{{ log.text }}</a>
+            </a>
+        </div>
 
 
-            <WelcomeOverlay :overlay="overlay_main" :page="overlay_page"></WelcomeOverlay>
-        </v-card>
-    </div>
+        <WelcomeOverlay :overlay="overlay_main" :page="overlay_page"></WelcomeOverlay>
+    </v-card>
 </template>
 
 <script lang="ts">
@@ -99,6 +97,7 @@ export default {
         this.onResize()
 
         this.overlay_main = this.settingsStore.welcome
+        console.log(this.windowSize)
     },
     setup() {
         const settingsStore = useSettingsStore()
@@ -126,7 +125,7 @@ export default {
 
 <style>
 html {
-    overflow-y: auto
+    overflow-y: auto;
 }
 .log-list {
     display: flex;
