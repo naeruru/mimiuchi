@@ -97,7 +97,6 @@ export default {
         this.onResize()
 
         this.overlay_main = this.settingsStore.welcome
-        console.log(this.windowSize)
     },
     setup() {
         const settingsStore = useSettingsStore()

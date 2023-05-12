@@ -32,7 +32,7 @@
                             v-model="input_text"
                             density="compact"
                             variant="outlined"
-                            label="Type a message"
+                            :label="$t('general.type_message')"
                             append-inner-icon="mdi-chevron-right"
                             single-line
                             hide-details
