@@ -15,6 +15,10 @@ import { useSettingsStore } from  './stores/settings'
 
 export default {
   name: 'App',
+  mounted () {
+    // this.$i18n.locale = 'en'
+    // console.log(this.$i18n.locale)
+  },
   setup() {
     const appearanceStore = useAppearanceStore()
     const wordReplaceStore = useWordReplaceStore()

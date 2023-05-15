@@ -10,9 +10,12 @@ const pinia = createPinia()
 
 // loadFonts()
 
+const app_name = 'Chatbox Tools'
+
 createApp(App)
   .use(vuetify)
   .use(pinia)
   .use(router)
   .use(i18n)
+  .provide('app_name', app_name)
   .mount('#app')

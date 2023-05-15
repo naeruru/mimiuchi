@@ -1,32 +1,28 @@
 <template>
-    <v-card color="transparent" flat>
+    <v-card :title="$t('settings.general.title')" :subtitle="$t('settings.general.description')" color="transparent" flat>
         <v-snackbar v-model="snackbar" location="top" color="success">
             {{ snackbar_text }}
             <template v-slot:actions>
                 <v-btn variant="text" @click="snackbar = false">
-                    Close
+                    {{  $t('settings.general.reset.snackbar.button') }}
                 </v-btn>
             </template>
         </v-snackbar>
-        <v-card-title>
-            General Settings
-        </v-card-title>
-        <v-card-subtitle class="overflow-hidden">General application settings</v-card-subtitle>
         <v-divider></v-divider>
         <v-card-text>
             <v-row>
                 <v-col>
                     <v-btn color="error" block>
-                        Reset all settings
+                        {{  $t('settings.general.reset.button') }}
                         <v-dialog
                                 v-model="reset_dialog"
                                 activator="parent"
                                 max-width="500"
                             >
                                 <v-card>
-                                    <v-card-title>Reset Settings</v-card-title>
+                                    <v-card-title>{{  $t('settings.general.reset.dialog.title') }}</v-card-title>
                                     <v-card-text>
-                                        You are about to reset settings for the entire application.
+                                        {{  $t('settings.general.reset.dialog.description') }}
                                     </v-card-text>
                                     <v-form validate-on="input" @submit.prevent="reset_submit">
                                         <v-card-actions>
@@ -36,8 +32,9 @@
                                             </v-col> -->
                                         </v-card-actions>
                                     </v-form>
-                                    <v-btn @click="reset_settings()" class="mt-2" color="error">reset</v-btn>
-                                    
+                                    <v-btn @click="reset_settings()" class="mt-2" color="error">
+                                        {{  $t('settings.general.reset.dialog.button') }}
+                                    </v-btn>
                                 </v-card>
                         </v-dialog>
                     </v-btn>
@@ -73,7 +70,7 @@ export default {
             if (this.word_replace) this.wordReplaceStore.$reset()
             if (this.settings) this.settingsStore.$reset()
             this.reset_dialog = false
-            this.snackbar_text = 'Settings reset'
+            this.snackbar_text = this.$t('settings.general.reset.snackbar.title')
             this.snackbar = true
         }
     },

@@ -1,16 +1,16 @@
 <template>
         <v-navigation-drawer v-model="settingsStore.drawer" :permanent="!smAndDown">
             <v-list density="compact" nav>
-                <v-list-subheader>Settings</v-list-subheader>
+                <v-list-subheader>{{ $t('settings.title') }}</v-list-subheader>
                 <v-list-item
                     v-for="(setting, i) in settings_general"
                     @click="$router.push({ path: `/settings/${setting.value}` })"
                     :prepend-icon="setting.icon"
                     :title="setting.title"
                     :value="setting.value"
-                    :active="(setting.value === $route.query.p)"
+                    :active="(setting.value === $route.name)"
+                    active-color="primary"
                 ></v-list-item>
-
                 <v-divider></v-divider>
                 <v-list-subheader>OSC</v-list-subheader>
                 <v-list-item
@@ -21,6 +21,7 @@
                     :title="setting.title"
                     :value="setting.value"
                     :active="(setting.value === $route.name)"
+                    active-color="primary"
                 ></v-list-item>
                 <p v-else class="text-caption">OSC settings are available on the desktop app</p>
             </v-list>
@@ -50,44 +51,46 @@ import { useDisplay } from 'vuetify'
 
 export default {
     name: 'Settings',
-    data: () => ({
-        APP_VERSION: __APP_VERSION__,
-        settings_general: [
-            {
-                title: "General",
-                value: "general",
-                icon: "mdi-home",
-            },
-            {
-                title: "Speech-to-Text",
-                value: "stt",
-                icon: "mdi-microphone-outline"
-            },
-            {
-                title: "Appearance",
-                value: "appearance",
-                icon: "mdi-palette"
-            },
-            {
-                title: "Word Replace",
-                value: "wordreplace",
-                icon: "mdi-swap-horizontal"
-            },
-        ],
+    data() {
+        return {
+            APP_VERSION: __APP_VERSION__,
+            settings_general: [
+                {
+                    title: this.$t('settings.general.title'),
+                    value: "general",
+                    icon: "mdi-home",
+                },
+                {
+                    title: this.$t('settings.speech.title'),
+                    value: "stt",
+                    icon: "mdi-microphone-outline"
+                },
+                {
+                    title: this.$t('settings.appearance.title'),
+                    value: "appearance",
+                    icon: "mdi-palette"
+                },
+                {
+                    title: this.$t('settings.wordreplace.title'),
+                    value: "wordreplace",
+                    icon: "mdi-swap-horizontal"
+                },
+            ],
 
-        settings_osc: [
-            {
-                title: "General",
-                value: "osc",
-                icon: "mdi-transit-connection-variant"
-            },
-            {
-                title: "Custom Params",
-                value: "oscparams",
-                icon: "mdi-format-list-bulleted-square"
-            }
-        ],
-    }),
+            settings_osc: [
+                {
+                    title: this.$t('settings.osc.general.title'),
+                    value: "osc",
+                    icon: "mdi-transit-connection-variant"
+                },
+                {
+                    title: this.$t('settings.osc.params.title'),
+                    value: "oscparams",
+                    icon: "mdi-format-list-bulleted-square"
+                }
+            ],
+        }
+    },
     methods: {
         open_external(link: string) {
             window.open(link, '_blank')

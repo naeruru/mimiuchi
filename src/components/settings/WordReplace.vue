@@ -7,7 +7,7 @@
         <v-divider></v-divider>
         <v-card-text>
             
-            <v-card>
+            <v-card class="mb-4">
                 <v-switch
                     v-model="wordReplaceStore.enabled"
                     label="Enable replacing words or phrases"
@@ -19,10 +19,10 @@
             </v-card>
             <div v-if="replacements.length" class="mt-2">
                 <v-row v-for="(replacement, i) in replacements">
-                        <v-col :cols="12" :md="6">
+                        <v-col :cols="12" :sm="6">
                             <v-text-field v-model="replacement.replacing" label="Replacing" append-icon="mdi-arrow-right-bold" hide-details></v-text-field>
                         </v-col>
-                        <v-col :cols="10" :md="6">
+                        <v-col :cols="10" :sm="6">
                             <v-text-field v-model="replacement.replacement" label="Replacement" hide-details>
 
                                 <template v-slot:append>

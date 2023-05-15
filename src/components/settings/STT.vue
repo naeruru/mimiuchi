@@ -1,8 +1,5 @@
 <template>
-    <v-card color="transparent" flat>
-        <v-card-title>
-            Speech-to-text
-        </v-card-title>
+    <v-card :title="$t('settings.speech.title')" :subtitle="$t('settings.speech.description')" color="transparent" flat>
         <v-divider></v-divider>
         <v-card-text v-if="!isElectron()">
             <v-row>
@@ -10,15 +7,18 @@
                     <v-combobox
                         v-model="language_choice"
                         :items="languages"
-                        label="Language"
+                        :label="$t('settings.speech.language')"
                     ></v-combobox>
                 </v-col>
             </v-row>
         </v-card-text>
         <v-card-text v-else>
             <h2>
-                Speech-to-text is only available on the 
-                <a @click="openURL('https://captions.naeris.net/')" class="text-primary pointer">website version</a> (^・ω・^)
+                <!-- Speech-to-text is only available on the 
+                <a @click="openURL('https://captions.naeris.net/')" class="text-primary pointer">website version</a> (^・ω・^) -->
+                <i18n-t keypath="settings.speech.unsupported.text" tag="label" for="link">
+                    <a @click="openURL('https://captions.naeris.net/')" class="text-primary pointer">{{ $t('settings.speech.unsupported.link')}}</a>
+                </i18n-t>
             </h2>
         </v-card-text>
     </v-card>
