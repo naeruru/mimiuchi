@@ -61,12 +61,27 @@ export default {
                 color: 'Background color'
             }
         },
-        wordreplace: {
-            title: 'Word Replace'
+        word_replace: {
+            title: 'Word Replace',
+            description: 'Add words or phrases to replace here',
+            enabled: 'Enable replacing words or phrases',
+            info: 'Use the + button to add a new replacement!',
+            replacing: 'Replacing',
+            replacement: 'Replacement'
         },
         osc: {
             general: {
-                title: 'General'
+                title: 'OSC Settings',
+                description: 'Settings for customizing OSC connection',
+                osc_ip: 'Default OSC IP',
+                osc_port: 'Default OSC Port',
+                enabled: 'Send all text with OSC (when broadcasting)',
+                typing_indicator: 'Enable typing indicator when typing',
+                speech_indicator: 'Enable typing indicator for speech-to-text',
+                unsupported: {
+                    text: 'OSC settings are available on the {0}. (  ᐡᴗ  ̫ ᴗᐡ)',
+                    link: 'desktop app version'
+                }
             },
             params: {
                 title: 'Custom Params'

@@ -71,7 +71,7 @@ export default {
                     icon: "mdi-palette"
                 },
                 {
-                    title: this.$t('settings.wordreplace.title'),
+                    title: this.$t('settings.word_replace.title'),
                     value: "wordreplace",
                     icon: "mdi-swap-horizontal"
                 },

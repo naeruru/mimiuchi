@@ -11,9 +11,10 @@
         <v-divider></v-divider>
         <v-card-text>
             <v-row>
-                <v-col>
-                    <v-btn color="error" block>
-                        {{  $t('settings.general.reset.button') }}
+                <v-col :cols="12" :md="12" class="d-flex flex-no-wrap justify-space-between">
+                    <v-card-title class="text-subtitle-1">{{ $t('settings.general.reset.button') }}</v-card-title>
+                    <v-btn color="error" class="mt-1">
+                        <v-icon>mdi-trash-can</v-icon>
                         <v-dialog
                                 v-model="reset_dialog"
                                 activator="parent"
@@ -39,6 +40,7 @@
                         </v-dialog>
                     </v-btn>
                 </v-col>
+                <v-divider></v-divider>
             </v-row>
         </v-card-text>
     </v-card>

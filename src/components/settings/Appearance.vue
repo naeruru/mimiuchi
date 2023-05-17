@@ -15,7 +15,7 @@
                         hide-details
                     ></v-text-field>
                 </v-col>
-                <v-col :cols="12" :md="6" class="d-flex">
+                <v-col :cols="12" :sm="6" class="d-flex">
                         <v-checkbox-btn
                         v-model="appearanceStore.text.enable_fade"
                         class="pe-2"
@@ -29,7 +29,7 @@
                             hide-details
                         ></v-text-field>
                 </v-col>
-                <v-col :cols="12" :md="6">
+                <v-col :cols="12" :sm="6">
                     <v-text-field 
                         v-model="appearanceStore.text.fade_time" 
                         :disabled="!appearanceStore.text.enable_fade"
@@ -39,49 +39,34 @@
                         hide-details
                     ></v-text-field>
                 </v-col>
-                <v-col :cols="12" :md="12">
-                    <v-card class="mt-2">
-                        <v-col class="d-flex flex-no-wrap justify-space-between">
-                            <v-card-title class="text-subtitle-1">{{ $t('settings.appearance.text.color') }}</v-card-title>
-                            <v-btn :color="appearanceStore.text.color" width="20vw" class="ma-2" flat>
-                                <v-menu activator="parent" :close-on-content-click="false">
-                                    <v-color-picker v-model="appearanceStore.text.color" :modes="['hexa']" flat class="pa-2"></v-color-picker>
-                                </v-menu>
-                            </v-btn>
-                        </v-col>
-                    </v-card>
+                <v-divider></v-divider>
+                <v-col :cols="12" :md="12" class="d-flex flex-no-wrap justify-space-between mt-1">
+                    <v-card-title class="text-subtitle-1">{{ $t('settings.appearance.text.color') }}</v-card-title>
+                    <v-btn :color="appearanceStore.text.color" width="20vw" class="ma-2" flat>
+                        <v-menu activator="parent" :close-on-content-click="false">
+                            <v-color-picker v-model="appearanceStore.text.color" :modes="['hexa']" flat class="pa-2"></v-color-picker>
+                        </v-menu>
+                    </v-btn>
                 </v-col>
-                <v-col :cols="12" :md="12">
-                    <v-card class="mt-2">
-                        <v-col class="d-flex flex-no-wrap justify-space-between">
-                            <v-card-title class="text-subtitle-1">{{ $t('settings.appearance.text.interim_color') }}</v-card-title>
-                            <v-btn :color="appearanceStore.text.interim_color" width="20vw" class="ma-2" flat>
-                                <v-menu activator="parent" :close-on-content-click="false">
-                                    <v-color-picker v-model="appearanceStore.text.interim_color" :modes="['hexa']" flat class="pa-2"></v-color-picker>
-                                </v-menu>
-                            </v-btn>
-                        </v-col>
-                    </v-card>
+                <v-divider></v-divider>
+                <v-col :cols="12" :md="12" class="d-flex flex-no-wrap justify-space-between mt-1">
+                    <v-card-title class="text-subtitle-1">{{ $t('settings.appearance.text.interim_color') }}</v-card-title>
+                    <v-btn :color="appearanceStore.text.interim_color" width="20vw" class="ma-2" flat>
+                        <v-menu activator="parent" :close-on-content-click="false">
+                            <v-color-picker v-model="appearanceStore.text.interim_color" :modes="['hexa']" flat class="pa-2"></v-color-picker>
+                        </v-menu>
+                    </v-btn>
                 </v-col>
-            </v-row>
-
-            <v-row class="mt-6">
-                <v-divider class="mx-2"></v-divider>
-                <v-col :cols="12">
-                    <p class="text-h6" label color="secondary">{{ $t('settings.appearance.ui.title') }}</p>
+                <v-divider></v-divider>
+                <v-col :cols="12" :md="12" class="d-flex flex-no-wrap justify-space-between mt-1">
+                    <v-card-title class="text-subtitle-1">{{ $t('settings.appearance.ui.color') }}</v-card-title>
+                    <v-btn :color="appearanceStore.ui.color" width="20vw" class="ma-2" flat>
+                        <v-menu activator="parent" :close-on-content-click="false">
+                            <v-color-picker v-model="appearanceStore.ui.color" :modes="['hexa']" flat class="pa-2"></v-color-picker>
+                        </v-menu>
+                    </v-btn>
                 </v-col>
-                <v-col :cols="12" :md="12">
-                    <v-card>
-                        <v-col class="d-flex flex-no-wrap justify-space-between">
-                            <v-card-title class="text-subtitle-1">{{ $t('settings.appearance.ui.color') }}</v-card-title>
-                            <v-btn :color="appearanceStore.ui.color" width="20vw" class="ma-2" flat>
-                                <v-menu activator="parent" :close-on-content-click="false">
-                                    <v-color-picker v-model="appearanceStore.ui.color" :modes="['hexa']" flat class="pa-2"></v-color-picker>
-                                </v-menu>
-                            </v-btn>
-                        </v-col>
-                    </v-card>
-                </v-col>
+                <v-divider></v-divider>
             </v-row>
         </v-card-text>
     </v-card>

@@ -61,12 +61,21 @@ export default {
                 color: 'ウインドウ色'
             }
         },
-        wordreplace: {
-            title: 'テキストを置き換える'
+        word_replace: {
+            title: 'テキストリプレース',
+            description: 'ここで置き換えるテキストを追加します',
+            enabled: 'テキストリプレース',
+            info: '新しい置き換えを追加する場合は「＋」バタンを使用してください',
+            replacing: 'リプレース',
+            replacement: 'リプレースメント'
         },
         osc: {
             general: {
-                title: '全般'
+                title: 'OSC設定',
+                unsupported: {
+                    text: 'OSCの設定は{0}で利用できます。(  ᐡᴗ  ̫ ᴗᐡ)',
+                    link: 'デスクトップアプリ版'
+                }
             },
             params: {
                 title: 'カスタムパラメータ'

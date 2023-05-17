@@ -14,8 +14,6 @@
         </v-card-text>
         <v-card-text v-else>
             <h2>
-                <!-- Speech-to-text is only available on the 
-                <a @click="openURL('https://captions.naeris.net/')" class="text-primary pointer">website version</a> (^・ω・^) -->
                 <i18n-t keypath="settings.speech.unsupported.text" tag="label" for="link">
                     <a @click="openURL('https://captions.naeris.net/')" class="text-primary pointer">{{ $t('settings.speech.unsupported.link')}}</a>
                 </i18n-t>
