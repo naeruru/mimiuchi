@@ -18,6 +18,7 @@ export default defineConfig(({ command }) => {
 
   return {
     define: {
+      __APP_NAME__: JSON.stringify('mimiuchi'),
       __APP_VERSION__: JSON.stringify(process.env.npm_package_version)
     },
     plugins: [

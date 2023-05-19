@@ -15,7 +15,13 @@ export default {
         }
     },
     general: {
-        type_message: 'メッセージを送信'
+        type_message: 'メッセージを送信',
+        beta: 'ベータ'
+    },
+    alerts: {
+        no_speech: 'このブラウザはWeb Speech APIをサポートしていません（Speech-to-text）',
+        mic_error: 'マイクのアクセスに失敗しました。許可する必要があります。',
+        broadcast_error: 'ブロードキャストに失敗しました. デスクトップアプリが起動していることを確認してください。'
     },
     settings: {
         title: 'ユーザー設定',
@@ -76,7 +82,7 @@ export default {
                 description: 'OSC接続の設定',
                 osc_ip: 'デフォルトのOSC IP',
                 osc_port: 'デフォルトのOSC Port',
-                enabled: 'OSCで全文送信（送信中）',
+                enabled: 'OSCで全文送信（ブロードキャスト中）',
                 typing_indicator: 'タイピング時にタイピングインジケーターを有効',
                 speech_indicator: 'Speech-to-text時のタイピングインジケーターを有効',
                 unsupported: {

@@ -15,7 +15,13 @@ export default {
         }
     },
     general: {
-        type_message: 'Type a message'
+        type_message: 'Type a message',
+        beta: 'BETA'
+    },
+    alerts: {
+        no_speech: 'Your browser does not support Web Speech API (Speech-to-text).',
+        mic_error: 'Error enabling microphone. You must give permission to use it.',
+        broadcast_error: 'Error enabling broadcast. Make sure the desktop app is running.'
     },
     settings: {
         title: 'Settings',

@@ -3,13 +3,12 @@
         v-model="snackbar"
         :color="snackbar_color"
         location="top"
-        max-height="60"
     >
         <v-row class="align-center justify-center">
-            <v-col :cols="2">
+            <v-col :cols="2" class="d-none d-md-flex">
                 <v-icon :cols="2">{{ snackbar_icon }}</v-icon>
             </v-col>
-            <v-col :cols="10">
+            <v-col :cols="12" :md="10">
                 <p v-html="snackbar_desc"></p>
             </v-col>
         </v-row>
@@ -152,7 +151,7 @@ export default {
                 if (!recognition) {
                     this.listening = false
                     this.listening_error = true
-                    this.snackbar_desc = 'Your browswer does not support Web Speech API.'
+                    this.snackbar_desc = this.$t('alerts.no_speech')
                     this.snackbar_icon = 'mdi-alert-circle-outline'
                     this.snackbar_color = 'error'
                     this.snackbar = true
@@ -204,7 +203,7 @@ export default {
                     if (event.error === 'no-speech') return
                     this.listening = false
                     this.listening_error = true
-                    this.snackbar_desc = "Error enabling microphone. You must give permission to use it."
+                    this.snackbar_desc = this.$t('alerts.mic_error')
                     this.snackbar_icon = "mdi-alert-circle-outline"
                     this.snackbar_color = "error"
                     this.snackbar = true
@@ -348,7 +347,7 @@ export default {
                     this.broadcasting = false
                     this.loadingWebsocket = false
                     this.ws = null
-                    this.snackbar_desc = `Error enabling broadcast. Make sure the desktop app is running.`
+                    this.snackbar_desc = this.$t('alerts.broadcast_error')
                     this.snackbar_color = "error"
                     this.snackbar_icon = "mdi-alert-circle-outline"
                     this.snackbar = true

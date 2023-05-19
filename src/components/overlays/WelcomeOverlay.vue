@@ -5,14 +5,14 @@
         :contained="overlay_page === 0 ? false : true"
         :class="overlay_page === 0 ? 'align-center justify-center' : 'align-end justify-end'"
     >
-        <v-card v-if="overlay_page == 0" :title="$t('welcome.intro.title', { name: app_name })" class="pa-2" max-width="500">
+        <v-card v-if="overlay_page == 0" :title="$t('welcome.intro.title', { name: APP_NAME })" class="pa-2" max-width="500">
             <template v-slot:prepend>
                 <v-avatar
                     color="transparent"
                 ><v-img :src="logo"></v-img></v-avatar>
             </template>
             <v-card-text class="text-subtitle-1 py-2">
-                {{  $t('welcome.intro.description', { name: app_name }) }}
+                {{  $t('welcome.intro.description', { name: APP_NAME }) }}
             </v-card-text>
             <v-card-actions>
                 <v-btn color="secondary" @click="overlay_state = false">
@@ -80,11 +80,11 @@ export default {
         }
     },
     setup() {
-        const app_name = inject('app_name')
+        const APP_NAME = __APP_NAME__
         const settingsStore = useSettingsStore()
 
         return {
-            app_name,
+            APP_NAME,
             settingsStore
         }
     }
