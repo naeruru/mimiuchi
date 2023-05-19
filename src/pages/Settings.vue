@@ -38,11 +38,15 @@
 
         </v-navigation-drawer>
 
-        <router-view name="panel" v-slot="{ Component }">
-            <transition name="slide-up">
-                <component :is="Component" />
-            </transition>
-        </router-view>
+        <div class="d-flex justify-center">
+            <v-col class="pa-0 pt-2" cols="12" lg="12" xl="8">
+                <router-view name="panel" v-slot="{ Component }">
+                    <transition name="slide-up">
+                        <component :is="Component" />
+                    </transition>
+                </router-view>
+            </v-col>
+        </div>
 </template>
 
 <script lang="ts">
@@ -53,8 +57,12 @@ export default {
     name: 'Settings',
     data() {
         return {
-            APP_VERSION: __APP_VERSION__,
-            settings_general: [
+            APP_VERSION: __APP_VERSION__
+        }
+    },
+    computed: {
+        settings_general() {
+            return [
                 {
                     title: this.$t('settings.general.title'),
                     value: "general",
@@ -75,9 +83,10 @@ export default {
                     value: "wordreplace",
                     icon: "mdi-swap-horizontal"
                 },
-            ],
-
-            settings_osc: [
+            ]
+        },
+        settings_osc() {
+            const settings_osc =  [
                 {
                     title: this.$t('settings.osc.general.title'),
                     value: "osc",
@@ -88,7 +97,9 @@ export default {
                     value: "oscparams",
                     icon: "mdi-format-list-bulleted-square"
                 }
-            ],
+            ]
+            if (this.isElectron()) return settings_osc
+            else return [settings_osc[0]]
         }
     },
     methods: {

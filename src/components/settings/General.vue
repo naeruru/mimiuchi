@@ -11,10 +11,24 @@
         <v-divider></v-divider>
         <v-card-text>
             <v-row>
+                <v-col :cols="12">
+                    <v-radio-group v-model="settingsStore.language" :label="$t('settings.general.language')">
+                        <v-card v-for="(language, i) in languages" class="pa-2 mb-2" :color="language.value === settingsStore.language ? 'primary' : 'default'" @click="settingsStore.language = language.value">
+                            <v-radio :label="language.title" :value="language.value">
+                                <template v-slot:label>
+                                    <div>{{ language.title }}</div>
+                                </template>
+                            </v-radio>
+                        </v-card>
+                    </v-radio-group>
+                </v-col>
+                <v-divider></v-divider>
+            </v-row>
+            <v-row>
                 <v-col :cols="12" :md="12" class="d-flex flex-no-wrap justify-space-between">
                     <v-card-title class="text-subtitle-1">{{ $t('settings.general.reset.button') }}</v-card-title>
                     <v-btn color="error" class="mt-1">
-                        <v-icon>mdi-trash-can</v-icon>
+                        <v-icon>mdi-restore</v-icon>
                         <v-dialog
                                 v-model="reset_dialog"
                                 activator="parent"
@@ -55,6 +69,17 @@ import { useSettingsStore } from  '../../stores/settings'
 export default {
     name: 'SettingsGeneral',
     data: () => ({
+        languages: [
+            {
+                title: "English (United States)",
+                value: "en"
+            },
+            {
+                title: "日本語（日本）",
+                value: "ja"
+            }
+        ],
+
         snackbar: false,
         snackbar_text: '',
 
@@ -74,6 +99,7 @@ export default {
             this.reset_dialog = false
             this.snackbar_text = this.$t('settings.general.reset.snackbar.title')
             this.snackbar = true
+            // this.$i18n.locale = this.settingsStore.language
         }
     },
     setup() {

@@ -3,21 +3,28 @@
         <v-divider></v-divider>
         <v-card-text v-if="!isElectron()">
             <v-row>
-                <v-col :cols="12" :md="6">
-                    <v-combobox
-                        v-model="language_choice"
-                        :items="languages"
-                        :label="$t('settings.speech.language')"
-                    ></v-combobox>
+                <v-col :cols="12">
+                    <v-radio-group v-model="settingsStore.stt_Settings.language" :label="$t('settings.speech.language')">
+                        <v-card v-for="(language, i) in languages" class="pa-2 mb-2" :color="language.value === settingsStore.stt_Settings.language ? 'primary' : 'default'" @click="settingsStore.stt_Settings.language = language.value">
+                            <v-radio :label="language.title" :value="language.value">
+                                <template v-slot:label>
+                                    <div>{{ language.title }}</div>
+                                </template>
+                            </v-radio>
+                        </v-card>
+                    </v-radio-group>
                 </v-col>
+                <v-divider></v-divider>
             </v-row>
         </v-card-text>
         <v-card-text v-else>
-            <h2>
-                <i18n-t keypath="settings.speech.unsupported.text" tag="label" for="link">
-                    <a @click="openURL('https://captions.naeris.net/')" class="text-primary pointer">{{ $t('settings.speech.unsupported.link')}}</a>
-                </i18n-t>
-            </h2>
+            <v-alert variant="outlined" type="warning" prominent>
+                    <v-alert-title>
+                        <i18n-t keypath="settings.speech.unsupported.text" tag="label" for="link">
+                            <a @click="openURL('https://captions.naeris.net/')" class="text-primary pointer">{{ $t('settings.speech.unsupported.link')}}</a>
+                        </i18n-t>
+                    </v-alert-title>
+                </v-alert>
         </v-card-text>
     </v-card>
 </template>
@@ -73,7 +80,7 @@ export default {
     mounted() {
         this.languages.map(language => {
             if (language.value === this.settingsStore.stt_Settings.language)
-                this.language_choice = language.title
+                this.language_choice = language.value
         })
     },
     setup() {

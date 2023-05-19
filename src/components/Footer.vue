@@ -70,6 +70,7 @@ import { useWordReplaceStore } from  '../stores/word_replace'
 import { useSettingsStore } from  '../stores/settings'
 import { useAppearanceStore } from '../stores/appearance'
 import { useLogStore } from '../stores/logs'
+import { useOSCStore } from '../stores/osc'
 
 declare const window: any
 
@@ -229,8 +230,8 @@ export default {
                 // to see which assign is the closest to the keyword found
                 // unless switch to nlp first.....
                 if (this.isElectron()) {
-                    if (this.settingsStore.osc_params.length) {
-                        this.settingsStore.osc_params.forEach(custom_param => {
+                    if (this.oscStore.osc_params.length) {
+                        this.oscStore.osc_params.forEach(custom_param => {
                             let matchesKey = null
 
                             custom_param.keywords.forEach(keyword => {
@@ -294,7 +295,7 @@ export default {
             } else {
                 this.logs.push(toSend)
                 i++;
-                if (this.isElectron() && this.settingsStore.osc_settings.stt_typing) {
+                if (this.isElectron() && this.oscStore.stt_typing) {
                     window.ipcRenderer.send("typing-text-event", true)
                 }
             }
@@ -307,7 +308,7 @@ export default {
                 }, this.appearanceStore.text.hide_after * 1000)
 
             // send text via osc
-            if (this.isElectron() && isFinal && this.settingsStore.osc_settings.osc_text) {
+            if (this.isElectron() && isFinal && this.oscStore.osc_text) {
                 window.ipcRenderer.send("send-text-event", input)
                 // window.ipcRenderer.send("typing-text-event", false)
             } else if (this.ws) {
@@ -419,6 +420,7 @@ export default {
         const settingsStore = useSettingsStore()
         const appearanceStore = useAppearanceStore()
         const logStore = useLogStore()
+        const oscStore = useOSCStore()
 
         if (recognition)
             recognition.lang = settingsStore.stt_Settings.language
@@ -434,6 +436,7 @@ export default {
             settingsStore,
             appearanceStore,
             logs: logStore.logs,
+            oscStore,
             font_size,
             fade_time,
             text_color,

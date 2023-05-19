@@ -21,7 +21,8 @@ export default {
         title: 'ユーザー設定',
         general: {
             title: '全般設定',
-            description: 'アプリ全般の設定です',
+            description: 'アプリ全般の設定',
+            language: '言語を選択',
             reset: {
                 button: 'すべての設定をリセットする',
                 dialog: {
@@ -37,8 +38,8 @@ export default {
         },
         speech: {
             title: 'スピーチ',
-            description: 'スピーチの設定です',
-            language: '言語',
+            description: 'スピーチの設定',
+            language: 'Speech-to-textの言語を選択',
             unsupported: {
                 text: 'Speech-to-Textは{0}で利用できます。(^・ω・^)',
                 link: 'ウェブサイト版'
@@ -72,6 +73,12 @@ export default {
         osc: {
             general: {
                 title: 'OSC設定',
+                description: 'OSC接続の設定',
+                osc_ip: 'デフォルトのOSC IP',
+                osc_port: 'デフォルトのOSC Port',
+                enabled: 'OSCで全文送信（送信中）',
+                typing_indicator: 'タイピング時にタイピングインジケーターを有効',
+                speech_indicator: 'Speech-to-text時のタイピングインジケーターを有効',
                 unsupported: {
                     text: 'OSCの設定は{0}で利用できます。(  ᐡᴗ  ̫ ᴗᐡ)',
                     link: 'デスクトップアプリ版'

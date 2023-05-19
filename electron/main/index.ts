@@ -165,6 +165,6 @@ wss.on('connection', ws => {
       win.webContents.send('receive-text-event', JSON.stringify(message.data))
     }
   })
-  ws.send('connected to websocket (^・ω・^)')
+  ws.send('connected to websocket ( •̀ ω •́ )')
   win.webContents.send('websocket-connect', true)
 })

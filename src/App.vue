@@ -16,8 +16,10 @@ import { useSettingsStore } from  './stores/settings'
 export default {
   name: 'App',
   mounted () {
-    // this.$i18n.locale = 'en'
-    // console.log(this.$i18n.locale)
+    this.$i18n.locale = this.settingsStore.language
+    this.settingsStore.$subscribe((language, state) => {
+        this.$i18n.locale = this.settingsStore.language
+    })
   },
   setup() {
     const appearanceStore = useAppearanceStore()

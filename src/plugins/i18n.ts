@@ -9,7 +9,6 @@ const messages = {
 }
 
 export default createI18n({
-    locale: navigator.language,
     fallbackLocale: 'en',
     messages
 })

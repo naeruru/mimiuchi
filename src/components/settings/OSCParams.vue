@@ -1,11 +1,16 @@
 <template>
 
     <v-card color="transparent" flat>
-        <v-card-title>Custom Params</v-card-title>
+        <v-card-title>
+            Custom Params
+            <v-chip prepend-icon="mdi-alert-circle-outline" color="warning" class="ml-2" variant="elevated">
+                Subject to change
+            </v-chip>
+        </v-card-title>
         <v-card-subtitle class="overflow-hidden">Add custom param triggers here.</v-card-subtitle>
         <v-divider></v-divider>
         <v-card-text>
-            <v-card v-if="osc_params.length" v-for="(param, i) in osc_params" class="mb-4">
+            <v-card v-if="oscStore.osc_params.length" v-for="(param, i) in oscStore.osc_params" class="mb-4">
                 <v-card color="rgba(0, 0, 0, 0)">
                     <v-card-title class="d-flex align-center">
                         {{ param.route }}
@@ -162,7 +167,7 @@
 
 <script lang="ts">
 
-import { useSettingsStore } from  '../../stores/settings'
+import { useOSCStore } from  '../../stores/osc'
 
 
 interface Param {
@@ -203,8 +208,8 @@ export default {
     }),
     methods: {
         openAddDialog() {
-            this.new_param.ip = this.osc_settings.ip
-            this.new_param.port = this.osc_settings.port
+            this.new_param.ip = this.oscStore.ip
+            this.new_param.port = this.oscStore.port
             this.add_dialog = true
         },
         add_trigger() {
@@ -225,7 +230,7 @@ export default {
             }
         },
         add_param() {
-            this.osc_params.push(this.new_param)
+            this.oscStore.osc_params.push(this.new_param)
             this.add_dialog = false
             this.new_param = {
                 ip: '',
@@ -236,21 +241,20 @@ export default {
             }
         },
         delete_param(i: number) {
-            this.osc_params.splice(i, 1)
+            this.oscStore.osc_params.splice(i, 1)
         }
     },
     setup() {
-        const settingsStore = useSettingsStore()
+        const oscStore = useOSCStore()
 
-        const { osc_settings, osc_params } = settingsStore
+        // const { osc_settings, osc_params } = oscStore
 
         // Object.keys(osc_settings).forEach((setting, i) => this.settings.push({ [setting]: osc_settings[setting]}))
 
         // console.log(this.settings)
 
         return {
-            osc_settings,
-            osc_params
+            oscStore
         }
     }
 }

@@ -22,6 +22,7 @@ export default {
         general: {
             title: 'General Settings',
             description: 'General application settings',
+            language: 'Select a language',
             reset: {
                 button: 'Reset all settings',
                 dialog: {
@@ -38,7 +39,7 @@ export default {
         speech: {
             title: 'Speech',
             description: 'Speech settings',
-            language: 'Language',
+            language: 'Select a speech detection language',
             unsupported: {
                 text: 'Speech-to-Text is only available on the {0}. (^・ω・^)',
                 link: 'website version'
@@ -79,8 +80,8 @@ export default {
                 typing_indicator: 'Enable typing indicator when typing',
                 speech_indicator: 'Enable typing indicator for speech-to-text',
                 unsupported: {
-                    text: 'OSC settings are available on the {0}. (  ᐡᴗ  ̫ ᴗᐡ)',
-                    link: 'desktop app version'
+                    text: 'To use OSC, you must use the {0}. You can access additional settings there. (  ᐡᴗ  ̫ ᴗᐡ)',
+                    link: 'desktop app'
                 }
             },
             params: {

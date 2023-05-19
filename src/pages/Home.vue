@@ -2,11 +2,10 @@
 <template>
     <v-card
         id="loglist"
-        v-resize="onResize"
-        class="d-flex pa-4 overflow-auto log-list"
+        class="pa-4 overflow-auto log-list"
         :color="appearanceStore.ui.color"
         flat
-        :height="windowSize.y - 55"
+        :height="height - 55"
         tile
     >
 
@@ -27,6 +26,8 @@
 
 <script lang="ts">
 // import {ipcRenderer} from "electron"
+import { useDisplay } from 'vuetify'
+
 import WelcomeOverlay from "../components/overlays/WelcomeOverlay.vue"
 
 import { useSettingsStore } from  '../stores/settings'
@@ -74,9 +75,6 @@ export default {
         }
     },
     methods: {
-        onResize () {
-            this.windowSize = { x: window.innerWidth, y: window.innerHeight }
-        },
         isElectron() {
             // Renderer process
             if (typeof window !== 'undefined' && typeof window.process === 'object' && window.process.type === 'renderer') {
@@ -94,11 +92,11 @@ export default {
         }
     },
     mounted () {
-        this.onResize()
-
         this.overlay_main = this.settingsStore.welcome
     },
     setup() {
+        const { height } = useDisplay()
+
         const settingsStore = useSettingsStore()
         const appearanceStore = useAppearanceStore()
         const logStore = useLogStore()
@@ -116,7 +114,8 @@ export default {
             font_size,
             fade_time,
             text_color,
-            interim_color
+            interim_color,
+            height
         }
     }
 }

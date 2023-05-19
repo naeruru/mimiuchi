@@ -5,7 +5,7 @@
   "description": "customizable, osc enabled text interface for relaying text to different types of applications",
   "author": "naeris <support@risu.dev>",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --host",
     "build": "vue-tsc --noEmit && vite build && electron-builder",
     "preview": "vite preview"
   },
