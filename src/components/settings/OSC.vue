@@ -51,8 +51,14 @@
                 <v-col :cols="12">
                     <v-alert variant="outlined" type="warning" prominent>
                         <v-alert-title>
-                            <i18n-t keypath="settings.osc.general.unsupported.text" tag="label" for="link">
-                                <a @click="openURL('https://github.com/naexris/chatbox-tools/releases')" class="text-primary pointer">{{ $t('settings.osc.general.unsupported.link')}}</a>
+                            <i18n-t keypath="settings.osc.general.unsupported.text" tag="label">
+                                
+                                <template v-slot:link>
+                                    <a @click="openURL('https://github.com/naexris/chatbox-tools/releases')" class="text-primary pointer">{{ $t('settings.osc.general.unsupported.link')}}</a>
+                                </template>
+                                <template v-slot:icon>
+                                    <v-icon color="success" size="small">{{ $t('settings.osc.general.unsupported.icon')}}</v-icon>
+                                </template>
                             </i18n-t>
                         </v-alert-title>
                     </v-alert>

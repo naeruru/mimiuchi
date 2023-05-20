@@ -3,6 +3,7 @@
         v-model="snackbar"
         :color="snackbar_color"
         location="top"
+        :timeout="8000"
     >
         <v-row class="align-center justify-center">
             <v-col :cols="2" class="d-none d-md-flex">
@@ -116,8 +117,6 @@ export default {
             loadingWebsocket: false,
             broadcasting: false,
 
-            // logs: [] as Log[], // { text: '' }
-
             input_text: '',
 
             snackbar: false,
@@ -148,6 +147,7 @@ export default {
         toggleListen () {
             this.listening = !this.listening
             if (this.listening) {
+                // recognition not supported
                 if (!recognition) {
                     this.listening = false
                     this.listening_error = true
@@ -157,40 +157,33 @@ export default {
                     this.snackbar = true
                     return
                 }
+
+                // start recognition
                 recognition.start()
 
-                // recognition.onspeechstart = () => {
-                //     console.log('Speech has been detected')
-                //     this.ws.send(`{"type": "command", "data": "speechstart"}`)
-                // }
-                // recognition.onspeechend = () => {
-                //     console.log('Speech has ended')
-                //     this.ws.send(`{"type": "command", "data": "speechend"}`)
-                // }
+                // on result
                 recognition.onresult = (event: any) => {
                     const results = event.results[event.results.length - 1]
-                    // if (event.results[event.results.length - 1][0].confidence >= 0.0)
+
                     // result is final
                     if (results.isFinal) {
-                        console.log(results)
                         this.onSubmit(results[0].transcript, results.isFinal)
                         this.talking = false
-                        // if (this.ws && this.settingsStore.osc_settings.stt_typing)
-                        //     this.ws.send(`{"type": "command", "data": "speechend"}`)
+                        recognition.stop()
                     // user started talking
                     } else if (!results.isFinal && !this.talking) {
                         console.log('Speech has been detected')
                         this.talking = true
-                        // if (this.ws && this.settingsStore.osc_settings.stt_typing)
-                        //     this.ws.send(`{"type": "command", "data": "speechstart"}`)
                     }
 
                     // continually track changes
                     if (!results.isFinal && this.talking) {
-                        this.onSubmit(results[0].transcript, results.isFinal)
+                        let transcript = ''
+                        Object.keys(event.results).forEach((key: string) => {
+                            transcript += event.results[key][0].transcript
+                        })
+                        this.onSubmit(transcript, results.isFinal)
                     }
-                        // this.ws.send(`{"type": "command", "data": "speechend"}`)
-                        // recognition.stop()
                 }
                 recognition.onend = () => {
                     console.log('speech recognition stopped')
@@ -287,9 +280,7 @@ export default {
             // overwrite last log
             let i = this.logs.length - 1 // track current index
             if (i >= 0 && !this.logs[i].isFinal) {
-                if (input.startsWith(this.logs[i].text.slice(0, 5)) || isFinal) {
-                    this.logs[i] = toSend
-                }
+                this.logs[i] = toSend
             // push to log
             } else {
                 this.logs.push(toSend)
@@ -336,6 +327,15 @@ export default {
                     this.broadcasting = true
                     this.loadingWebsocket = false
                 }
+                this.ws.onmessage = (event: any) => {
+                    const msg = JSON.parse(event.data)
+                    if (msg.event === 'connect' && msg.version !== __APP_VERSION__) {
+                        this.snackbar_desc = this.$t('alerts.version_mismatch')
+                        this.snackbar_icon = "mdi-alert-circle-outline"
+                        this.snackbar_color = "warning"
+                        this.snackbar = true
+                    }
+                }
                 this.ws.onclose = () => {
                     console.log('websocket closed')
                     this.broadcasting = false
@@ -380,7 +380,6 @@ export default {
                 window.ipcRenderer.removeListener('websocket-connect')
                 window.ipcRenderer.removeListener('receive-text-event')
                 window.ipcRenderer.receive('websocket-connect', (event: any, data: any) => {
-                    console.log('meow')
                     this.broadcasting = event
                 })
                 window.ipcRenderer.receive('receive-text-event', (event: any, data: any) => {

@@ -2,6 +2,7 @@ import { app, BrowserWindow, shell, ipcMain } from 'electron'
 import { release } from 'node:os'
 import { join } from 'node:path'
 
+import pkg from '../../package.json'
 import { emit_osc } from './modules/osc'
 
 // The built directory structure	
@@ -165,6 +166,6 @@ wss.on('connection', ws => {
       win.webContents.send('receive-text-event', JSON.stringify(message.data))
     }
   })
-  ws.send('connected to websocket ( •̀ ω •́ )')
+  ws.send(`{"event": "connect", "msg":"connected to websocket ( •̀ ω •́ )", "version":"${pkg.version}"}`)
   win.webContents.send('websocket-connect', true)
 })

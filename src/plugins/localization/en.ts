@@ -21,7 +21,8 @@ export default {
     alerts: {
         no_speech: 'Your browser does not support Web Speech API (Speech-to-text).',
         mic_error: 'Error enabling microphone. You must give permission to use it.',
-        broadcast_error: 'Error enabling broadcast. Make sure the desktop app is running.'
+        broadcast_error: 'Error enabling broadcast. Make sure the desktop app is running.',
+        version_mismatch: 'The desktop app has a different version than the web version. Consider updating, as things might break.'
     },
     settings: {
         title: 'Settings',
@@ -86,8 +87,9 @@ export default {
                 typing_indicator: 'Enable typing indicator when typing',
                 speech_indicator: 'Enable typing indicator for speech-to-text',
                 unsupported: {
-                    text: 'To use OSC, you must use the {0}. You can access additional settings there. (  ᐡᴗ  ̫ ᴗᐡ)',
-                    link: 'desktop app'
+                    text: 'To use OSC, you must use the {link}. Once installed, the website and desktop versions can be used together with the {icon} button. (  ᐡᴗ  ̫ ᴗᐡ)',
+                    link: 'desktop app',
+                    icon: 'mdi-broadcast'
                 }
             },
             params: {

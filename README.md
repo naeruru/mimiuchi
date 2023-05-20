@@ -38,7 +38,7 @@ In the future, I would like to support a standalone desktop experience, but this
 ## Todo
 in no particular order...
 - more customization for text window
-- better intermediate text results
+- ~~better intermediate text results~~ ✅
 - support more languages
 - text-to-speech (voice suggestions? let me know!)
 - VRChat text shader support (sending character data to float params)
@@ -51,7 +51,7 @@ in no particular order...
 - DeepL translation support
 
 ## Download
-I have yet to have release a build of the desktop app, but you are free to build it with the steps below!
+See the [release page](https://github.com/naexris/mimiuchi/releases) to install the latest version of the desktop app. The desktop version lets you use additional features like OSC.
 
 ## Building it yourself
 ### Requirements

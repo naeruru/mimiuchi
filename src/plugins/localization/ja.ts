@@ -21,7 +21,8 @@ export default {
     alerts: {
         no_speech: 'このブラウザはWeb Speech APIをサポートしていません（Speech-to-text）',
         mic_error: 'マイクのアクセスに失敗しました。許可する必要があります。',
-        broadcast_error: 'ブロードキャストに失敗しました. デスクトップアプリが起動していることを確認してください。'
+        broadcast_error: 'ブロードキャストに失敗しました. デスクトップアプリが起動していることを確認してください。',
+        version_mismatch: 'デスクトップ版とウェブアプリ版は別物です。壊れるかもしれないので、アップデートを検討してください。'
     },
     settings: {
         title: 'ユーザー設定',
@@ -30,10 +31,10 @@ export default {
             description: 'アプリ全般の設定',
             language: '言語を選択',
             reset: {
-                button: 'すべての設定をリセットする',
+                button: 'アプリの設定をリセットする',
                 dialog: {
                     title: '設定をリセットする',
-                    description: 'すべてのアプリの設定をリセットするところです。',
+                    description: 'アプリの設定がリセットされます。本当にリセットしてもいいですか。',
                     button: 'リセット'
                 },
                 snackbar: {
@@ -53,7 +54,7 @@ export default {
         },
         appearance: {
             title: 'テーマ',
-            description: 'アプリのテーマを変更する',
+            description: 'アプリのテーマを変更',
             text: {
                 title: '文字設定',
                 font_size: '文字の大きさ',
@@ -86,8 +87,9 @@ export default {
                 typing_indicator: 'タイピング時にタイピングインジケーターを有効',
                 speech_indicator: 'Speech-to-text時のタイピングインジケーターを有効',
                 unsupported: {
-                    text: 'OSCの設定は{0}で利用できます。(  ᐡᴗ  ̫ ᴗᐡ)',
-                    link: 'デスクトップアプリ版'
+                    text: 'OSCの設定は{link}で利用できます。インストールすれば、{icon}ボタンでウェブサイト版とデスクトップ版を一緒に使うことができます（Speech-to-text▶︎OSC）(  ᐡᴗ  ̫ ᴗᐡ)',
+                    link: 'デスクトップアプリ版',
+                    icon: 'mdi-broadcast'
                 }
             },
             params: {

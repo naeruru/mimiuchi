@@ -5,7 +5,10 @@
             <v-row>
                 <v-col :cols="12">
                     <v-radio-group v-model="settingsStore.stt_Settings.language" :label="$t('settings.speech.language')">
-                        <v-card v-for="(language, i) in languages" class="pa-2 mb-2" :color="language.value === settingsStore.stt_Settings.language ? 'primary' : 'default'" @click="settingsStore.stt_Settings.language = language.value">
+                        <v-col>
+                            <v-text-field v-model="search_lang" label="Search" variant="outlined" single-line hide-details></v-text-field>
+                        </v-col>
+                        <v-card v-for="(language, i) in filtered_lang" class="pa-2 mb-2" :color="language.value === settingsStore.stt_Settings.language ? 'primary' : 'default'" @click="settingsStore.stt_Settings.language = language.value">
                             <v-radio :label="language.title" :value="language.value">
                                 <template v-slot:label>
                                     <div>{{ language.title }}</div>
@@ -37,7 +40,20 @@ export default {
     name: 'STT',
     data: () => ({
         language_choice: "",
+        search_lang: '',
         languages: [
+            {
+                title: "English (Australia)",
+                value: "en-AU"
+            },
+            {
+                title: "English (Ireland)",
+                value: "en-IE"
+            },
+            {
+                title: "English (United Kingdom)",
+                value: "en-GB"
+            },
             {
                 title: "English (United States)",
                 value: "en-US"
@@ -45,9 +61,18 @@ export default {
             {
                 title: "日本語（日本）",
                 value: "ja-JP"
-            }
+            },
+            {
+                title: "한국어",
+                value: "ko-KR"
+            },
         ]
     }),
+    computed: {
+        filtered_lang() {
+            return this.languages.filter(lang => `${lang.title} ${lang.value}`.toLocaleLowerCase().includes(this.search_lang.toLocaleLowerCase()))
+        }
+    },
     watch: {
         language_choice(new_val) {
             if (new_val.value)
@@ -73,9 +98,6 @@ export default {
             }
             return false
         }
-    },
-    computed: {
-
     },
     mounted() {
         this.languages.map(language => {
