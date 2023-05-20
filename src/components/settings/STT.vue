@@ -24,7 +24,7 @@
             <v-alert variant="outlined" type="warning" prominent>
                     <v-alert-title>
                         <i18n-t keypath="settings.speech.unsupported.text" tag="label" for="link">
-                            <a @click="openURL('https://captions.naeris.net/')" class="text-primary pointer">{{ $t('settings.speech.unsupported.link')}}</a>
+                            <a @click="openURL('https://mimiuchi.naeris.net/')" class="text-primary pointer">{{ $t('settings.speech.unsupported.link')}}</a>
                         </i18n-t>
                     </v-alert-title>
                 </v-alert>

@@ -50,7 +50,7 @@
 
 <script lang="ts">
 import { inject } from 'vue'
-import logo from "../../assets/naelogo2.png"
+import logo from "../../assets/logo-256x256.png"
 import { useSettingsStore } from  '../../stores/settings'
 
 export default {

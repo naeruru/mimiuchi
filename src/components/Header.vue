@@ -2,11 +2,7 @@
     <v-app-bar color="primary" app flat height="50">
       <v-app-bar-nav-icon variant="text" @click.stop="settingsStore.drawer = !settingsStore.drawer"></v-app-bar-nav-icon>
       <v-container class="mb-7 fill-height d-flex align-center">
-        <v-avatar
-            class="me-10 ms-4 d-none d-sm-flex"
-            color="white"
-            size="32"
-        ><v-img :src="logo"></v-img></v-avatar>
+        <v-icon class="me-6 ms-4 d-none d-sm-flex" icon="mdi-weather-night"></v-icon>
 
         <v-app-bar-title class="font-weight-medium">
           {{ APP_NAME }}
@@ -38,7 +34,7 @@
   
 <script lang='ts'>
 import { useSettingsStore } from  '../stores/settings'
-import logo from "../assets/naelogo2.png"
+import logo from "../assets/logo-256x256.png"
 
 export default {
     name: 'Header',
