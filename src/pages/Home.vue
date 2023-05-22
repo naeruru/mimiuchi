@@ -1,10 +1,11 @@
 
 <template>
     <v-card
-        id="loglist"
-        class="pa-4 overflow-auto log-list"
+        id="log-list"
+        style="overflow-y: auto; max-height: calc(100vh - 55px);"
+        class="fill-height pa-4 overflow-auto log-list"
+        v-resize="onResize"
         :color="appearanceStore.ui.color"
-        flat
         :height="height - 55"
         tile
     >
@@ -74,7 +75,24 @@ export default {
             }
         }
     },
+    watch: {
+      logs: {
+        handler() {
+          this.scrollToBottom()
+        },
+        deep: true
+      }
+    },
     methods: {
+        scrollToBottom() {
+          this.$nextTick(() => {
+            const objDiv = document.getElementById("log-list");
+            window.scrollTo(this.windowSize.y, objDiv?.scrollHeight)
+          })
+        },
+        onResize() {
+          this.windowSize = { x: window.innerWidth, y: window.innerHeight }
+        },
         isElectron() {
             // Renderer process
             if (typeof window !== 'undefined' && typeof window.process === 'object' && window.process.type === 'renderer') {
@@ -93,6 +111,8 @@ export default {
     },
     mounted () {
         this.overlay_main = this.settingsStore.welcome
+        this.onResize()
+        this.scrollToBottom()
     },
     setup() {
         const { height } = useDisplay()
@@ -123,7 +143,7 @@ export default {
 
 <style>
 html {
-    overflow-y: auto;
+    overflow-y: hidden;
 }
 .log-list {
     display: flex;

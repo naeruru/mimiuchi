@@ -19,7 +19,7 @@
             </v-btn>
         </template>
     </v-snackbar>
-    <v-footer app class="d-flex flex-column" height="55" permanent>
+    <v-footer app class="d-flex flex-column" height="55" permanent fixed>
         <div class="d-flex w-100 align-center">
             
             <v-form
@@ -135,7 +135,7 @@ export default {
     },
     watch: {
         input_text(new_val) {
-            if (this.isElectron() && new_val.length === 1)
+            if (this.isElectron() && new_val.length === 1 && this.oscStore.text_typing && this.broadcasting)
                 window.ipcRenderer.send("typing-text-event", !!new_val)
         },
         'settingsStore.stt_Settings.language'(new_val) {
@@ -285,7 +285,7 @@ export default {
             } else {
                 this.logs.push(toSend)
                 i++;
-                if (this.isElectron() && this.oscStore.stt_typing) {
+                if (this.isElectron() && this.oscStore.stt_typing && this.broadcasting) {
                     window.ipcRenderer.send("typing-text-event", true)
                 }
             }
@@ -298,7 +298,7 @@ export default {
                 }, this.appearanceStore.text.hide_after * 1000)
 
             // send text via osc
-            if (this.isElectron() && isFinal && this.oscStore.osc_text) {
+            if (this.isElectron() && isFinal && this.oscStore.osc_text && this.broadcasting) {
                 window.ipcRenderer.send("send-text-event", input)
                 // window.ipcRenderer.send("typing-text-event", false)
             } else if (this.ws) {

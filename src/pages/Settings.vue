@@ -9,7 +9,7 @@
                     :title="setting.title"
                     :value="setting.value"
                     :active="(setting.value === $route.name)"
-                    active-color="primary"
+                    color="primary"
                 ></v-list-item>
                 <v-divider></v-divider>
                 <v-list-subheader>OSC</v-list-subheader>
@@ -21,7 +21,7 @@
                     :title="setting.title"
                     :value="setting.value"
                     :active="(setting.value === $route.name)"
-                    active-color="primary"
+                    color="primary"
                 ></v-list-item>
                 <p v-else class="text-caption">OSC settings are available on the desktop app</p>
             </v-list>
@@ -42,7 +42,7 @@
             <v-col class="pa-0 pt-2" cols="12" lg="12" xl="8">
                 <router-view name="panel" v-slot="{ Component }">
                     <transition name="slide-up">
-                        <component :is="Component" />
+                        <component style="overflow-y: overlay; max-height: calc(100vh - 117px);" :is="Component" />
                     </transition>
                 </router-view>
             </v-col>
@@ -57,7 +57,8 @@ export default {
     name: 'Settings',
     data() {
         return {
-            APP_VERSION: __APP_VERSION__
+            APP_VERSION: __APP_VERSION__,
+            scrollbar: false,
         }
     },
     computed: {
@@ -123,6 +124,7 @@ export default {
         }
     },
     mounted() {
+        setTimeout(() => this.scrollbar = true, 1000)
         if (!this.isElectron())
             this.settings_osc = [this.settings_osc[0]]
     },
