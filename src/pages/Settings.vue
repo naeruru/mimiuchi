@@ -39,10 +39,10 @@
         </v-navigation-drawer>
 
         <div class="d-flex justify-center">
-            <v-col class="pa-0 pt-2" cols="12" lg="12" xl="8">
+            <v-col class="pa-0" cols="12" lg="12" xl="8">
                 <router-view name="panel" v-slot="{ Component }">
                     <transition name="slide-up">
-                        <component style="overflow-y: overlay; max-height: calc(100vh - 117px);" :is="Component" />
+                        <component :is="Component" />
                     </transition>
                 </router-view>
             </v-col>
@@ -57,8 +57,7 @@ export default {
     name: 'Settings',
     data() {
         return {
-            APP_VERSION: __APP_VERSION__,
-            scrollbar: false,
+            APP_VERSION: __APP_VERSION__
         }
     },
     computed: {
@@ -124,13 +123,12 @@ export default {
         }
     },
     mounted() {
-        setTimeout(() => this.scrollbar = true, 1000)
         if (!this.isElectron())
             this.settings_osc = [this.settings_osc[0]]
     },
     setup() {
         const settingsStore = useSettingsStore()
-        const { smAndDown } = useDisplay()
+        const { smAndDown, mobile } = useDisplay()
 
         settingsStore.drawer = !smAndDown.value
 

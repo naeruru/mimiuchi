@@ -75,21 +75,7 @@ export default {
             }
         }
     },
-    watch: {
-      logs: {
-        handler() {
-          this.scrollToBottom()
-        },
-        deep: true
-      }
-    },
     methods: {
-        scrollToBottom() {
-          this.$nextTick(() => {
-            const objDiv = document.getElementById("log-list");
-            window.scrollTo(this.windowSize.y, objDiv?.scrollHeight)
-          })
-        },
         onResize() {
           this.windowSize = { x: window.innerWidth, y: window.innerHeight }
         },
@@ -112,7 +98,6 @@ export default {
     mounted () {
         this.overlay_main = this.settingsStore.welcome
         this.onResize()
-        this.scrollToBottom()
     },
     setup() {
         const { height } = useDisplay()
@@ -143,8 +128,9 @@ export default {
 
 <style>
 html {
-    overflow-y: hidden;
+    overflow-y: overlay;
 }
+
 .log-list {
     display: flex;
     flex-direction: column-reverse;

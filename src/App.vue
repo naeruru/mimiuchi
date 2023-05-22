@@ -54,12 +54,13 @@ export default {
 .pointer {
   cursor: pointer;
 }
+
 ::-webkit-scrollbar {
-  width: 10px; 
+  width: 8px;
 }
 
 ::-webkit-scrollbar-track {
-    background-color: rgb(var(--v-theme-background)); /* rgb(var(--v-theme-primary)); */
+    background-color: transparent; /* rgb(var(--v-theme-primary)); */
 }
 
 ::-webkit-scrollbar-thumb {
