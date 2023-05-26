@@ -6,7 +6,7 @@ I support the idea of people having many ways to communicate and do things. It i
 
 ### Features
 - Speech-to-text
-- Text-to-text
+- Text-to-speech
 - OSC broadcasting (for apps like VRChat)
 - Custom OSC param execution via language triggers ("turn my marker on" -> `/avatar/parameter/Marker True`) (WIP)
 - ...and many settings to customize the experience!
@@ -37,7 +37,8 @@ In the future, I would like to support a standalone desktop experience, but this
 in no particular order...
 - more customization for text window
 - ~~better intermediate text results~~ ✅
-- text-to-speech
+- ~~text-to-speech~~ ✅
+- more TTS/STT options (for standalone desktop experience)
 - VRChat text shader support (sending character data to float params)
 - add ability to export settings/transcripts
 - ~~better webkit/safari support~~✅
@@ -47,7 +48,6 @@ in no particular order...
 - better generic osc support
 - DeepL translation support
 - webhook/websocket customization to connect to other apps that aren't related to me
-- more TTS/STT options (for standalone desktop experience)
 - documentation 
 
 ## Download
