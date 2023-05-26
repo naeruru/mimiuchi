@@ -29,7 +29,7 @@ export default {
         general: {
             title: 'General Settings',
             description: 'General application settings',
-            language: 'Select a language',
+            language: 'Select a UI language',
             reset: {
                 button: 'Reset all settings',
                 dialog: {
@@ -43,10 +43,23 @@ export default {
                 }
             }
         },
-        speech: {
-            title: 'Speech',
-            description: 'Speech settings',
+        stt: {
+            title: 'Speech-to-Text',
+            description: 'Speech-to-text settings',
+            type: 'Select a STT service',
             language: 'Select a speech detection language',
+            unsupported: {
+                text: 'Web Speech API Speech-to-Text is only available on the {0}. (^・ω・^)',
+                link: 'website version'
+            }
+        },
+        tts: {
+            title: 'Text-to-Speech',
+            description: 'Text-to-speech settings',
+            enabled: 'Enable text-to-speech voice playback',
+            rate: 'Rate',
+            pitch: 'Pitch',
+            language: 'Select a text-to-speech voice',
             unsupported: {
                 text: 'Speech-to-Text is only available on the {0}. (^・ω・^)',
                 link: 'website version'

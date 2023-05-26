@@ -42,7 +42,7 @@
             <v-col class="pa-0" cols="12" lg="12" xl="8">
                 <router-view name="panel" v-slot="{ Component }">
                     <transition name="slide-up">
-                        <component :is="Component" />
+                            <component :is="Component" />
                     </transition>
                 </router-view>
             </v-col>
@@ -69,14 +69,19 @@ export default {
                     icon: "mdi-home",
                 },
                 {
-                    title: this.$t('settings.speech.title'),
+                    title: this.$t('settings.appearance.title'),
+                    value: "appearance",
+                    icon: "mdi-palette"
+                },
+                {
+                    title: this.$t('settings.stt.title'),
                     value: "stt",
                     icon: "mdi-microphone-outline"
                 },
                 {
-                    title: this.$t('settings.appearance.title'),
-                    value: "appearance",
-                    icon: "mdi-palette"
+                    title: this.$t('settings.tts.title'),
+                    value: "tts",
+                    icon: "mdi-account-voice"
                 },
                 {
                     title: this.$t('settings.word_replace.title'),
@@ -142,6 +147,7 @@ export default {
 
 
 <style>
+
 .slide-up-enter-active {
   transition: all 0.25s ease-out;
 }

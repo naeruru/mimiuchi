@@ -65,6 +65,7 @@
 import { useAppearanceStore } from  '../../stores/appearance'
 import { useWordReplaceStore } from  '../../stores/word_replace'
 import { useSettingsStore } from  '../../stores/settings'
+import { useSpeechStore } from  '../../stores/speech'
 
 export default {
     name: 'SettingsGeneral',
@@ -87,6 +88,7 @@ export default {
         appearance: true,
         settings: true,
         word_replace: true,
+        speech: true
     }),
     methods: {
         reset_submit() {
@@ -96,6 +98,7 @@ export default {
             if (this.appearance) this.appearanceStore.$reset()
             if (this.word_replace) this.wordReplaceStore.$reset()
             if (this.settings) this.settingsStore.$reset()
+            if (this.speech) this.speechStore.$reset()
             this.reset_dialog = false
             this.snackbar_text = this.$t('settings.general.reset.snackbar.title')
             this.snackbar = true
@@ -106,11 +109,13 @@ export default {
         const appearanceStore = useAppearanceStore()
         const wordReplaceStore = useWordReplaceStore()
         const settingsStore = useSettingsStore()
+        const speechStore = useSpeechStore()
         
         return {
             appearanceStore,
             wordReplaceStore,
-            settingsStore
+            settingsStore,
+            speechStore
         }
     }
 }

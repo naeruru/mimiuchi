@@ -68,6 +68,7 @@ import WelcomeOverlay from "../components/overlays/WelcomeOverlay.vue"
 
 import { useWordReplaceStore } from  '../stores/word_replace'
 import { useSettingsStore } from  '../stores/settings'
+import { useSpeechStore } from  '../stores/speech'
 import { useAppearanceStore } from '../stores/appearance'
 import { useLogStore } from '../stores/logs'
 import { useOSCStore } from '../stores/osc'
@@ -77,6 +78,8 @@ declare const window: any
 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition
 const SpeechGrammarList = window.SpeechGrammarList || window.webkitSpeechGrammarList
 const SpeechRecognitionEvent = window.SpeechRecognitionEvent || window.webkitSpeechRecognitionEvent
+
+const synth = window.speechSynthesis
 
 const recognition = (SpeechRecognition) ? new SpeechRecognition() : null;
 // const speechRecognitionList = new SpeechGrammarList()
@@ -138,7 +141,7 @@ export default {
             if (this.isElectron() && new_val.length === 1 && this.oscStore.text_typing && this.broadcasting)
                 window.ipcRenderer.send("typing-text-event", !!new_val)
         },
-        'settingsStore.stt_Settings.language'(new_val) {
+        'speechStore.stt.language'(new_val) {
             if (recognition)
                 recognition.lang = new_val
         }
@@ -172,7 +175,7 @@ export default {
                         recognition.stop()
                     // user started talking
                     } else if (!results.isFinal && !this.talking) {
-                        console.log('Speech has been detected')
+                        // console.log('Speech has been detected')
                         this.talking = true
                     }
 
@@ -186,7 +189,7 @@ export default {
                     }
                 }
                 recognition.onend = () => {
-                    console.log('speech recognition stopped')
+                    // console.log('speech recognition stopped')
 
                     // restart if auto stopped
                     if (this.listening)
@@ -258,6 +261,13 @@ export default {
                 }
             }
         },
+        tts(input: string) {
+            const utterance = new SpeechSynthesisUtterance(input)
+            utterance.voice = synth.getVoices().filter((voice: any) => voice.name === this.speechStore.tts.voice)[0]
+            utterance.pitch = this.speechStore.tts.pitch
+            utterance.rate = this.speechStore.tts.rate
+            synth.speak(utterance)
+        },
         onSubmit (input_override: string, isFinal: boolean = true) {
             let input = (input_override) ? input_override : this.input_text
 
@@ -290,12 +300,18 @@ export default {
                 }
             }
 
-            // fadeout text
-            if (isFinal && this.appearanceStore.text.enable_fade) 
-                setTimeout(() => {
-                    this.logs[i].hide = 1
-                    setTimeout(() => this.logs[i].hide = 2, this.appearanceStore.text.fade_time * 1000)
-                }, this.appearanceStore.text.hide_after * 1000)
+            // finalized text
+            if (isFinal) {
+                // text-to-speech
+                if (this.speechStore.tts.enabled && this.speechStore.tts.voice) this.tts(input)
+
+                // fadeout text
+                if (this.appearanceStore.text.enable_fade)
+                    setTimeout(() => {
+                        this.logs[i].hide = 1
+                        setTimeout(() => this.logs[i].hide = 2, this.appearanceStore.text.fade_time * 1000)
+                    }, this.appearanceStore.text.hide_after * 1000)
+            }
 
             // send text via osc
             if (this.isElectron() && isFinal && this.oscStore.osc_text && this.broadcasting) {
@@ -416,13 +432,13 @@ export default {
     setup() {
         const wordReplaceStore = useWordReplaceStore()
         const settingsStore = useSettingsStore()
+        const speechStore = useSpeechStore()
         const appearanceStore = useAppearanceStore()
         const logStore = useLogStore()
         const oscStore = useOSCStore()
 
         if (recognition)
-            recognition.lang = settingsStore.stt_Settings.language
-
+            recognition.lang = speechStore.stt.language
 
         const font_size = `${appearanceStore.text.font_size}px`
         const fade_time = `${appearanceStore.text.fade_time}s`
@@ -432,6 +448,7 @@ export default {
         return {
             wordReplaceStore,
             settingsStore,
+            speechStore,
             appearanceStore,
             logs: logStore.logs,
             oscStore,

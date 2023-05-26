@@ -7,6 +7,7 @@ import Home from '../pages/Home.vue'
 import Settings from '../pages/Settings.vue'
 import SettingsGeneral from '../components/settings/General.vue'
 import STT from '../components/settings/STT.vue'
+import TTS from '../components/settings/TTS.vue'
 import Appearance from '../components/settings/Appearance.vue'
 import WordReplace from '../components/settings/WordReplace.vue'
 import OSC from '../components/settings/OSC.vue'
@@ -47,6 +48,15 @@ const routes = [
         components: {
           default: Settings,
           panel: STT,
+          Header
+        },
+      },
+      {
+        path: 'tts',
+        name: 'tts',
+        components: {
+          default: Settings,
+          panel: TTS,
           Header
         },
       },

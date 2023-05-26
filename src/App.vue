@@ -12,6 +12,7 @@
 import { useAppearanceStore } from  './stores/appearance'
 import { useWordReplaceStore } from  './stores/word_replace'
 import { useSettingsStore } from  './stores/settings'
+import { useSpeechStore } from  './stores/speech'
 
 export default {
   name: 'App',
@@ -23,11 +24,15 @@ export default {
   },
   setup() {
     const appearanceStore = useAppearanceStore()
+    const speechStore = useSpeechStore()
     const wordReplaceStore = useWordReplaceStore()
     const settingsStore = useSettingsStore()
 
     appearanceStore.$subscribe((_, state) => {
         localStorage.setItem('appearance', JSON.stringify(state))
+    })
+    speechStore.$subscribe((_, state) => {
+        localStorage.setItem('speech', JSON.stringify(state))
     })
     settingsStore.$subscribe((_, state) => {
         localStorage.setItem('settings', JSON.stringify(state))
@@ -38,11 +43,13 @@ export default {
 
 
     appearanceStore.$patch(JSON.parse(localStorage.getItem('appearance') || '{}'))
+    speechStore.$patch(JSON.parse(localStorage.getItem('speech') || '{}'))
     settingsStore.$patch(JSON.parse(localStorage.getItem('settings') || '{}'))
     wordReplaceStore.$patch(JSON.parse(localStorage.getItem('word_replace') || '{}'))
     
     return {
       appearanceStore,
+      speechStore,
       wordReplaceStore,
       settingsStore
     }

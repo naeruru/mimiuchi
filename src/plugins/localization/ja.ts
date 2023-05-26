@@ -29,7 +29,7 @@ export default {
         general: {
             title: '全般設定',
             description: 'アプリ全般の設定',
-            language: '言語を選択',
+            language: 'UIの言語を選択',
             reset: {
                 button: 'アプリの設定をリセットする',
                 dialog: {
@@ -43,12 +43,26 @@ export default {
                 }
             }
         },
-        speech: {
-            title: 'スピーチ',
-            description: 'スピーチの設定',
+        stt: {
+            title: 'Speech-to-Text',
+            description: 'Speech-to-textの設定',
+            type: 'STTサービスを選択',
             language: 'Speech-to-textの言語を選択',
             unsupported: {
-                text: 'Speech-to-Textは{0}で利用できます。(^・ω・^)',
+                text: 'Web Speech APIのSpeech-to-Textは{0}で利用できます。(^・ω・^)',
+                link: 'ウェブサイト版'
+            }
+        },
+        tts: {
+            title: 'Text-to-Speech',
+            description: 'Text-to-speechの設定',
+            type: 'TTSサービスを選択',
+            enabled: 'テキストを音声に変換',
+            rate: 'スピード',
+            pitch: 'ピッチ',
+            language: 'Text-to-speechの音声を選択',
+            unsupported: {
+                text: 'Text-to-Speechは{0}で利用できます。 (^・ω・^)',
                 link: 'ウェブサイト版'
             }
         },
