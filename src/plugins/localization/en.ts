@@ -57,6 +57,7 @@ export default {
             title: 'Text-to-Speech',
             description: 'Text-to-speech settings',
             enabled: 'Enable text-to-speech voice playback',
+            type: 'Select a TTS service',
             rate: 'Rate',
             pitch: 'Pitch',
             language: 'Select a text-to-speech voice',

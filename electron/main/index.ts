@@ -43,6 +43,7 @@ async function createWindow() {
   win = new BrowserWindow({
     title: 'Main window',
     icon: join(process.env.PUBLIC, 'favicon.ico'),
+    frame: false,
     webPreferences: {
       preload,
       // Warning: Enable nodeIntegration and disable contextIsolation is not secure in production
@@ -73,7 +74,10 @@ async function createWindow() {
     return { action: 'deny' }
   })
   // win.webContents.on('will-navigate', (event, url) => { }) #344
-}
+
+  win.on('maximize', () => win.webContents.send('maximized_state', true))
+  win.on('unmaximize', () => win.webContents.send('maximized_state', false))
+  }
 
 app.whenReady().then(createWindow)
 
@@ -120,6 +124,19 @@ ipcMain.handle('open-win', (_, arg) => {
 /*
  * event listeners that listens to the event emitted by Vue component
  */
+// event for closing application
+ipcMain.on("close_app", () => {
+  app.quit()
+})
+// event for toggling maximized
+ipcMain.on("toggle_maximize", () => {
+  win.isMaximized() ? win.unmaximize() : win.maximize() 
+})
+// event for minimizing
+ipcMain.on("minimize", () => {
+  win.minimize()
+})
+
 // event for text typing indicator
 ipcMain.on("typing-text-event", (event, args) => {
   emit_osc(['/chatbox/typing', args])

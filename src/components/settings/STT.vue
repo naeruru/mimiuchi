@@ -14,7 +14,7 @@
                     ></v-select>
                 </v-col>
             </v-row>
-            <v-row v-if="speechStore.tts.type.value === 'webspeech' && !isElectron()">
+            <v-row v-if="speechStore.tts.type.value === 'webspeech' && !is_electron()">
                 <v-col :cols="12">
                     <v-radio-group v-model="speechStore.stt.language" :label="$t('settings.stt.language')">
                         <v-text-field v-model="search_lang" class="mb-2" label="Search" variant="outlined" single-line hide-details></v-text-field>
@@ -45,6 +45,8 @@
 
 <script lang="ts">
 import { useSpeechStore } from  '../../stores/speech'
+
+import is_electron from '../../helpers/is_electron'
 
 export default {
     name: 'STT',
@@ -98,21 +100,6 @@ export default {
     methods: {
         openURL(url: string) {
             window.open(url, '_blank')
-        },
-        isElectron() {
-            // Renderer process
-            if (typeof window !== 'undefined' && typeof window.process === 'object' && window.process.type === 'renderer') {
-                return true
-            }
-            // Main process
-            if (typeof process !== 'undefined' && typeof process.versions === 'object' && !!process.versions.electron) {
-                return true
-            }
-            // Detect the user agent when the `nodeIntegration` option is set to true
-            if (typeof navigator === 'object' && typeof navigator.userAgent === 'string' && navigator.userAgent.indexOf('Electron') >= 0) {
-                return true
-            }
-            return false
         }
     },
     mounted() {
@@ -125,7 +112,8 @@ export default {
         const speechStore = useSpeechStore()
 
         return {
-            speechStore
+            speechStore,
+            is_electron
         }
     }
 }

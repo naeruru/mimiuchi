@@ -2,7 +2,6 @@
 <template>
     <v-card
         id="log-list"
-        style="overflow-y: auto; max-height: calc(100vh - 55px);"
         class="fill-height pa-4 overflow-auto log-list"
         v-resize="onResize"
         :color="appearanceStore.ui.color"
@@ -28,6 +27,8 @@
 <script lang="ts">
 // import {ipcRenderer} from "electron"
 import { useDisplay } from 'vuetify'
+
+import is_electron from '../helpers/is_electron'
 
 import WelcomeOverlay from "../components/overlays/WelcomeOverlay.vue"
 
@@ -75,24 +76,12 @@ export default {
             }
         }
     },
+    computed: {
+      outer_size: (() => is_electron() ? '90px' : '55px')
+    },
     methods: {
         onResize() {
           this.windowSize = { x: window.innerWidth, y: window.innerHeight }
-        },
-        isElectron() {
-            // Renderer process
-            if (typeof window !== 'undefined' && typeof window.process === 'object' && window.process.type === 'renderer') {
-                return true
-            }
-            // Main process
-            if (typeof process !== 'undefined' && typeof process.versions === 'object' && !!process.versions.electron) {
-                return true
-            }
-            // Detect the user agent when the `nodeIntegration` option is set to true
-            if (typeof navigator === 'object' && typeof navigator.userAgent === 'string' && navigator.userAgent.indexOf('Electron') >= 0) {
-                return true
-            }
-            return false
         }
     },
     mounted () {
@@ -128,13 +117,14 @@ export default {
 
 <style>
 html {
-    overflow-y: overlay;
+    overflow-y: hidden;
 }
-
 .log-list {
     display: flex;
     flex-direction: column-reverse;
     font-size: v-bind(font_size);
+    overflow-y: auto;
+    max-height: calc(100vh - v-bind(outer_size));
 }
 .log-list::-webkit-scrollbar {
     display: none; /* for Chrome, Safari and Opera */

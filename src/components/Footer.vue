@@ -41,7 +41,7 @@
 
                     <v-spacer></v-spacer>
                     
-                    <v-btn v-if="!isElectron()" @click="toggleListen" class="mr-4" :color="(listening) ? 'success' : 'error'" size="small"  icon variant="outlined">
+                    <v-btn v-if="!is_electron()" @click="toggleListen" class="mr-4" :color="(listening) ? 'success' : 'error'" size="small"  icon variant="outlined">
                         <v-icon v-if="!listening">mdi-microphone-off</v-icon>
                         <v-icon v-else>mdi-microphone</v-icon>
                     </v-btn>
@@ -65,6 +65,8 @@
 <script lang="ts">
 // import {ipcRenderer} from "electron"
 import WelcomeOverlay from "../components/overlays/WelcomeOverlay.vue"
+
+import is_electron from "../helpers/is_electron"
 
 import { useWordReplaceStore } from  '../stores/word_replace'
 import { useSettingsStore } from  '../stores/settings'
@@ -138,7 +140,7 @@ export default {
     },
     watch: {
         input_text(new_val) {
-            if (this.isElectron() && new_val.length === 1 && this.oscStore.text_typing && this.broadcasting)
+            if (is_electron() && new_val.length === 1 && this.oscStore.text_typing && this.broadcasting)
                 window.ipcRenderer.send("typing-text-event", !!new_val)
         },
         'speechStore.stt.language'(new_val) {
@@ -224,7 +226,7 @@ export default {
                 // use https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/search
                 // to see which assign is the closest to the keyword found
                 // unless switch to nlp first.....
-                if (this.isElectron()) {
+                if (is_electron()) {
                     if (this.oscStore.osc_params.length) {
                         this.oscStore.osc_params.forEach(custom_param => {
                             let matchesKey = null
@@ -295,7 +297,7 @@ export default {
             } else {
                 this.logs.push(toSend)
                 i++;
-                if (this.isElectron() && this.oscStore.stt_typing && this.broadcasting) {
+                if (is_electron() && this.oscStore.stt_typing && this.broadcasting) {
                     window.ipcRenderer.send("typing-text-event", true)
                 }
             }
@@ -314,7 +316,7 @@ export default {
             }
 
             // send text via osc
-            if (this.isElectron() && isFinal && this.oscStore.osc_text && this.broadcasting) {
+            if (is_electron() && isFinal && this.oscStore.osc_text && this.broadcasting) {
                 window.ipcRenderer.send("send-text-event", input)
                 // window.ipcRenderer.send("typing-text-event", false)
             } else if (this.ws) {
@@ -335,7 +337,7 @@ export default {
                 return
             }
 
-            if (!this.isElectron()) {
+            if (!is_electron()) {
                 this.loadingWebsocket = true
                 this.ws = new WebSocket('ws://localhost:8999/')
                 this.ws.onopen = () => {
@@ -376,23 +378,8 @@ export default {
         onResize () {
             this.windowSize = { x: window.innerWidth, y: window.innerHeight }
         },
-        isElectron() {
-            // Renderer process
-            if (typeof window !== 'undefined' && typeof window.process === 'object' && window.process.type === 'renderer') {
-                return true
-            }
-            // Main process
-            if (typeof process !== 'undefined' && typeof process.versions === 'object' && !!process.versions.electron) {
-                return true
-            }
-            // Detect the user agent when the `nodeIntegration` option is set to true
-            if (typeof navigator === 'object' && typeof navigator.userAgent === 'string' && navigator.userAgent.indexOf('Electron') >= 0) {
-                return true
-            }
-            return false
-        },
         reloadEvents() {
-            if (this.isElectron()) {
+            if (is_electron()) {
                 window.ipcRenderer.removeListener('websocket-connect')
                 window.ipcRenderer.removeListener('receive-text-event')
                 window.ipcRenderer.receive('websocket-connect', (event: any, data: any) => {
@@ -413,7 +400,7 @@ export default {
     unmounted () {
         if (this.listening) this.toggleListen()
         if (this.broadcasting) this.toggleBroadcast()
-        if (this.isElectron()) {
+        if (is_electron()) {
             window.ipcRenderer.removeListener('websocket-connect')
             window.ipcRenderer.removeListener('receive-text-event')
         }
@@ -455,7 +442,8 @@ export default {
             font_size,
             fade_time,
             text_color,
-            interim_color
+            interim_color,
+            is_electron
         }
     }
 }

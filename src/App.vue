@@ -1,10 +1,11 @@
 <template>
   <v-app>
+    <SystemBar v-if="is_electron()"></SystemBar>
+    <router-view name="Header"></router-view>
     <v-main>
-      <router-view name="Header"></router-view>
       <router-view></router-view>
-      <router-view name="Footer"></router-view>
     </v-main>
+    <router-view name="Footer"></router-view>
   </v-app>
 </template>
 
@@ -14,8 +15,15 @@ import { useWordReplaceStore } from  './stores/word_replace'
 import { useSettingsStore } from  './stores/settings'
 import { useSpeechStore } from  './stores/speech'
 
+import is_electron from './helpers/is_electron'
+
+import SystemBar from './components/appbars/SystemBar.vue'
+
 export default {
   name: 'App',
+  components: {
+    SystemBar
+  },
   mounted () {
     this.$i18n.locale = this.settingsStore.language
     this.settingsStore.$subscribe((language, state) => {
@@ -51,7 +59,8 @@ export default {
       appearanceStore,
       speechStore,
       wordReplaceStore,
-      settingsStore
+      settingsStore,
+      is_electron
     }
   }
 }

@@ -38,18 +38,20 @@
 
         </v-navigation-drawer>
 
-        <div class="d-flex justify-center">
+        <div id="settings" class="d-flex fill-height justify-center settings">
             <v-col class="pa-0" cols="12" lg="12" xl="8">
                 <router-view name="panel" v-slot="{ Component }">
                     <transition name="slide-up">
                             <component :is="Component" />
                     </transition>
+                    <!-- <v-sheet v-if="smAndDown" color="transparent" height="100"></v-sheet> -->
                 </router-view>
             </v-col>
         </div>
 </template>
 
 <script lang="ts">
+import is_electron from '../helpers/is_electron'
 import { useSettingsStore } from  '../stores/settings'
 import { useDisplay } from 'vuetify'
 
@@ -61,6 +63,7 @@ export default {
         }
     },
     computed: {
+        outer_size: (() => is_electron() ? '140px' : '105px'),
         settings_general() {
             return [
                 {
@@ -103,32 +106,17 @@ export default {
                     icon: "mdi-format-list-bulleted-square"
                 }
             ]
-            if (this.isElectron()) return settings_osc
+            if (is_electron()) return settings_osc
             else return [settings_osc[0]]
         }
     },
     methods: {
         open_external(link: string) {
             window.open(link, '_blank')
-        },
-        isElectron() {
-            // Renderer process
-            if (typeof window !== 'undefined' && typeof window.process === 'object' && window.process.type === 'renderer') {
-                return true
-            }
-            // Main process
-            if (typeof process !== 'undefined' && typeof process.versions === 'object' && !!process.versions.electron) {
-                return true
-            }
-            // Detect the user agent when the `nodeIntegration` option is set to true
-            if (typeof navigator === 'object' && typeof navigator.userAgent === 'string' && navigator.userAgent.indexOf('Electron') >= 0) {
-                return true
-            }
-            return false
         }
     },
     mounted() {
-        if (!this.isElectron())
+        if (!is_electron())
             this.settings_osc = [this.settings_osc[0]]
     },
     setup() {
@@ -147,6 +135,10 @@ export default {
 
 
 <style>
+.settings {
+    overflow-y: auto;
+    max-height: calc(100svh - v-bind(outer_size));
+}
 
 .slide-up-enter-active {
   transition: all 0.25s ease-out;

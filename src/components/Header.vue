@@ -6,18 +6,8 @@
 
         <v-app-bar-title class="font-weight-medium">
           {{ APP_NAME }}
-          <v-chip class="ml-2" label>{{ $t('general.beta') }}</v-chip>
+          <!-- <v-chip class="ml-2" label>{{ $t('general.beta') }}</v-chip> -->
         </v-app-bar-title>
-
-        <!-- <v-btn
-          v-for="link in links"
-          :key="link"
-          text
-        >
-          {{ link }}
-        </v-btn> -->
-
-
 
         <v-btn icon @click="$router.push({ path: '/' })" :color="$route.name === 'home' ? 'secondary' : 'white'">
             <v-icon>mdi-home</v-icon>

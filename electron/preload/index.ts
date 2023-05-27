@@ -96,7 +96,18 @@ setTimeout(removeLoading, 4999)
 // added to differentiate electron and website version
 import { contextBridge, ipcRenderer } from 'electron'
 
-let validChannels = ['typing-text-event', 'send-text-event', 'send-param-event', 'receive-text-event', 'websocket-connect']
+let validChannels = [
+  'close_app',
+  'toggle_maximize',
+  'minimize',
+  'maximized_state',
+
+  'typing-text-event',
+  'send-text-event',
+  'send-param-event',
+  'receive-text-event',
+  'websocket-connect'
+]
 
 // Expose ipcRenderer to the client
 contextBridge.exposeInMainWorld('ipcRenderer', {
