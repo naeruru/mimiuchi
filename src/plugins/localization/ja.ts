@@ -22,6 +22,7 @@ export default {
         no_speech: 'このブラウザはWeb Speech APIをサポートしていません（Speech-to-text）',
         mic_error: 'マイクのアクセスに失敗しました。許可する必要があります。',
         broadcast_error: 'ブロードキャストに失敗しました. デスクトップアプリが起動していることを確認してください。',
+        websocket_error: 'ウェブソケットのURLが無効です',
         version_mismatch: 'デスクトップ版とウェブアプリ版は別物です。壊れるかもしれないので、アップデートを検討してください。'
     },
     settings: {
@@ -91,7 +92,16 @@ export default {
             replacing: 'リプレース',
             replacement: 'リプレースメント'
         },
+        connections: {
+            title: '接続',
+            description: '他のアプリケーションを{name}に接続',
+            ws: {
+                name: 'デスクトップアプリの接続',
+                description: 'ウェブソケットでテキスト更新を即座に送信できます'
+            }
+        },
         osc: {
+            title: 'VRChat',
             general: {
                 title: 'OSC設定',
                 description: 'OSC接続の設定',

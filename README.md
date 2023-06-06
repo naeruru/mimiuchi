@@ -64,3 +64,6 @@ Use `npm install` to install dependencies.
 Use `npm run dev` to run the application. It will run an electron version and web version.
 
 Or you can use `npm run build` to build the application. It will create an exe file in `release/`.
+
+## License
+This project is licensed under GNU General Public License v3.0 - see the [LICENSE.txt](LICENSE.txt) file for details.

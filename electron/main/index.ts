@@ -2,8 +2,8 @@ import { app, BrowserWindow, shell, ipcMain } from 'electron'
 import { release } from 'node:os'
 import { join } from 'node:path'
 
-import pkg from '../../package.json'
 import { emit_osc } from './modules/osc'
+import { initialize_ws, close_ws } from './modules/ws'
 
 // The built directory structure	
 //	
@@ -38,6 +38,8 @@ let win: BrowserWindow | null = null
 const preload = join(__dirname, '../preload/index.js')
 const url = process.env.VITE_DEV_SERVER_URL	
 const indexHtml = join(process.env.DIST, 'index.html')
+
+let wss: any
 
 async function createWindow() {
   win = new BrowserWindow({
@@ -77,7 +79,7 @@ async function createWindow() {
 
   win.on('maximize', () => win.webContents.send('maximized_state', true))
   win.on('unmaximize', () => win.webContents.send('maximized_state', false))
-  }
+}
 
 app.whenReady().then(createWindow)
 
@@ -152,37 +154,18 @@ ipcMain.on("send-param-event", (event, args) => {
   emit_osc([args.route, args.value], args.ip, args.port)
 })
 
-
-/*
- * websocket control
- */
-const WebSocket = require('ws')
-const wss = new WebSocket.Server({ port: 8999 })
-wss.on('connection', ws => {
-  ws.on('message', message => {
-    message = JSON.parse(message)
-
-    console.log(`Received message => ${message.type}`)
-
-    if (message.type === 'command') {
-      console.log(`Received command: ${message.data}`)
-      switch(message.data) {
-        case 'stop':
-          win.webContents.send('websocket-connect', false)
-          break
-        case 'speechstart':
-          emit_osc(['/chatbox/typing', true])
-          break
-        case 'speechend':
-          emit_osc(['/chatbox/typing', false])
-          break
-        default:
-          break
-      }
-    } else if (message.type === 'text') {
-      win.webContents.send('receive-text-event', JSON.stringify(message.data))
-    }
-  })
-  ws.send(`{"event": "connect", "msg":"connected to websocket ( •̀ ω •́ )", "version":"${pkg.version}"}`)
-  win.webContents.send('websocket-connect', true)
+// websocket events
+import { WebSocketServer } from 'ws'
+ipcMain.on("start-ws", (event, args) => {
+  wss = new WebSocketServer({ port: args })
+  initialize_ws(win, wss, args)
+    .then((ws: WebSocket) => {
+      win.webContents.send('websocket-started', true)
+    })
+    .catch((error: any) => {
+      win.webContents.send('websocket-error', true)
+    })
+})
+ipcMain.on("close-ws", (event, args) => {
+  wss.close()
 })

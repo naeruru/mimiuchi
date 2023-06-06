@@ -8,7 +8,11 @@ const messages = {
     ja
 }
 
-export default createI18n({
+const instance = createI18n({
     fallbackLocale: 'en',
     messages
 })
+
+export default instance
+
+export const i18n = instance.global

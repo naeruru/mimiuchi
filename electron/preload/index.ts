@@ -106,7 +106,13 @@ let validChannels = [
   'send-text-event',
   'send-param-event',
   'receive-text-event',
-  'websocket-connect'
+  
+  'websocket-connect',
+  'websocket-started',
+  'websocket-error',
+
+  'start-ws',
+  'close-ws'
 ]
 
 // Expose ipcRenderer to the client

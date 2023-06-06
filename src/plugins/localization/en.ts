@@ -22,6 +22,7 @@ export default {
         no_speech: 'Your browser does not support Web Speech API (Speech-to-text).',
         mic_error: 'Error enabling microphone. You must give permission to use it.',
         broadcast_error: 'Error enabling broadcast. Make sure the desktop app is running.',
+        websocket_error: '無効なウェブソケットURL',
         version_mismatch: 'The desktop app has a different version than the web version. Consider updating, as things might break.'
     },
     settings: {
@@ -91,9 +92,18 @@ export default {
             replacing: 'Replacing',
             replacement: 'Replacement'
         },
+        connections: {
+            title: 'Connections',
+            description: 'Send data to other applications when using {icon}',
+            ws: {
+                name: 'Desktop connection',
+                description: 'Send real-time text updates over a websocket'
+            }
+        },
         osc: {
+            title: 'VRChat',
             general: {
-                title: 'OSC Settings',
+                title: 'General',
                 description: 'Settings for customizing OSC connection',
                 osc_ip: 'Default OSC IP',
                 osc_port: 'Default OSC Port',

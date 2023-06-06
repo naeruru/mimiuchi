@@ -28,20 +28,22 @@
             >
                 <div class="d-flex w-100 align-center">
                     
-                        <v-text-field
-                            v-model="input_text"
-                            density="compact"
-                            variant="outlined"
-                            :label="$t('general.type_message')"
-                            append-inner-icon="mdi-chevron-right"
-                            single-line
-                            hide-details
-                            flat
-                        ></v-text-field>
+                    <v-text-field
+                        v-model="input_text"
+                        density="compact"
+                        variant="outlined"
+                        :label="$t('general.type_message')"
+                        append-inner-icon="mdi-chevron-right"
+                        class="mr-6"
+                        single-line
+                        hide-details
+                        flat
+                    ></v-text-field>
 
-                    <v-spacer></v-spacer>
+                    <v-spacer v-if="!smAndDown"></v-spacer>
                     
-                    <v-btn v-if="!is_electron()" @click="toggleListen" class="mr-4" :color="(listening) ? 'success' : 'error'" size="small"  icon variant="outlined">
+                    <div class="d-flex justify-right">
+                        <v-btn v-if="!is_electron()" @click="toggleListen" class="mr-4" :color="(listening) ? 'success' : 'error'" size="small"  icon variant="outlined">
                         <v-icon v-if="!listening">mdi-microphone-off</v-icon>
                         <v-icon v-else>mdi-microphone</v-icon>
                     </v-btn>
@@ -57,6 +59,7 @@
                         <v-icon>mdi-home</v-icon>
                     </v-btn>
                 </div>
+                </div>
             </v-form>
         </div>
     </v-footer>
@@ -68,12 +71,14 @@ import WelcomeOverlay from "../components/overlays/WelcomeOverlay.vue"
 
 import is_electron from "../helpers/is_electron"
 
+import { useDisplay } from 'vuetify'
 import { useWordReplaceStore } from  '../stores/word_replace'
 import { useSettingsStore } from  '../stores/settings'
 import { useSpeechStore } from  '../stores/speech'
 import { useAppearanceStore } from '../stores/appearance'
 import { useLogStore } from '../stores/logs'
 import { useOSCStore } from '../stores/osc'
+import { useConnectionStore } from "../stores/connections"
 
 declare const window: any
 
@@ -339,9 +344,19 @@ export default {
 
             if (!is_electron()) {
                 this.loadingWebsocket = true
-                this.ws = new WebSocket('ws://localhost:8999/')
+                try {
+                    this.ws = new WebSocket(`ws://${this.connectionStore.ws.url}`)
+                } catch {
+                    this.broadcasting = false
+                    this.loadingWebsocket = false
+                    this.ws = null
+                    this.snackbar_desc = this.$t('alerts.websocket_error')
+                    this.snackbar_color = "error"
+                    this.snackbar_icon = "mdi-alert-circle-outline"
+                    this.snackbar = true
+                    return
+                }
                 this.ws.onopen = () => {
-                    console.log('websocket connected')
                     this.broadcasting = true
                     this.loadingWebsocket = false
                 }
@@ -361,7 +376,6 @@ export default {
                     this.ws = null
                 }
                 this.ws.onerror = () => {
-                    console.log('websocket error')
                     this.broadcasting = false
                     this.loadingWebsocket = false
                     this.ws = null
@@ -417,12 +431,14 @@ export default {
         this.reloadEvents()
     },
     setup() {
+        const { smAndDown } = useDisplay()
         const wordReplaceStore = useWordReplaceStore()
         const settingsStore = useSettingsStore()
         const speechStore = useSpeechStore()
         const appearanceStore = useAppearanceStore()
         const logStore = useLogStore()
         const oscStore = useOSCStore()
+        const connectionStore = useConnectionStore()
 
         if (recognition)
             recognition.lang = speechStore.stt.language
@@ -439,10 +455,13 @@ export default {
             appearanceStore,
             logs: logStore.logs,
             oscStore,
+            connectionStore,
+
             font_size,
             fade_time,
             text_color,
             interim_color,
+            smAndDown,
             is_electron
         }
     }
