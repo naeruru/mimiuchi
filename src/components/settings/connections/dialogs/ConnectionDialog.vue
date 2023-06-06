@@ -3,8 +3,7 @@
         <v-card>
             <v-form v-model="form" @submit.prevent>
                 <v-card-title>
-                    <span class="text-subtitle-1">Update Connection</span>
-                    <template v-slot:append>test</template>
+                    <span class="text-subtitle-1">{{ $t('settings.connections.update') }}</span>
                 </v-card-title>
                 <v-divider class="pb-2"></v-divider>
                 <v-card-text>

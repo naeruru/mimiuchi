@@ -95,8 +95,10 @@ export default {
         connections: {
             title: '接続',
             description: '他のアプリケーションを{name}に接続',
+            update: 'アップデート接続',
             ws: {
                 name: 'デスクトップアプリの接続',
+                port: 'ウェブソケットポート',
                 description: 'ウェブソケットでテキスト更新を即座に送信できます'
             }
         },

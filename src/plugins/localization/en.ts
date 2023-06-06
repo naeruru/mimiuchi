@@ -95,8 +95,10 @@ export default {
         connections: {
             title: 'Connections',
             description: 'Send data to other applications when using {icon}',
+            update: 'Update Connection',
             ws: {
                 name: 'Desktop connection',
+                port: 'Websocket Port',
                 description: 'Send real-time text updates over a websocket'
             }
         },
