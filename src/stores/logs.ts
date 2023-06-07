@@ -1,8 +1,8 @@
 import { defineStore } from 'pinia'
 
 
-interface Log {
-    text: string,
+export interface Log {
+    transcript: string,
     isFinal: boolean,
     hide: number
 }

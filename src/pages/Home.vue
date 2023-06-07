@@ -15,7 +15,7 @@
                 class="font-weight-light"
                 :class="{'fade-out': log.hide, 'final-text': log.isFinal, 'interim-text': !log.isFinal }"
             >
-                <a v-if="log.hide !== 2">{{ log.text }}</a>
+                <a v-if="log.hide !== 2">{{ log.transcript }}</a>
             </a>
         </div>
 
@@ -57,8 +57,6 @@ export default {
 
             loadingWebsocket: false,
             broadcasting: false,
-
-            // logs: [] as Log[], // { text: '' }
 
             input_text: '',
 

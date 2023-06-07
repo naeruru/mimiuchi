@@ -76,7 +76,7 @@ import { useWordReplaceStore } from  '../stores/word_replace'
 import { useSettingsStore } from  '../stores/settings'
 import { useSpeechStore } from  '../stores/speech'
 import { useAppearanceStore } from '../stores/appearance'
-import { useLogStore } from '../stores/logs'
+import { useLogStore, Log } from '../stores/logs'
 import { useOSCStore } from '../stores/osc'
 import { useConnectionStore } from "../stores/connections"
 
@@ -97,12 +97,6 @@ if (recognition) {
     recognition.lang = 'en-US'
     recognition.interimResults = true
     recognition.maxAlternatives = 1
-}
-
-interface Log {
-    text: string,
-    isFinal: boolean,
-    hide: number
 }
 
 export default {
@@ -196,8 +190,6 @@ export default {
                     }
                 }
                 recognition.onend = () => {
-                    // console.log('speech recognition stopped')
-
                     // restart if auto stopped
                     if (this.listening)
                         recognition.start()
@@ -240,21 +232,14 @@ export default {
                                 const key_check = `(^|\\s)(${keyword.text})($|[^a-zA-Z\\d])`
                                 const reKey = new RegExp(key_check, "ig")
                                 matchesKey = reKey.exec(input)
-                                // console.log(matchesKey)
                             })
 
                             if (matchesKey) {
-                                // console.log(`matched keyword!`)
                                 custom_param.assigns.forEach(assign => {
                                     const assign_check = `(^|\\s)(${assign.keyword})($|[^a-zA-Z\\d])`
                                     const reAssign = new RegExp(assign_check, "ig")
-                                    console.log(reAssign)
                                     const matchesAssign = reAssign.exec(input)
                                     if (matchesAssign) {
-                                        // console.log(`matched keyword and assign!`)
-
-                                        // let value = assign.set
-
                                         this.snackbar_desc = `<code>${custom_param.route} = ${assign.set}</code>`
                                         this.snackbar_color = "secondary"
                                         this.snackbar_icon = "mdi-send"
@@ -289,7 +274,7 @@ export default {
             if (loglist) loglist.scrollTop = loglist.scrollHeight
 
             const toSend = {
-                text: input, 
+                transcript: input, 
                 isFinal: isFinal, 
                 hide: 0 // 1 = fade, 2 = hide
             }
@@ -401,7 +386,7 @@ export default {
                 })
                 window.ipcRenderer.receive('receive-text-event', (event: any, data: any) => {
                     event = JSON.parse(event)
-                    this.onSubmit(event.text, event.isFinal)
+                    this.onSubmit(event.transcript, event.isFinal)
                 })
             }
         }

@@ -94,7 +94,7 @@ export default {
         },
         connections: {
             title: '接続',
-            description: '他のアプリケーションを{name}に接続',
+            description: '{icon}使用時に他のアプリにデータを送信',
             update: 'アップデート接続',
             ws: {
                 name: 'デスクトップアプリの接続',
