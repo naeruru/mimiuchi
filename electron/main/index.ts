@@ -2,6 +2,9 @@ import { app, BrowserWindow, shell, ipcMain } from 'electron'
 import { release } from 'node:os'
 import { join } from 'node:path'
 
+import Store from "electron-store"
+const store = new Store()
+
 import { emit_osc } from './modules/osc'
 import { initialize_ws, close_ws } from './modules/ws'
 
@@ -41,20 +44,27 @@ const indexHtml = join(process.env.DIST, 'index.html')
 
 let wss: any
 
+const window_config: any = {
+  title: 'Main window',
+  width: 1000,
+  height: 700,
+  icon: join(process.env.PUBLIC, 'favicon.ico'),
+  frame: false,
+  webPreferences: {
+    preload,
+    // Warning: Enable nodeIntegration and disable contextIsolation is not secure in production
+    // Consider using contextBridge.exposeInMainWorld
+    // Read more on https://www.electronjs.org/docs/latest/tutorial/context-isolation
+    nodeIntegration: true,
+    contextIsolation: true, // was false
+  },
+}
+
 async function createWindow() {
-  win = new BrowserWindow({
-    title: 'Main window',
-    icon: join(process.env.PUBLIC, 'favicon.ico'),
-    frame: false,
-    webPreferences: {
-      preload,
-      // Warning: Enable nodeIntegration and disable contextIsolation is not secure in production
-      // Consider using contextBridge.exposeInMainWorld
-      // Read more on https://www.electronjs.org/docs/latest/tutorial/context-isolation
-      nodeIntegration: true,
-      contextIsolation: true, // was false
-    },
-  })
+  Object.assign(window_config, store.get("win_bounds"))
+  win = new BrowserWindow(window_config)
+
+  if (window_config.isMaximized) win.maximize()
 
   if (process.env.VITE_DEV_SERVER_URL) {
     win.loadURL(url)
@@ -79,6 +89,13 @@ async function createWindow() {
 
   win.on('maximize', () => win.webContents.send('maximized_state', true))
   win.on('unmaximize', () => win.webContents.send('maximized_state', false))
+  win.on("close", () => {
+    Object.assign(window_config, { isMaximized: win.isMaximized() }, win.getNormalBounds())
+    store.set("win_bounds", window_config)
+  })
+  win.webContents.once('dom-ready', () => {
+    if (window_config.isMaximized) win.webContents.send('maximized_state', true)
+  })
 }
 
 app.whenReady().then(createWindow)
