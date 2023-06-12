@@ -48,7 +48,9 @@ in no particular order...
 - better generic osc support
 - DeepL translation support
 - webhook/websocket customization to connect to other apps that aren't related to me
-- documentation 
+- documentation
+- steamvr integration
+- locally run whisper ai c++ bindings
 
 ## Download
 See the [release page](https://github.com/naexris/mimiuchi/releases) to install the latest version of the desktop app. The desktop version lets you use additional features like OSC.
