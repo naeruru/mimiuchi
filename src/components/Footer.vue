@@ -6,10 +6,7 @@
         :timeout="8000"
     >
         <v-row class="align-center justify-center">
-            <v-col :cols="2" class="d-none d-md-flex">
-                <v-icon :cols="2">{{ snackbar_icon }}</v-icon>
-            </v-col>
-            <v-col :cols="12" :md="10">
+            <v-col :cols="12">
                 <p v-html="snackbar_desc"></p>
             </v-col>
         </v-row>
@@ -82,22 +79,7 @@ import { useConnectionStore } from "../stores/connections"
 
 declare const window: any
 
-const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition
-const SpeechGrammarList = window.SpeechGrammarList || window.webkitSpeechGrammarList
-const SpeechRecognitionEvent = window.SpeechRecognitionEvent || window.webkitSpeechRecognitionEvent
-
-const synth = window.speechSynthesis
-
-const recognition = (SpeechRecognition) ? new SpeechRecognition() : null;
-// const speechRecognitionList = new SpeechGrammarList()
-
-// recognition.grammars = speechRecognitionList
-if (recognition) {
-    recognition.continuous = true
-    recognition.lang = 'en-US'
-    recognition.interimResults = true
-    recognition.maxAlternatives = 1
-}
+import { WebSpeech } from '../modules/speech'
 
 export default {
     name: 'Home',
@@ -143,68 +125,42 @@ export default {
                 window.ipcRenderer.send("typing-text-event", !!new_val)
         },
         'speechStore.stt.language'(new_val) {
-            if (recognition)
-                recognition.lang = new_val
+            if (this.speech.recognition) {
+                this.speech.stop()
+                this.speech.recognition.lang = new_val
+            }
         }
     },
     methods: {
         toggleListen () {
+            // recognition not supported
+            if (!this.speech.recognition) {
+                // this.listening = false
+                this.listening_error = true
+                this.show_snackbar('error', this.$t('alerts.no_speech'))
+                return
+            }
+
             this.listening = !this.listening
             if (this.listening) {
-                // recognition not supported
-                if (!recognition) {
-                    this.listening = false
-                    this.listening_error = true
-                    this.snackbar_desc = this.$t('alerts.no_speech')
-                    this.snackbar_icon = 'mdi-alert-circle-outline'
-                    this.snackbar_color = 'error'
-                    this.snackbar = true
-                    return
+                this.speech.start()
+                this.speech.onresult = (transcript: string, isFinal: boolean) => {
+                    this.onSubmit(transcript, isFinal)
                 }
-
-                // start recognition
-                recognition.start()
-
-                // on result
-                recognition.onresult = (event: any) => {
-                    const results = event.results[event.results.length - 1]
-
-                    // result is final
-                    if (results.isFinal) {
-                        this.onSubmit(results[0].transcript, results.isFinal)
-                        this.talking = false
-                        recognition.stop()
-                    // user started talking
-                    } else if (!results.isFinal && !this.talking) {
-                        // console.log('Speech has been detected')
-                        this.talking = true
-                    }
-
-                    // continually track changes
-                    if (!results.isFinal && this.talking) {
-                        let transcript = ''
-                        Object.keys(event.results).forEach((key: string) => {
-                            transcript += event.results[key][0].transcript
-                        })
-                        this.onSubmit(transcript, results.isFinal)
-                    }
-                }
-                recognition.onend = () => {
+                this.speech.onend = () => {
                     // restart if auto stopped
-                    if (this.listening)
-                        recognition.start()
+                    if (this.listening) this.speech.start()
                 }
-                recognition.onerror = (event: any) => {
-                    if (event.error === 'no-speech') return
+                this.speech.onerror = (event: any) => {
+                    let desc = ''
+                    if (event.error === 'no-speech') return // web-speech: no sound detected
+                    if (event.error === 'not-allowed') desc = this.snackbar_desc = this.$t('alerts.mic_error')
                     this.listening = false
                     this.listening_error = true
-                    this.snackbar_desc = this.$t('alerts.mic_error')
-                    this.snackbar_icon = "mdi-alert-circle-outline"
-                    this.snackbar_color = "error"
-                    this.snackbar = true
+                    this.show_snackbar('error', desc)
                 }
             } else {
-                recognition.stop()
+                this.speech.stop()
             }
         },
         replace_words(input: string) {
@@ -216,49 +172,39 @@ export default {
         },
         paramTrigger(input: string) {
             // console.log(window.process.type)
-            if (this.broadcasting) {
-
+            if (this.broadcasting && is_electron()) {
                 // if custom params
                 // potential addition:
                 // use https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/search
                 // to see which assign is the closest to the keyword found
                 // unless switch to nlp first.....
-                if (is_electron()) {
-                    if (this.oscStore.osc_params.length) {
-                        this.oscStore.osc_params.forEach(custom_param => {
-                            let matchesKey = null
+                if (this.oscStore.osc_params.length) {
+                    this.oscStore.osc_params.forEach(custom_param => {
+                        let matchesKey = null
 
-                            custom_param.keywords.forEach(keyword => {
-                                const key_check = `(^|\\s)(${keyword.text})($|[^a-zA-Z\\d])`
-                                const reKey = new RegExp(key_check, "ig")
-                                matchesKey = reKey.exec(input)
-                            })
-
-                            if (matchesKey) {
-                                custom_param.assigns.forEach(assign => {
-                                    const assign_check = `(^|\\s)(${assign.keyword})($|[^a-zA-Z\\d])`
-                                    const reAssign = new RegExp(assign_check, "ig")
-                                    const matchesAssign = reAssign.exec(input)
-                                    if (matchesAssign) {
-                                        this.snackbar_desc = `<code>${custom_param.route} = ${assign.set}</code>`
-                                        this.snackbar_color = "secondary"
-                                        this.snackbar_icon = "mdi-send"
-                                        this.snackbar = true
-                                        window.ipcRenderer.send("send-param-event", { ip: custom_param.ip, port: custom_param.port, route: custom_param.route, value: assign.set})
-                                    }
-                                })
-                            }
+                        custom_param.keywords.forEach(keyword => {
+                            const key_check = `(^|\\s)(${keyword.text})($|[^a-zA-Z\\d])`
+                            const reKey = new RegExp(key_check, "ig")
+                            matchesKey = reKey.exec(input)
                         })
-                    }
+
+                        if (matchesKey) {
+                            custom_param.assigns.forEach(assign => {
+                                const assign_check = `(^|\\s)(${assign.keyword})($|[^a-zA-Z\\d])`
+                                const reAssign = new RegExp(assign_check, "ig")
+                                const matchesAssign = reAssign.exec(input)
+                                if (matchesAssign) {
+                                    this.show_snackbar('secondary', `<code>${custom_param.route} = ${assign.set}</code>`)
+                                    window.ipcRenderer.send("send-param-event", { ip: custom_param.ip, port: custom_param.port, route: custom_param.route, value: assign.set})
+                                }
+                            })
+                        }
+                    })
                 }
             }
         },
         tts(input: string) {
-            const utterance = new SpeechSynthesisUtterance(input)
-            utterance.voice = synth.getVoices().filter((voice: any) => voice.name === this.speechStore.tts.voice)[0]
-            utterance.pitch = this.speechStore.tts.pitch
-            utterance.rate = this.speechStore.tts.rate
-            synth.speak(utterance)
+            this.speech.speak(input)
         },
         onSubmit (input_override: string, isFinal: boolean = true) {
             let input = (input_override) ? input_override : this.input_text
@@ -335,10 +281,7 @@ export default {
                     this.broadcasting = false
                     this.loadingWebsocket = false
                     this.ws = null
-                    this.snackbar_desc = this.$t('alerts.websocket_error')
-                    this.snackbar_color = "error"
-                    this.snackbar_icon = "mdi-alert-circle-outline"
-                    this.snackbar = true
+                    this.show_snackbar('error', this.$t('alerts.websocket_error'))
                     return
                 }
                 this.ws.onopen = () => {
@@ -348,10 +291,7 @@ export default {
                 this.ws.onmessage = (event: any) => {
                     const msg = JSON.parse(event.data)
                     if (msg.event === 'connect' && msg.version !== __APP_VERSION__) {
-                        this.snackbar_desc = this.$t('alerts.version_mismatch')
-                        this.snackbar_icon = "mdi-alert-circle-outline"
-                        this.snackbar_color = "warning"
-                        this.snackbar = true
+                        this.show_snackbar('error', this.$t('alerts.version_mismatch'))
                     }
                 }
                 this.ws.onclose = () => {
@@ -364,15 +304,17 @@ export default {
                     this.broadcasting = false
                     this.loadingWebsocket = false
                     this.ws = null
-                    this.snackbar_desc = this.$t('alerts.broadcast_error')
-                    this.snackbar_color = "error"
-                    this.snackbar_icon = "mdi-alert-circle-outline"
-                    this.snackbar = true
+                    this.show_snackbar('error', this.$t('alerts.broadcast_error'))
                 }
             } else {
                 this.broadcasting = true
             }
 
+        },
+        show_snackbar(type: string, desc: string) {
+            this.snackbar_desc = desc
+            this.snackbar_color = type
+            this.snackbar = true
         },
         onResize () {
             this.windowSize = { x: window.innerWidth, y: window.innerHeight }
@@ -425,8 +367,10 @@ export default {
         const oscStore = useOSCStore()
         const connectionStore = useConnectionStore()
 
-        if (recognition)
-            recognition.lang = speechStore.stt.language
+        let speech = new WebSpeech(speechStore.stt.language)
+
+        // if (recognition)
+        //     recognition.lang = speechStore.stt.language
 
         const font_size = `${appearanceStore.text.font_size}px`
         const fade_time = `${appearanceStore.text.fade_time}s`
@@ -441,6 +385,8 @@ export default {
             logs: logStore.logs,
             oscStore,
             connectionStore,
+
+            speech,
 
             font_size,
             fade_time,

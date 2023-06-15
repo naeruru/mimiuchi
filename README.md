@@ -51,6 +51,7 @@ in no particular order...
 - documentation
 - steamvr integration
 - locally run whisper ai c++ bindings
+- continuous text transmission option for VRChat
 
 ## Download
 See the [release page](https://github.com/naexris/mimiuchi/releases) to install the latest version of the desktop app. The desktop version lets you use additional features like OSC.
