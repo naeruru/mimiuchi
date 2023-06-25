@@ -68,5 +68,8 @@ Use `npm run dev` to run the application. It will run an electron version and we
 
 Or you can use `npm run build` to build the application. It will create an exe file in `release/`.
 
+## Special Thanks
+- fuopy for the name, mimiuchi, which lends the name from a project they made long ago!
+
 ## License
 This project is licensed under GNU General Public License v3.0 - see the [LICENSE.txt](LICENSE.txt) file for details.
