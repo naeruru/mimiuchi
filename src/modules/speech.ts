@@ -1,5 +1,6 @@
-import { WebSpeech } from './speech/WebSpeech'
+import { WebSpeech, WebSpeechLangs } from './speech/WebSpeech'
 
 export {
-    WebSpeech
+    WebSpeech,
+    WebSpeechLangs
 }

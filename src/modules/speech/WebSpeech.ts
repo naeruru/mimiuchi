@@ -2,6 +2,12 @@ import { useSpeechStore } from  '../../stores/speech'
 
 declare const window: any
 
+declare interface Lang {
+    title: string,
+    value: string,
+    icon?: string
+}
+
 class WebSpeech {
     SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition
     SpeechGrammarList = window.SpeechGrammarList || window.webkitSpeechGrammarList
@@ -76,6 +82,262 @@ class WebSpeech {
     }
 }
 
+const WebSpeechLangs: Lang[] = [
+    {
+        title: 'Afrikaans',
+        value: 'af-ZA'
+    },
+    {
+        title: 'Bahasa Indonesia',
+        value: 'id-ID'
+    },
+    {
+        title: 'Bahasa Melayu',
+        value: 'ms-MY'
+    },
+    {
+        title: 'Català',
+        value: 'ca-ES'
+    },
+    {
+        title: 'Čeština',
+        value: 'cs-CZ'
+    },
+    {
+        title: 'Deutsch',
+        value: 'de-DE'
+    },
+    
+
+    {
+        title: 'English (Australia)',
+        value: 'en-AU'
+    },
+    {
+        title: 'English (Canada)',
+        value: 'en-CA'
+    },
+    {
+        title: 'English (India)',
+        value: 'en-IN'
+    },
+    {
+        title: 'English (Ireland)',
+        value: 'en-IE'
+    },
+    {
+        title: 'English (New Zealand)',
+        value: 'en-NZ'
+    },
+    {
+        title: 'English (South Africa)',
+        value: 'en-ZA'
+    },
+    {
+        title: 'English (United Kingdom)',
+        value: 'en-GB'
+    },
+    {
+        title: 'English (United States)',
+        value: 'en-US'
+    },
+
+    {
+        title: 'Español (Argentina)',
+        value: 'es-AR'
+    },
+    {
+        title: 'Español (Bolivia)',
+        value: 'es-BO'
+    },
+    {
+        title: 'Español (Chile)',
+        value: 'es-CL'
+    },
+    {
+        title: 'Español (Columbia)',
+        value: 'es-CO'
+    },
+    {
+        title: 'Español (Costa Rica)',
+        value: 'es-CR'
+    },
+    {
+        title: 'Español (Ecuador)',
+        value: 'es-EC'
+    },
+    {
+        title: 'Español (El Salvador)',
+        value: 'es-SV'
+    },
+    {
+        title: 'Español (España)',
+        value: 'es-ES'
+    },
+    {
+        title: 'Español (Estados Unidos)',
+        value: 'es-US'
+    },
+    {
+        title: 'Español (Guatemala)',
+        value: 'es-GT'
+    },
+    {
+        title: 'Español (Honduras)',
+        value: 'es-HN'
+    },
+    {
+        title: 'Español (México)',
+        value: 'es-MX'
+    },
+    {
+        title: 'Español (Nicaragua)',
+        value: 'es-NI'
+    },
+    {
+        title: 'Español (Panamá)',
+        value: 'es-PA'
+    },
+    {
+        title: 'Español (Paraguay)',
+        value: 'es-PY'
+    },
+    {
+        title: 'Español (Perú)',
+        value: 'es-PE'
+    },
+    {
+        title: 'Español (Puerto Rico)',
+        value: 'es-PR'
+    },
+    {
+        title: 'Español (República Dominicana)',
+        value: 'es-DO'
+    },
+    {
+        title: 'Español (Uruguay)',
+        value: 'es-UY'
+    },
+    {
+        title: 'Español (Venezuela)',
+        value: 'es-VE'
+    },
+
+    {
+        title: 'Euskara',
+        value: 'eu-ES'
+    },
+    {
+        title: 'Galego',
+        value: 'gl-ES'
+    },
+    {
+        title: 'Hrvatski',
+        value: 'hr-HR'
+    },
+    {
+        title: 'IsiZulu',
+        value: 'zu-ZA'
+    },
+    {
+        title: 'Íslenska',
+        value: 'is-IS'
+    },
+    {
+        title: 'Italiano (Italia)',
+        value: 'it-IT'
+    },
+    {
+        title: 'Italiano (Svizzera)',
+        value: 'it-CH'
+    },
+    {
+        title: 'Magyar',
+        value: 'hu-HU'
+    },
+    {
+        title: 'Nederlands',
+        value: 'nl-NL'
+    },
+    {
+        title: 'Norsk bokmå',
+        value: 'nb-NO'
+    },
+    {
+        title: 'Polski',
+        value: 'pl-PL'
+    },
+    {
+        title: 'Português (Brasil)',
+        value: 'pt-BR'
+    },
+    {
+        title: 'Português (Portugal)',
+        value: 'pt-PT'
+    },
+    {
+        title: 'Română',
+        value: 'ro-RO'
+    },
+    {
+        title: 'Slovenčina',
+        value: 'sk-SK'
+    },
+    {
+        title: 'Suomi',
+        value: 'fi-FI'
+    },
+    {
+        title: 'Svenska',
+        value: 'sv-SE'
+    },
+    {
+        title: 'Türkçe',
+        value: 'tr-TR'
+    },
+    {
+        title: 'български',
+        value: 'bg-BG'
+    },
+    {
+        title: 'Pусский',
+        value: 'ru-RU'
+    },
+    {
+        title: 'Српски',
+        value: 'sr-RS'
+    },
+    {
+        title: '普通话 (中国大陆)',
+        value: 'cmn-Hans-CN'
+    },
+    {
+        title: '普通话 (香港)',
+        value: 'cmn-Hans-HK'
+    },
+    {
+        title: '中文 (台灣)',
+        value: 'cmn-Hant-TW'
+    },
+    {
+        title: '粵語 (香港)',
+        value: 'yue-Hant-HK'
+    },
+    
+    {
+        title: '日本語（日本）',
+        value: 'ja-JP'
+    },
+    {
+        title: '한국어',
+        value: 'ko-KR'
+    },
+    {
+        title: 'Lingua latīna',
+        value: 'la'
+    },
+]
 
 
-export { WebSpeech }
+
+export { WebSpeech, WebSpeechLangs }

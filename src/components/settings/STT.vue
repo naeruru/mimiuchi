@@ -45,6 +45,7 @@
 
 <script lang="ts">
 import { useSpeechStore } from  '../../stores/speech'
+import { WebSpeechLangs } from '../../modules/speech'
 
 import is_electron from '../../helpers/is_electron'
 
@@ -53,38 +54,12 @@ export default {
     data: () => ({
         stt_options: [
             {
-                title: "Web Speech API",
-                value: "webspeech"
+                title: 'Web Speech API',
+                value: 'webspeech'
             },
         ],
-        language_choice: "",
-        search_lang: '',
-        languages: [
-            {
-                title: "English (Australia)",
-                value: "en-AU"
-            },
-            {
-                title: "English (Ireland)",
-                value: "en-IE"
-            },
-            {
-                title: "English (United Kingdom)",
-                value: "en-GB"
-            },
-            {
-                title: "English (United States)",
-                value: "en-US"
-            },
-            {
-                title: "日本語（日本）",
-                value: "ja-JP"
-            },
-            {
-                title: "한국어",
-                value: "ko-KR"
-            },
-        ]
+        language_choice: '',
+        search_lang: ''
     }),
     computed: {
         filtered_lang() {
@@ -113,7 +88,8 @@ export default {
 
         return {
             speechStore,
-            is_electron
+            is_electron,
+            languages: WebSpeechLangs
         }
     }
 }

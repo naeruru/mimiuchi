@@ -2,7 +2,7 @@
 mimiuchi is a free, customizable, OSC capable, speech-to-text application for displaying text or relaying it to other applications like VRChat. Its customizable text window is also designed to be paired with applications like OBS. It runs on the web and electron, with little setup required beyond customization. You can try it out right now at [mimiuchi.naeris.net](https://mimiuchi.naeris.net/) with Chrome, Safari, or Edge. UI currently supports English and Japanese日本語！
 
 ### Why?
-I support the idea of people having many ways to communicate and do things. It is important to give people those tools and make them easily accessible. This app will give another way for people to display text in different applications like OBS or VRC. It is free and privacy focused. An example of a very similar application is [web captioner](https://webcaptioner.com/). However, I want to expand upon it and make this version unique!
+I support the idea of people having many ways to communicate and do things. It is important to give people those tools and make them easily accessible. This app will give another way for people to display text in different applications like OBS or VRC. It is free and focused on privacy as an end goal. An example of a very similar application is [web captioner](https://webcaptioner.com/). However, I want to expand upon it and make this version unique!
 
 ### Features
 - Speech-to-text
@@ -13,7 +13,7 @@ I support the idea of people having many ways to communicate and do things. It i
 
 ## How to use
 ### Speech-to-Text
-Simply go to [mimiuchi.naeris.net](https://mimiuchi.naeris.net/) and press the mic button! You will need to grant access the first time you do it. Currently, mimiuchi uses [Web Speech API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Speech_API) to perform speech-to-text, which is only supported on the web version. You [can read more about it below](#web-speech-api).
+Simply go to [mimiuchi.naeris.net](https://mimiuchi.naeris.net/) and press the mic button! You will need to grant access the first time you do it. Currently, mimiuchi uses [Web Speech API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Speech_API) to perform speech-to-text, which is only supported on the web version. You [can read more about it below](#web-speech-api). In the future I will support more options.
 
 ### Using OSC
 Click the broadcast button to toggle OSC. Due to how VRChat OSC works, this will require the desktop app version. If you're using speech-to-text, the web version can relay all speech-to-text to the deskop app when broadcasting is on.
@@ -46,12 +46,13 @@ in no particular order...
 - OBS websocket and 'text source' support
 - option for second 'control panel' type screen with focus on quick switching between settings
 - better generic osc support
-- DeepL translation support
+- translation support
 - webhook/websocket customization to connect to other apps that aren't related to me
 - documentation
 - steamvr integration
-- locally run whisper ai c++ bindings
 - continuous text transmission option for VRChat
+- locally run whisper c++ bindings / WebGPU based inference
+  - this point is really important to me, because I want a truly low latency private STT system. but.. I want to make sure I do it the right way, such that it can work entirely in the browser, utilizing the full power of your GPU or CPU, completely local and with minimal latency. A lot of this is very new, so it may take some time to iron it out. the first versions of it may differ greatly from the end goal.
 
 ## Download
 See the [release page](https://github.com/naexris/mimiuchi/releases) to install the latest version of the desktop app. The desktop version lets you use additional features like OSC.
