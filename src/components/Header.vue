@@ -15,7 +15,7 @@
         <v-btn icon @click="$router.push({ path: '/settings/general' })" :color="$route.fullPath.startsWith('/settings') ? 'secondary' : 'white'">
             <v-icon>mdi-cog</v-icon>
         </v-btn>
-        <v-btn icon @click="open_external('https://github.com/naexris/chatbox-tools')" color="white">
+        <v-btn icon @click="open_external('https://github.com/naeruru/mimiuchi')" color="white">
             <v-icon>mdi-help-circle-outline</v-icon>
         </v-btn>
       </v-container>

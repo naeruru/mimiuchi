@@ -75,7 +75,7 @@
                 <v-alert variant="outlined" type="warning" prominent>
                     <v-alert-title>
                         <i18n-t keypath="settings.stt.unsupported.text" tag="label" for="link" scope="global">
-                            <a @click="openURL('https://mimiuchi.naeris.net/')" class="text-primary pointer">{{ $t('settings.stt.unsupported.link')}}</a>
+                            <a @click="openURL('https://mimiuchi.com/')" class="text-primary pointer">{{ $t('settings.stt.unsupported.link')}}</a>
                         </i18n-t>
                     </v-alert-title>
                 </v-alert>

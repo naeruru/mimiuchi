@@ -46,7 +46,7 @@
                 <v-divider></v-divider>
                 <v-col class="d-flex justify-right mt-1">
                     <v-spacer></v-spacer>
-                    <v-btn size="small" variant="flat" prepend-icon="mdi-tag" @click="open_external('https://github.com/naexris/chatbox-tools/releases')">v{{ APP_VERSION }}</v-btn>
+                    <v-btn size="small" variant="flat" prepend-icon="mdi-tag" @click="open_external('https://github.com/naeruru/mimiuchi/releases')">v{{ APP_VERSION }}</v-btn>
                 </v-col>
                 
             </template>
