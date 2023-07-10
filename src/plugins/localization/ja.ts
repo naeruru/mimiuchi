@@ -48,6 +48,10 @@ export default {
             title: 'Speech-to-Text',
             description: 'Speech-to-textの設定',
             type: 'STTサービスを選択',
+            sensitivity: '感度ゲート',
+            sensitivity_start: 'マイクテスト',
+            sensitivity_stop: 'テストを中...',
+            device: 'デバイス： ',
             language: 'Speech-to-textの言語を選択',
             unsupported: {
                 text: 'Web Speech APIのSpeech-to-Textは{0}で利用できます。(^・ω・^)',

@@ -48,6 +48,10 @@ export default {
             title: 'Speech-to-Text',
             description: 'Speech-to-text settings',
             type: 'Select a STT service',
+            sensitivity: 'Sensitivity gate',
+            sensitivity_start: 'Check',
+            sensitivity_stop: 'Stop',
+            device: 'Listening: ',
             language: 'Select a speech detection language',
             unsupported: {
                 text: 'Web Speech API Speech-to-Text is only available on the {0}. (^・ω・^)',

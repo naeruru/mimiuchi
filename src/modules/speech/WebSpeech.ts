@@ -15,6 +15,10 @@ class WebSpeech {
     synth = window.speechSynthesis
     recognition: any
 
+    stream: any = null
+    sensitivity: number = 0.0
+    max_sensitivity: number = 0.0
+
     talking: boolean = false
     listening: boolean = false
 
@@ -38,17 +42,45 @@ class WebSpeech {
         }
     }
 
-    start() {
+    async get_sensitivity() {
+        this.stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
+        const audioContext = new AudioContext();
+        const mediaStreamAudioSourceNode = audioContext.createMediaStreamSource(this.stream);
+        const analyserNode = audioContext.createAnalyser();
+        mediaStreamAudioSourceNode.connect(analyserNode);
+
+        const pcmData = new Float32Array(analyserNode.fftSize);
+        const onFrame = () => {
+            if (!this.stream) return
+            analyserNode.getFloatTimeDomainData(pcmData);
+            let sumSquares = 0.0;
+            for (const amplitude of pcmData) { sumSquares += amplitude*amplitude; }
+            this.sensitivity = Math.sqrt(sumSquares / pcmData.length)
+            if (this.sensitivity > this.max_sensitivity)
+                this.max_sensitivity = this.sensitivity
+            window.requestAnimationFrame(onFrame)
+        };
+        window.requestAnimationFrame(onFrame)
+    }
+
+    async start() {
         // start recognition
         this.recognition.start()
+        // try {
+        //     await this.get_sensitivity()
+        // } catch {} // ios will deny the request on unsecure connections
 
         this.recognition.onresult = (event: any) => {
+            if (this.max_sensitivity < this.speechStore.stt.sensitivity)
+                return
+            
             const results = event.results[event.results.length - 1]
 
             // result is final
             if (results.isFinal) {
                 this.talking = false
                 this.stop()
+                this.max_sensitivity = 0.0
                 this.onresult(results[0].transcript, results.isFinal)
             // user started talking
             } else if (!results.isFinal && !this.talking) {
@@ -71,6 +103,11 @@ class WebSpeech {
 
     stop() {
         this.recognition.stop()
+        this.stream?.getTracks().forEach((track: any) => {
+            track.stop()
+            this.stream = null
+            this.max_sensitivity = 0.0
+        })
     }
 
     speak(input: string) {

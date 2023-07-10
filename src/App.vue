@@ -98,4 +98,16 @@ export default {
   background: #4e4e4e; /* #a9a4e5 */
   border-radius: 10px;
 }
+
+/* blink keyframe */
+.text-glow {
+  color: rgba(var(--v-theme-secondary))
+}
+.blink {
+  animation: blinker 1s cubic-bezier(.5, 0, 1, 1) infinite alternate;  
+}
+@keyframes blinker {  
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
 </style>

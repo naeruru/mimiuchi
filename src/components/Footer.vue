@@ -41,21 +41,21 @@
                     
                     <div class="d-flex justify-right">
                         <v-btn v-if="!is_electron()" @click="toggleListen" class="mr-4" :color="(listening) ? 'success' : 'error'" size="small"  icon variant="outlined">
-                        <v-icon v-if="!listening">mdi-microphone-off</v-icon>
-                        <v-icon v-else>mdi-microphone</v-icon>
-                    </v-btn>
-                    <v-btn @click="toggleBroadcast" :loading="loadingWebsocket" :disabled="loadingWebsocket" class="mr-4" :color="(broadcasting) ? 'success' : 'error'" size="small" icon variant="outlined">
-                        <v-icon v-if="!broadcasting">mdi-broadcast-off</v-icon>
-                        <v-icon v-else>mdi-broadcast</v-icon>
-                    </v-btn>
-                    <v-divider class="mr-4" vertical></v-divider>
-                    <v-btn v-if="$route.name === 'home'" @click="$router.push({ path: last_setting })" color="transparent"  size="small" icon flat>
-                        <v-icon>mdi-cog</v-icon>
-                    </v-btn>
-                    <v-btn v-else @click="$router.push({ path: '/' })" color="transparent"  size="small" icon flat>
-                        <v-icon>mdi-home</v-icon>
-                    </v-btn>
-                </div>
+                            <v-icon v-if="!listening">mdi-microphone-off</v-icon>
+                            <v-icon v-else>mdi-microphone</v-icon>
+                        </v-btn>
+                        <v-btn @click="toggleBroadcast" :loading="loadingWebsocket" :disabled="loadingWebsocket" class="mr-4" :color="(broadcasting) ? 'success' : 'error'" size="small" icon variant="outlined">
+                            <v-icon v-if="!broadcasting">mdi-broadcast-off</v-icon>
+                            <v-icon v-else>mdi-broadcast</v-icon>
+                        </v-btn>
+                        <v-divider class="mr-4" vertical></v-divider>
+                        <v-btn v-if="$route.name === 'home'" @click="$router.push({ path: last_setting })" color="transparent"  size="small" icon flat>
+                            <v-icon>mdi-cog</v-icon>
+                        </v-btn>
+                        <v-btn v-else @click="$router.push({ path: '/' })" color="transparent"  size="small" icon flat>
+                            <v-icon>mdi-home</v-icon>
+                        </v-btn>
+                    </div>
                 </div>
             </v-form>
         </div>
