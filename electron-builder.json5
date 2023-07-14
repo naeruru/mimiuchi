@@ -2,7 +2,7 @@
  * @see https://www.electron.build/configuration/configuration
  */
 {
-  "appId": "ChatboxTools",
+  "appId": "Mimiuchi",
   "asar": true,
   "icon": "public/favicon.ico",
   "directories": {
@@ -19,7 +19,8 @@
     ]
   },
   "linux": {
-      "icon": "public/logo-256x256.png"
+      "icon": "public/logo-256x256.png",
+      "category": "utility"
   },
   "win": {
     "target": [

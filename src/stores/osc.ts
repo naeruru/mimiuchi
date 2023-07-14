@@ -31,6 +31,7 @@ export const useOSCStore = defineStore('osc', {
         osc_text: true,
         text_typing: true, // typing indicator
         stt_typing: true, // talking indicator
+        show_keyboard: false,
 
         osc_params: [] as Param[]
     }),

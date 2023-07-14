@@ -116,6 +116,7 @@ export default {
                 enabled: 'OSCで全文送信（ブロードキャスト中）',
                 typing_indicator: 'タイピング時にタイピングインジケーターを有効',
                 speech_indicator: 'Speech-to-text時のタイピングインジケーターを有効',
+                show_keyboard: 'テキスト送信時にVRChatでキーボードを開く',
                 unsupported: {
                     text: 'OSCの設定は{link}で利用できます。インストールすれば、{icon}ボタンでウェブサイト版とデスクトップ版を一緒に使うことができます（Speech-to-text▶︎OSC）(  ᐡᴗ  ̫ ᴗᐡ)',
                     link: 'デスクトップアプリ版',

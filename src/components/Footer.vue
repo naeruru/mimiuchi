@@ -104,6 +104,7 @@ export default {
             broadcasting: false,
 
             input_text: '',
+            typing_limited: false,
 
             snackbar: false,
             snackbar_color: "error",
@@ -121,8 +122,8 @@ export default {
     },
     watch: {
         input_text(new_val) {
-            if (is_electron() && new_val.length === 1 && this.oscStore.text_typing && this.broadcasting)
-                window.ipcRenderer.send("typing-text-event", !!new_val)
+            if (this.oscStore.text_typing && this.broadcasting)
+                this.typing_event(true)
         },
         'speechStore.stt.language'(new_val) {
             if (this.speech.recognition) {
@@ -169,6 +170,15 @@ export default {
             return input.replace(replace_re, (matched) => {
                 return this.wordReplaceStore.word_replacements[matched.toLowerCase()]
             })
+        },
+        typing_event(event: boolean) {
+            if (is_electron() && !this.typing_limited) {
+                this.typing_limited = true
+                window.ipcRenderer.send("typing-text-event", event)
+                setTimeout(() => this.typing_limited = false, 6 * 1000)
+            }
+            
+            
         },
         paramTrigger(input: string) {
             // console.log(window.process.type)
@@ -225,6 +235,11 @@ export default {
                 hide: 0 // 1 = fade, 2 = hide
             }
 
+            // broadcast typing event
+            if (is_electron() && this.oscStore.stt_typing && this.broadcasting) {
+                this.typing_event(true)
+            }
+
             // overwrite last log
             let i = this.logs.length - 1 // track current index
             if (i >= 0 && !this.logs[i].isFinal) {
@@ -233,9 +248,6 @@ export default {
             } else {
                 this.logs.push(toSend)
                 i++;
-                if (is_electron() && this.oscStore.stt_typing && this.broadcasting) {
-                    window.ipcRenderer.send("typing-text-event", true)
-                }
             }
 
             // finalized text
@@ -253,8 +265,7 @@ export default {
 
             // send text via osc
             if (is_electron() && isFinal && this.oscStore.osc_text && this.broadcasting) {
-                window.ipcRenderer.send("send-text-event", input)
-                // window.ipcRenderer.send("typing-text-event", false)
+                window.ipcRenderer.send("send-text-event", `{ "transcript": "${input}", "hide_ui": ${!this.oscStore.show_keyboard} }`)
             } else if (this.ws) {
                 this.ws.send(`{"type": "text", "data": ${JSON.stringify(toSend)}}`)
             }

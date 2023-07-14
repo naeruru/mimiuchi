@@ -15,6 +15,7 @@ import { useWordReplaceStore } from  './stores/word_replace'
 import { useSettingsStore } from  './stores/settings'
 import { useSpeechStore } from  './stores/speech'
 import { useConnectionStore } from  './stores/connections'
+import { useOSCStore } from  './stores/osc'
 
 import is_electron from './helpers/is_electron'
 
@@ -45,6 +46,7 @@ export default {
     const wordReplaceStore = useWordReplaceStore()
     const settingsStore = useSettingsStore()
     const connectionStore = useConnectionStore()
+    const oscStore = useOSCStore()
 
     appearanceStore.$subscribe((_, state) => {
         localStorage.setItem('appearance', JSON.stringify(state))
@@ -61,6 +63,9 @@ export default {
     connectionStore.$subscribe((_, state) => {
         localStorage.setItem('connections', JSON.stringify(state))
     })
+    oscStore.$subscribe((_, state) => {
+        localStorage.setItem('osc', JSON.stringify(state))
+    })
 
 
     appearanceStore.$patch(JSON.parse(localStorage.getItem('appearance') || '{}'))
@@ -68,13 +73,15 @@ export default {
     settingsStore.$patch(JSON.parse(localStorage.getItem('settings') || '{}'))
     wordReplaceStore.$patch(JSON.parse(localStorage.getItem('word_replace') || '{}'))
     connectionStore.$patch(JSON.parse(localStorage.getItem('connections') || '{}'))
-    
+    oscStore.$patch(JSON.parse(localStorage.getItem('osc') || '{}'))
+
     return {
       appearanceStore,
       speechStore,
       wordReplaceStore,
       settingsStore,
       connectionStore,
+      oscStore,
       is_electron
     }
   }

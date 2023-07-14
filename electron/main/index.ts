@@ -5,7 +5,7 @@ import { join } from 'node:path'
 import Store from "electron-store"
 const store = new Store()
 
-import { emit_osc } from './modules/osc'
+import { emit_osc, empty_queue } from './modules/osc'
 import { initialize_ws, close_ws } from './modules/ws'
 
 // The built directory structure	
@@ -162,8 +162,14 @@ ipcMain.on("typing-text-event", (event, args) => {
 })
 
 // event for sending text
+export let text_queue = []
 ipcMain.on("send-text-event", (event, args) => {
-  emit_osc(['/chatbox/input', args, true])
+  args = JSON.parse(args)
+  const new_text = args.transcript.indexOf(' ') >= 0 ? args.transcript.match(/.{1,140}(\s|$)/g) : args.transcript.match(/.{1,140}/g)
+  text_queue = [ ...text_queue, ...new_text ]
+  if (text_queue.length >= 1) {
+    empty_queue(text_queue, args.hide_ui)
+  }
 })
 
 // event for sending custom osc param

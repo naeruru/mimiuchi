@@ -116,6 +116,7 @@ export default {
                 enabled: 'Send all text with OSC (when broadcasting)',
                 typing_indicator: 'Enable typing indicator when typing',
                 speech_indicator: 'Enable typing indicator for speech-to-text',
+                show_keyboard: 'Open keyboard in VRChat when sending text',
                 unsupported: {
                     text: 'To use OSC, you must use the {link}. Once installed, the website and desktop versions can be used together with the {icon} button. (  ᐡᴗ  ̫ ᴗᐡ)',
                     link: 'desktop app',
