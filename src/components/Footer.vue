@@ -44,10 +44,12 @@
                             <v-icon v-if="!listening">mdi-microphone-off</v-icon>
                             <v-icon v-else>mdi-microphone</v-icon>
                         </v-btn>
-                        <v-btn @click="toggleBroadcast" :loading="loadingWebsocket" :disabled="loadingWebsocket" class="mr-4" :color="(broadcasting) ? 'success' : 'error'" size="small" icon variant="outlined">
-                            <v-icon v-if="!broadcasting">mdi-broadcast-off</v-icon>
-                            <v-icon v-else>mdi-broadcast</v-icon>
-                        </v-btn>
+                        <v-badge :model-value="!!connections" :content="connections ? connections : null" color="success" class="mr-4">
+                            <v-btn @click="toggleBroadcast" :loading="loadingWebsocket" :disabled="loadingWebsocket"  :color="(broadcasting) ? 'success' : 'error'" size="small" icon variant="outlined">
+                                <v-icon v-if="!broadcasting">mdi-broadcast-off</v-icon>
+                                <v-icon v-else>mdi-broadcast</v-icon>
+                            </v-btn>
+                        </v-badge>
                         <v-divider class="mr-4" vertical></v-divider>
                         <v-btn v-if="$route.name === 'home'" @click="$router.push({ path: last_setting })" color="transparent"  size="small" icon flat>
                             <v-icon>mdi-cog</v-icon>
@@ -100,6 +102,8 @@ export default {
             listening: false,
             listening_error: false,
             talking: false,
+
+            connections: 0,
 
             loadingWebsocket: false,
             broadcasting: false,
@@ -282,6 +286,7 @@ export default {
         toggleBroadcast () {
             if (this.broadcasting) {
                 this.broadcasting = false
+                this.connections = 0
                 if (this.ws) {
                     this.ws.send('{"type": "command", "data": "stop"}')
                     this.ws.close()
@@ -290,7 +295,9 @@ export default {
                 return
             }
 
-            if (!is_electron()) {
+            this.broadcasting = true
+
+            if (!is_electron() && this.connectionStore.ws.enabled) {
                 this.loadingWebsocket = true
                 try {
                     this.ws = new WebSocket(`ws://${this.connectionStore.ws.url}`)
@@ -304,6 +311,7 @@ export default {
                 this.ws.onopen = () => {
                     this.broadcasting = true
                     this.loadingWebsocket = false
+                    this.connections += 1
                 }
                 this.ws.onmessage = (event: any) => {
                     const msg = JSON.parse(event.data)
@@ -313,19 +321,22 @@ export default {
                 }
                 this.ws.onclose = () => {
                     console.log('websocket closed')
-                    this.broadcasting = false
+                    if (this.connections === 0)
+                        this.broadcasting = false
                     this.loadingWebsocket = false
                     this.ws = null
                 }
                 this.ws.onerror = () => {
-                    this.broadcasting = false
-                    this.loadingWebsocket = false
-                    this.ws = null
+                    // if (this.connections === 0)
+                    //     this.broadcasting = false
+                    // this.loadingWebsocket = false
+                    // this.ws = null
                     this.show_snackbar('error', this.$t('alerts.broadcast_error'))
                 }
-            } else {
-                this.broadcasting = true
             }
+
+            if (this.connectionStore.wh.enabled) 
+                this.connections += 1
 
         },
         show_snackbar(type: string, desc: string) {
