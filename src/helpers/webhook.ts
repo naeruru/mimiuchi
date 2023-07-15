@@ -13,7 +13,6 @@ const webhook = {
                 },
                 body: JSON.stringify(body)
             }).then(response => {
-                console.log('hi')
                 return response.json()
             }).then(data => {
                 resolve(data)
