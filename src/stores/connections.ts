@@ -22,7 +22,12 @@ export const useConnectionStore = defineStore('connections', {
             url: '127.0.0.1:7714',
             port: 7714, // ミ・ミ・ウ・チ
         } as Connection,
-        wh: {} as Connection
+        wh: {
+            enabled: false,
+            icon: 'mdi-webhook',
+            type: 'webhook',
+            url: ''
+        } as Connection
     }),
     getters: {
 

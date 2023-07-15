@@ -67,6 +67,7 @@
 import WelcomeOverlay from "../components/overlays/WelcomeOverlay.vue"
 
 import is_electron from "../helpers/is_electron"
+import webhook from '../helpers/webhook'
 
 import { useDisplay } from 'vuetify'
 import { useWordReplaceStore } from  '../stores/word_replace'
@@ -261,6 +262,11 @@ export default {
                         this.logs[i].hide = 1
                         setTimeout(() => this.logs[i].hide = 2, this.appearanceStore.text.fade_time * 1000)
                     }, this.appearanceStore.text.hide_after * 1000)
+                
+                // webhook
+                if (this.connectionStore.wh.enabled) {
+                    webhook.post(this.connectionStore.wh.url, { transcript: input })
+                }
             }
 
             // send text via osc

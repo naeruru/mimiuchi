@@ -2,17 +2,9 @@
     <v-row>
         <v-col v-if="modelValue">
             <v-text-field
-                v-if="!is_electron()"
                 v-model="modelValue.url"
                 label="URL"
-                prefix="ws://"
-            ></v-text-field>
-            <v-text-field
-                v-if="is_electron()"
-                v-model="modelValue.port"
-                :label="$t('settings.connections.ws.port')"
-                type="number"
-                :rules="port_rules"
+                :rules="url_rules"
             ></v-text-field>
         </v-col>
     </v-row>
@@ -24,18 +16,18 @@ import is_electron from '../../../../helpers/is_electron'
 import { Connection, useConnectionStore } from  '../../../../stores/connections'
 
 export default {
-    name: 'WebSocketOptions',
+    name: 'WebHookOptions',
     props: {
         modelValue: Object,
         type: String,
     },
     emits: ['update:modelValue'],
     data: () => ({
-        ws: {} as Connection,
-        port_rules: [
-            (value: number) => {
-                if (value >= 1 && value <=  65535) return true
-                return 'Must be a valid port number'
+        wh: {} as Connection,
+        url_rules: [
+            (value: string) => {
+                 return true
+                return 'Must be a valid URL'
             },
         ],
     }),
@@ -44,13 +36,13 @@ export default {
             get() {
                 return this.modelValue
             },
-            set(modelValue: boolean) {
+            set(modelValue: any) {
                 this.$emit('update:modelValue', modelValue)
             }
         }
     },
     mounted() {
-        this.ws = JSON.parse(JSON.stringify(this.connectionStore.ws))
+        this.wh = JSON.parse(JSON.stringify(this.connectionStore.wh))
     },
     setup() {
         const connectionStore = useConnectionStore()

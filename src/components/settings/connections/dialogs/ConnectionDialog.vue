@@ -15,7 +15,7 @@
                                         color="secondary"
                                         class="mr-2"
                                     ></v-icon>
-                                <h2>Websocket</h2>
+                                <h2>{{ connection?.title }}</h2>
                             </v-col>
                             <v-col class="d-flex justify-center text-center px-8">
                                 <label class="text-subtitle-1">{{ $t('settings.connections.ws.description') }}</label>
@@ -25,13 +25,16 @@
                                 <v-divider></v-divider>
                             </v-col>
                         </v-row>
-                        <WebSocketOptions v-if="type === 'ws'" v-model="ws"></WebSocketOptions>
+                        <WebSocketOptions v-if="connection?.type === 'ws'" v-model="ws"></WebSocketOptions>
+                        <WebHookOptions v-if="connection?.type === 'wh'" v-model="wh"></WebHookOptions>
                         
                 </v-card-text>
                 <v-card-actions>
                     <v-spacer></v-spacer>
                     <v-btn type="submit" @click="value = false">Cancel</v-btn>
-                    <v-btn :disabled="!form" type="submit" color="primary" variant="flat" @click="update_ws()">Update</v-btn>
+                    <v-btn :disabled="!form" type="submit" color="primary" variant="flat" @click="update_connection(connection)">
+                        Update
+                    </v-btn>
                 </v-card-actions>
             </v-form>
         </v-card>
@@ -43,27 +46,31 @@
 import is_electron from '../../../../helpers/is_electron'
 import { Connection, useConnectionStore } from  '../../../../stores/connections'
 import WebSocketOptions from './WebSocketOptions.vue'
+import WebHookOptions from './WebHookOptions.vue'
 
 declare const window: any
 
+declare interface ConnectionType {
+    title?: string,
+    type?: string,
+    icon?: string
+}
+
 export default {
-    name: 'SettingsGeneral',
-    components: { WebSocketOptions },
+    name: 'ConnectionDialog',
+    components: {
+        WebSocketOptions,
+        WebHookOptions
+    },
     props: {
         modelValue: Boolean,
-        type: String,
+        connection: Object,
     },
     emits: ['update:modelValue'],
     data: () => ({
         form: false,
         ws: {} as Connection,
-        firstNameRules: [
-            (value: string) => {
-                if (value?.length > 3) return true
-
-                return 'First name must be at least 3 characters.'
-            },
-        ],
+        wh: {} as Connection,
     }),
     computed: {
         value: {
@@ -72,24 +79,34 @@ export default {
             },
             set(modelValue: boolean) {
                 this.ws = JSON.parse(JSON.stringify(this.connectionStore.ws))
+                this.wh = JSON.parse(JSON.stringify(this.connectionStore.wh))
                 this.$emit('update:modelValue', modelValue)
             }
         }
     },
     methods: {
-        update_ws() {
-            this.connectionStore.ws = this.ws
-            if (this.is_electron()) {
-                if (this.connectionStore.ws.enabled) {
-                    window.ipcRenderer.send("close-ws")
-                    window.ipcRenderer.send("start-ws", this.connectionStore.ws.port)
-                }
+        update_connection(connection: any) {
+            switch(connection.type) {
+                case 'ws':
+                    this.connectionStore.ws = this.ws
+                    if (this.is_electron()) {
+                        if (this.connectionStore.ws.enabled) {
+                            window.ipcRenderer.send("close-ws")
+                            window.ipcRenderer.send("start-ws", this.connectionStore.ws.port)
+                        }
+                    }
+                    break
+                case 'wh':
+                    this.connectionStore.wh = this.wh
+                    this.connectionStore.wh.enabled = true
+                    break
             }
             this.$emit('update:modelValue', false)
         }
     },
     mounted() {
         this.ws = JSON.parse(JSON.stringify(this.connectionStore.ws))
+        this.wh = JSON.parse(JSON.stringify(this.connectionStore.wh))
     },
     setup() {
         const connectionStore = useConnectionStore()

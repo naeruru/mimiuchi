@@ -7,10 +7,11 @@
                 </template>
             </i18n-t>
         </template>
-        <ConnectionDialog v-model="dialog" :type="connection_type" ></ConnectionDialog>
+        <ConnectionDialog v-model="dialog" :connection="connection_type" ></ConnectionDialog>
         <v-divider></v-divider>
         <v-card-text>
             <v-row>
+
                 <!-- <v-col :cols="12">
                     <v-card subtitle="Add new connection" variant="outlined">
                         <v-card-text>
@@ -19,7 +20,7 @@
                                     v-for="(connection) in connection_options"
                                     class="ma-2 text-white"
                                     variant="tonal"
-                                    @click="dialog = true"
+                                    @click="open_dialog(connection)"
                                 >
                                     <v-card-item>
                                         <template v-slot:title>
@@ -39,7 +40,8 @@
                         </v-card-text>
                     </v-card>
                 </v-col> -->
-                <v-col>
+
+                <v-col :cols="12">
                     <v-card flat>
                         <v-card class="py-2" flat>
                             <v-list-item :title="$t('settings.connections.ws.name')" subtitle="websocket">
@@ -57,7 +59,10 @@
                                 </v-col> -->
                                 <v-spacer></v-spacer>
                                 <template v-slot:append>
-                                    <v-btn @click.stop="open_ws_dialog()" class="mr-4" icon variant="text">
+                                    <v-btn 
+                                        @click.stop="open_dialog({title: 'Websocket', icon: 'mdi-transit-connection-horizontal', type: 'ws'})" 
+                                        class="mr-4" icon variant="text"
+                                    >
                                         <v-icon>mdi-cog</v-icon>
                                     </v-btn>
                                     <v-switch v-model="connectionStore.ws.enabled" color="primary" inset hide-details></v-switch>
@@ -80,6 +85,72 @@
                     </v-card>
                     <!-- <v-card>meow</v-card> -->
                 </v-col>
+
+                <v-col :cols="12">
+                    <v-card flat>
+                        <v-card class="py-2" flat>
+                            <v-list-item title="Webhook">
+                                <template v-slot:prepend>
+                                    <v-icon
+                                        :icon="connectionStore.wh.icon"
+                                        size="30"
+                                        color="secondary"
+                                        class="mr-4"
+                                    ></v-icon>
+                                </template>
+                                <!-- <v-col>
+                                    <p class="text-subtitle-1 font-weight-bold pb-0">{{ $t('settings.connections.websocket_name') }}</p>
+                                    <p class="text-subtitle-2　font-weight-light text-medium-emphasis">websocket</p>
+                                </v-col> -->
+                                <v-spacer></v-spacer>
+                                <template v-slot:append>
+                                    <v-btn
+                                        v-if="connectionStore.wh.enabled"
+                                        @click.stop="open_dialog({title: 'Webhook', icon: 'mdi-webhook', type: 'wh'})" 
+                                        class="mr-4"
+                                        icon
+                                        variant="text"
+                                    >
+                                        <v-icon>mdi-cog</v-icon>
+                                    </v-btn>
+                                    <v-btn 
+                                        v-if="!connectionStore.wh.enabled"
+                                        @click.stop="open_dialog({title: 'Webhook', icon: 'mdi-webhook', type: 'wh'})" 
+                                        icon
+                                        color="success"
+                                        variant="text"
+                                    >
+                                        <v-icon>mdi-plus-circle</v-icon>
+                                    </v-btn>
+                                    <v-btn 
+                                        v-if="connectionStore.wh.enabled"
+                                        @click.stop="clear_wh()" 
+                                        icon
+                                        color="error"
+                                        variant="text"
+                                    >
+                                        <v-icon>mdi-close-circle</v-icon>
+                                    </v-btn>
+                                </template>
+                                
+
+                            </v-list-item>
+                        </v-card>
+                        <!-- <v-divider></v-divider> -->
+                        <!-- <v-list class="pa-0">
+                            <v-list-item :ripple="false" @click="toggle_ws()">
+                                <template v-slot:prepend>
+                                <p class="text-body-2">Enable</p>
+                            </template>
+                            <template v-slot:append>
+                                <v-switch v-model="connectionStore.ws.enabled" color="primary" inset hide-details></v-switch>
+                            </template>
+                            </v-list-item>
+                        </v-list> -->
+                    </v-card>
+                    <!-- <v-card>meow</v-card> -->
+                </v-col>
+                
             </v-row>
         </v-card-text>
     </v-card>
@@ -93,22 +164,25 @@ import ConnectionDialog from './dialogs/ConnectionDialog.vue'
 
 declare const window: any
 
+declare interface ConnectionType {
+    title?: string,
+    type?: string,
+    icon?: string
+}
+
 export default {
     name: "SettingsGeneral",
     components: { ConnectionDialog },
     data: () => ({
         dialog: false,
-        connection_type: 'ws',
+        connection_type: {} as ConnectionType,
         connection_options: [
             {
                 title: "Webhook",
+                type: "wh",
                 icon: "mdi-webhook"
-            },
-            // {
-            //     title: "Websocket",
-            //     icon: "mdi-transit-connection-horizontal"
-            // }
-        ],
+            }
+        ] as ConnectionType[],
         snackbar: false,
         snackbar_text: "",
         reset_dialog: false,
@@ -123,8 +197,8 @@ export default {
         }
     },
     methods: {
-        open_ws_dialog() {
-            this.connection_type = 'ws'
+        open_dialog(connection: ConnectionType) {
+            this.connection_type = connection
             this.dialog = true
         },
         ws_toggled(value: boolean) {
@@ -135,6 +209,10 @@ export default {
                     window.ipcRenderer.send("close-ws")
                 }
                 // value = !value
+        },
+        clear_wh() {
+            this.connectionStore.wh.enabled = false
+            this.connectionStore.wh.url = ''
         }
     },
     unmounted() {
