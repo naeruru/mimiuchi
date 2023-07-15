@@ -47,7 +47,7 @@ in no particular order...
 - option for second 'control panel' type screen with focus on quick switching between settings
 - better generic osc support
 - translation support
-- webhook/websocket customization to connect to other apps that aren't related to me
+- ~~webhook/websocket customization to connect to other apps that aren't related to me~~✅
 - documentation
 - steamvr integration
 - continuous text transmission option for VRChat
