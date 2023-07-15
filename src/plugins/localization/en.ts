@@ -22,7 +22,7 @@ export default {
         no_speech: 'Your browser does not support Web Speech API (Speech-to-text).',
         mic_error: 'Error enabling microphone. You must give permission to use it.',
         broadcast_error: 'Error enabling broadcast. Make sure the desktop app is running.',
-        websocket_error: '無効なウェブソケットURL',
+        websocket_error: 'Invalid websocket URL',
         version_mismatch: 'The desktop app has a different version than the web version. Consider updating, as things might break.'
     },
     settings: {
