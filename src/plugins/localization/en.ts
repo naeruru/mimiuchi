@@ -104,6 +104,9 @@ export default {
                 name: 'Desktop connection',
                 port: 'Websocket Port',
                 description: 'Send real-time text updates over a websocket'
+            },
+            wh: {
+                description: 'Send text updates over a webhook POST request'
             }
         },
         osc: {

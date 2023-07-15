@@ -104,6 +104,9 @@ export default {
                 name: 'デスクトップアプリの接続',
                 port: 'ウェブソケットポート',
                 description: 'ウェブソケットでテキスト更新を即座に送信できます'
+            },
+            wh: {
+                description: 'テキスト更新をWebhookのPOSTリクエストで送信できます'
             }
         },
         osc: {
