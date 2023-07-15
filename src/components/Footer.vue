@@ -327,10 +327,6 @@ export default {
                     this.ws = null
                 }
                 this.ws.onerror = () => {
-                    // if (this.connections === 0)
-                    //     this.broadcasting = false
-                    // this.loadingWebsocket = false
-                    // this.ws = null
                     this.show_snackbar('error', this.$t('alerts.broadcast_error'))
                 }
             }

@@ -8,14 +8,11 @@ const webhook = {
                 headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json',
-                    'Access-Control-Request-Private-Network': "true",
                     "Access-Control-Allow-Origin": '*',
                 },
                 body: JSON.stringify(body)
             }).then(response => {
-                return response.json()
-            }).then(data => {
-                resolve(data)
+                return resolve(response)
             }).catch(error => {
                 reject(error)
             })
