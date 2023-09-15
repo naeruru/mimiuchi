@@ -6,7 +6,30 @@
                 <v-col :cols="12">
                     <p class="text-h6" label color="secondary">{{ $t('settings.appearance.text.title') }}</p>
                 </v-col>
-                <v-col :cols="12">
+                <v-col :cols="12" :md="8">
+                    <v-autocomplete
+                        v-model="appearanceStore.text.font"
+                        :items="fonts"
+                        item-title="name"
+                        label="Font family"
+                        variant="solo"
+                        hide-details
+                        return-object
+                        :disabled="!fonts.length"
+                    >
+                    <!-- <template v-slot:append>
+                        <v-select
+                            v-model="appearanceStore.text.font.sub_type"
+                            :items="appearanceStore.text.font.sub_types"
+                            label="Type"
+                            variant="solo"
+                            hide-details
+                            :disabled="!fonts.length"
+                        ></v-select>
+                    </template> -->
+                    </v-autocomplete>
+                </v-col>
+                <v-col :cols="12" :md="4">
                     <v-text-field
                         v-model="appearanceStore.text.font_size"
                         :label="$t('settings.appearance.text.font_size')"
@@ -75,15 +98,24 @@
 
 <script lang="ts">
 import { useAppearanceStore } from '../../stores/appearance';
+import { get_fonts } from '../../helpers/get_fonts'
 
 
 export default {
     name: 'SettingsGeneral',
     data: () => ({
-        //
+        fonts: [] as any[],
     }),
     methods: {
 
+    },
+    watch: {
+        'appearanceStore.text.font': (v) => {
+            v.sub_type = 'regular'
+        }
+    },
+    async mounted() {
+        this.fonts = await get_fonts()
     },
     setup() {
         const appearanceStore = useAppearanceStore()

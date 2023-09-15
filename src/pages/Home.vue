@@ -13,7 +13,7 @@
             <a
                 v-for="log in logs"
                 class="font-weight-light"
-                :class="{'fade-out': log.hide, 'final-text': log.isFinal, 'interim-text': !log.isFinal }"
+                :class="{'fade-out': log.hide, 'final-text': log.isFinal, 'interim-text': !log.isFinal}"
             >
                 <a v-if="log.hide !== 2">{{ log.transcript }}</a>
             </a>
@@ -99,6 +99,8 @@ export default {
         const text_color = appearanceStore.text.color
         const interim_color = appearanceStore.text.interim_color
 
+        const font_name = appearanceStore.text.font.name
+
         return {
             settingsStore,
             appearanceStore,
@@ -107,7 +109,8 @@ export default {
             fade_time,
             text_color,
             interim_color,
-            height
+            font_name,
+            height,
         }
     }
 }
@@ -120,6 +123,7 @@ html {
 .log-list {
     display: flex;
     flex-direction: column-reverse;
+    font-family: v-bind(font_name);
     font-size: v-bind(font_size);
     overflow-y: auto;
     max-height: calc(100vh - v-bind(outer_size));
@@ -143,6 +147,7 @@ html {
   -ms-animation: fadeOut ease v-bind(fade_time);
   animation-fill-mode: forwards;
 }
+
 @keyframes fadeOut {
   0% {
     opacity:1;

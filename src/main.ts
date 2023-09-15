@@ -5,12 +5,14 @@ import router from './plugins/router'
 import i18n from './plugins/i18n'
 // import { loadFonts } from './plugins/webfontloader'
 
+import './assets/fonts/fonts.css';
+
 import { createPinia } from 'pinia'
 const pinia = createPinia()
 
 // loadFonts()
 
-const app_name = 'Chatbox Tools'
+const app_name = 'mimiuchi'
 
 createApp(App)
   .use(vuetify)
