@@ -160,10 +160,13 @@ export default {
                 this.speech.onerror = (event: any) => {
                     let desc = ''
                     if (event.error === 'no-speech') return // web-speech: no sound detected
-                    if (event.error === 'not-allowed') desc = this.snackbar_desc = this.$t('alerts.mic_error')
+                    if (event.error === 'not-allowed') desc = this.$t('alerts.mic_error')
+                    if (event.error === 'aborted') desc = this.$t('alerts.device_in_use')
                     this.listening = false
                     this.listening_error = true
                     this.show_snackbar('error', desc)
+                    this.listening = false
+                    this.speech.stop()
                 }
             } else {
                 this.speech.stop()
@@ -257,6 +260,8 @@ export default {
 
             // finalized text
             if (isFinal) {
+                // timestamp
+                this.logs[i].time = new Date()
                 // text-to-speech
                 if (this.speechStore.tts.enabled && this.speechStore.tts.voice) this.tts(input)
 

@@ -21,6 +21,7 @@ export default {
     alerts: {
         no_speech: 'Your browser does not support Web Speech API (Speech-to-text).',
         mic_error: 'Error enabling microphone. You must give permission to use it.',
+        device_in_use: 'Error: device in use by another tab.',
         broadcast_error: 'Error enabling broadcast. Make sure the desktop app is running.',
         websocket_error: 'Invalid websocket URL',
         version_mismatch: 'The desktop app has a different version than the web version. Consider updating, as things might break.'
@@ -31,6 +32,7 @@ export default {
             title: 'General Settings',
             description: 'General application settings',
             language: 'Select a UI language',
+            transcript: 'Download session transcript',
             reset: {
                 button: 'Reset all settings',
                 dialog: {
@@ -76,6 +78,8 @@ export default {
             description: 'Change the appearance of the app',
             text: {
                 title: 'Text Settings',
+                font_family: 'Font family',
+                font_type: 'Type',
                 font_size: 'Font Size',
                 fade_after: 'Fade text after',
                 seconds: 'seconds',

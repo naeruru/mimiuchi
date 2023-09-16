@@ -11,22 +11,22 @@
                         v-model="appearanceStore.text.font"
                         :items="fonts"
                         item-title="name"
-                        label="Font family"
+                        :label="$t('settings.appearance.text.font_family')"
                         variant="solo"
                         hide-details
                         return-object
                         :disabled="!fonts.length"
                     >
-                    <!-- <template v-slot:append>
+                    <template v-slot:append>
                         <v-select
                             v-model="appearanceStore.text.font.sub_type"
                             :items="appearanceStore.text.font.sub_types"
-                            label="Type"
+                            :label="$t('settings.appearance.text.font_type')"
                             variant="solo"
                             hide-details
                             :disabled="!fonts.length"
                         ></v-select>
-                    </template> -->
+                    </template>
                     </v-autocomplete>
                 </v-col>
                 <v-col :cols="12" :md="4">

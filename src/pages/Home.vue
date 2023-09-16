@@ -100,6 +100,7 @@ export default {
         const interim_color = appearanceStore.text.interim_color
 
         const font_name = appearanceStore.text.font.name
+        const font_subtype = appearanceStore.text.font.sub_type
 
         return {
             settingsStore,
@@ -110,6 +111,7 @@ export default {
             text_color,
             interim_color,
             font_name,
+            font_subtype,
             height,
         }
     }
@@ -124,6 +126,7 @@ html {
     display: flex;
     flex-direction: column-reverse;
     font-family: v-bind(font_name);
+    font-style: v-bind(font_subtype);
     font-size: v-bind(font_size);
     overflow-y: auto;
     max-height: calc(100vh - v-bind(outer_size));

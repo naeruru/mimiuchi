@@ -21,6 +21,7 @@ export default {
     alerts: {
         no_speech: 'このブラウザはWeb Speech APIをサポートしていません（Speech-to-text）',
         mic_error: 'マイクのアクセスに失敗しました。許可する必要があります。',
+        device_in_use: 'Error: デバイスが別のブラウザタブで使用中です',
         broadcast_error: 'ブロードキャストに失敗しました. デスクトップアプリが起動していることを確認してください。',
         websocket_error: 'ウェブソケットのURLが無効です',
         version_mismatch: 'デスクトップ版とウェブアプリ版は別物です。壊れるかもしれないので、アップデートを検討してください。'
@@ -31,6 +32,7 @@ export default {
             title: '全般設定',
             description: 'アプリ全般の設定',
             language: 'UIの言語を選択',
+            transcript: 'セッショントランスクリプトをダウンロードする',
             reset: {
                 button: 'アプリの設定をリセットする',
                 dialog: {
@@ -76,6 +78,8 @@ export default {
             description: 'アプリのテーマを変更',
             text: {
                 title: '文字設定',
+                font_family: 'フォント',
+                font_type: 'タイプ',
                 font_size: '文字の大きさ',
                 fade_after: '〇〇秒後にフェード',
                 fade_for: '〇〇秒間のフェード',
