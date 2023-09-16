@@ -176,7 +176,15 @@ const server_fonts = [
             'regular',
             'italic',
             '700',
-            '700 italic'
+            '700 italic',
+        ]
+    },
+    {
+        type: 'system',
+        name: 'にしき的',
+        sub_types: [
+            'regular',
+            'italic',
         ]
     }
 ]
