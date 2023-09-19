@@ -40,7 +40,7 @@ in no particular order...
 - ~~text-to-speech~~ ✅
 - more TTS/STT options (for standalone desktop experience)
 - VRChat text shader support (sending character data to float params)
-- add ability to export settings/transcripts
+- ~~add ability to export settings/transcripts~~✅
 - ~~better webkit/safari support~~✅
 - Spotify support(maybe)
 - OBS websocket and 'text source' support

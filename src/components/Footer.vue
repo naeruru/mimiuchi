@@ -102,6 +102,7 @@ export default {
             listening: false,
             listening_error: false,
             talking: false,
+            wait_interval: undefined as undefined | ReturnType<typeof setTimeout>,
 
             connections: 0,
 
@@ -227,6 +228,12 @@ export default {
         onSubmit (input_override: string, isFinal: boolean = true) {
             let input = (input_override) ? input_override : this.input_text
 
+            if (this.wait_interval) clearTimeout(this.wait_interval)
+            if (this.appearanceStore.text.new_line_delay >= 0)
+                this.wait_interval = setTimeout(() => {
+                    this.logs[this.logs.length - 1].pause = true
+                }, this.appearanceStore.text.new_line_delay * 1000)
+
             // word replace
             input = this.replace_words(input)
 
@@ -268,8 +275,16 @@ export default {
                 // fadeout text
                 if (this.appearanceStore.text.enable_fade)
                     setTimeout(() => {
-                        this.logs[i].hide = 1
-                        setTimeout(() => this.logs[i].hide = 2, this.appearanceStore.text.fade_time * 1000)
+                        if(!this.logs[i].pause) return
+
+                        let pauses = 0
+                        // fade out all text since last pause
+                        while (i >= 0 && pauses < 2) {
+                            this.logs[i].hide = 1
+                            setTimeout((i) => this.logs[i].hide = 2, this.appearanceStore.text.fade_time * 1000, i)
+                            if (this.logs[i].pause) pauses += 1
+                            i -= 1
+                        }
                     }, this.appearanceStore.text.hide_after * 1000)
                 
                 // webhook

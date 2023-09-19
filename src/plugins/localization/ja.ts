@@ -83,6 +83,39 @@ export default {
                 font_size: '文字の大きさ',
                 fade_after: '〇〇秒後にフェード',
                 fade_for: '〇〇秒間のフェード',
+                new_line_delay: {
+                    hint: 'テキストが送信されないと、改行を挿入す',
+                    options: [
+                        {
+                            title: 'すぐに',
+                            value: 0,
+                        },
+                        {
+                            title: '2秒後',
+                            value: 2,
+                        },
+                        {
+                            title: '4秒後',
+                            value: 4,
+                        },
+                        {
+                            title: '6秒後',
+                            value: 6,
+                        },
+                        {
+                            title: '8秒後',
+                            value: 8,
+                        },
+                        {
+                            title: '10秒後',
+                            value: 10,
+                        },
+                        {
+                            title: '改行なし',
+                            value: -1,
+                        },
+                    ]
+                },
                 seconds: '秒',
                 color: '文字色',
                 interim_color: '中間文字色'

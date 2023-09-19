@@ -17,16 +17,16 @@
                         return-object
                         :disabled="!fonts.length"
                     >
-                    <template v-slot:append>
-                        <v-select
-                            v-model="appearanceStore.text.font.sub_type"
-                            :items="appearanceStore.text.font.sub_types"
-                            :label="$t('settings.appearance.text.font_type')"
-                            variant="solo"
-                            hide-details
-                            :disabled="!fonts.length"
-                        ></v-select>
-                    </template>
+                        <template v-slot:append>
+                            <v-select
+                                v-model="appearanceStore.text.font.sub_type"
+                                :items="appearanceStore.text.font.sub_types"
+                                :label="$t('settings.appearance.text.font_type')"
+                                variant="solo"
+                                hide-details
+                                :disabled="!fonts.length"
+                            ></v-select>
+                        </template>
                     </v-autocomplete>
                 </v-col>
                 <v-col :cols="12" :md="4">
@@ -40,8 +40,8 @@
                 </v-col>
                 <v-col :cols="12" :sm="6" class="d-flex">
                         <v-checkbox-btn
-                        v-model="appearanceStore.text.enable_fade"
-                        class="pe-2"
+                            v-model="appearanceStore.text.enable_fade"
+                            class="pe-2"
                         ></v-checkbox-btn>
                         <v-text-field
                             v-model="appearanceStore.text.hide_after"
@@ -50,7 +50,8 @@
                             :suffix="$t('settings.appearance.text.seconds')"
                             type="number"
                             hide-details
-                        ></v-text-field>
+                        >
+                        </v-text-field>
                 </v-col>
                 <v-col :cols="12" :sm="6">
                     <v-text-field 
@@ -61,6 +62,14 @@
                         type="number"
                         hide-details
                     ></v-text-field>
+                </v-col>
+                <v-col>
+                    <v-select
+                        v-model="appearanceStore.text.new_line_delay"
+                        :items="$tm('settings.appearance.text.new_line_delay.options')"
+                        :label="$t('settings.appearance.text.new_line_delay.hint')"
+                        hide-details
+                    ></v-select>
                 </v-col>
                 <v-divider></v-divider>
                 <v-col :cols="12" :md="12" class="d-flex flex-no-wrap justify-space-between mt-1">
@@ -103,9 +112,11 @@ import { get_fonts } from '../../helpers/get_fonts'
 
 export default {
     name: 'SettingsGeneral',
-    data: () => ({
-        fonts: [] as any[],
-    }),
+    data() {
+        return {
+            fonts: [] as any[],
+        }
+    },
     methods: {
 
     },

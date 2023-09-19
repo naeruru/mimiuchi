@@ -84,6 +84,39 @@ export default {
                 fade_after: 'Fade text after',
                 seconds: 'seconds',
                 fade_for: 'Fade text for',
+                new_line_delay: {
+                    hint: 'Start a new line when no text is sent',
+                    options: [
+                        {
+                            title: 'Instantly',
+                            value: 0,
+                        },
+                        {
+                            title: 'after 2 seconds',
+                            value: 2,
+                        },
+                        {
+                            title: 'after 4 seconds',
+                            value: 4,
+                        },
+                        {
+                            title: 'after 6 seconds',
+                            value: 6,
+                        },
+                        {
+                            title: 'after 8 seconds',
+                            value: 8,
+                        },
+                        {
+                            title: 'after 10 seconds',
+                            value: 10,
+                        },
+                        {
+                            title: 'Never',
+                            value: -1,
+                        },
+                    ]
+                },
                 color: 'Text color',
                 interim_color: 'Iterim text color'
             },
