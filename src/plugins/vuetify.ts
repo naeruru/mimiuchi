@@ -5,16 +5,16 @@ import 'vuetify/styles'
 // Vuetify
 import { createVuetify } from 'vuetify'
 
+// themes
+import { midnight_purple } from './themes/midnight_purple'
+import { cotton_candy } from './themes/cotton_candy'
+
 export default createVuetify({
   theme: {
-    defaultTheme: 'dark',
+    defaultTheme: 'midnight_purple',
     themes: {
-      dark: {
-        dark: true,
-        colors: {
-          primary: '#825aef'
-        }
-      }
+      midnight_purple,
+      cotton_candy,
     }
   }
 })
