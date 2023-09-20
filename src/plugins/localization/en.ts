@@ -81,6 +81,7 @@ export default {
                 font_family: 'Font family',
                 font_type: 'Type',
                 font_size: 'Font Size',
+                fade: 'Fade text',
                 fade_after: 'Fade text after',
                 seconds: 'seconds',
                 fade_for: 'Fade text for',

@@ -38,11 +38,27 @@
                         hide-details
                     ></v-text-field>
                 </v-col>
-                <v-col :cols="12" :sm="6" class="d-flex">
-                        <v-checkbox-btn
-                            v-model="appearanceStore.text.enable_fade"
-                            class="pe-2"
-                        ></v-checkbox-btn>
+                <v-col>
+                    <v-select
+                        v-model="appearanceStore.text.new_line_delay"
+                        :items="$tm('settings.appearance.text.new_line_delay.options')"
+                        :label="$t('settings.appearance.text.new_line_delay.hint')"
+                        hide-details
+                    ></v-select>
+                </v-col>
+                <v-divider></v-divider>
+                <v-col :cols="12" :md="12" class="pb-0">
+                    <v-list-item :title="$t('settings.appearance.text.fade')">
+                        <template v-slot:append>
+                            <v-switch
+                                v-model="appearanceStore.text.enable_fade"
+                                color="primary"
+                                inset hide-details
+                            ></v-switch>
+                        </template>
+                    </v-list-item>
+                </v-col>
+                <v-col :cols="12" :sm="6">
                         <v-text-field
                             v-model="appearanceStore.text.hide_after"
                             :disabled="!appearanceStore.text.enable_fade"
@@ -62,14 +78,6 @@
                         type="number"
                         hide-details
                     ></v-text-field>
-                </v-col>
-                <v-col>
-                    <v-select
-                        v-model="appearanceStore.text.new_line_delay"
-                        :items="$tm('settings.appearance.text.new_line_delay.options')"
-                        :label="$t('settings.appearance.text.new_line_delay.hint')"
-                        hide-details
-                    ></v-select>
                 </v-col>
                 <v-divider></v-divider>
                 <v-col :cols="12" :md="12" class="d-flex flex-no-wrap justify-space-between mt-1">

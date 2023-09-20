@@ -81,6 +81,7 @@ export default {
                 font_family: 'フォント',
                 font_type: 'タイプ',
                 font_size: '文字の大きさ',
+                fade: 'フェード',
                 fade_after: '〇〇秒後にフェード',
                 fade_for: '〇〇秒間のフェード',
                 new_line_delay: {
