@@ -1,3 +1,16 @@
+
+export interface Font {
+    type: string,
+    name: string,
+    info?: string,
+    subtypes?: Subtype[]
+}
+
+export interface Subtype {
+    style:string,
+    weight: string,
+}
+
 const windows_fonts = [
     'Arial',
     'Arial Black',
@@ -134,36 +147,34 @@ const google_fonts = [
         type: 'google',
         name: 'Roboto',
         sub_types: [
-            '100',
-            '100italic',
-            '300',
-            '300italic',
-            'regular',
-            'italic',
-            '500',
-            '500italic',
-            '700',
-            '700italic',
-            '900',
-            '900italic',
+            { style: 'regular', weight: '100' },
+            { style: 'italic', weight: '100' },
+            { style: 'regular', weight: '300' },
+            { style: 'italic', weight: '300' },
+            { style: 'regular', weight: '400' },
+            { style: 'italic', weight: '400' },
+            { style: 'regular', weight: '500' },
+            { style: 'italic', weight: '500' },
+            { style: 'regular', weight: '700' },
+            { style: 'italic', weight: '700' },
+            { style: 'regular', weight: '900' },
+            { style: 'italic', weight: '900' },
         ]
     },
     {
         type: 'google',
         name: 'Roboto Mono',
         sub_types: [
-            '100',
-            '100italic',
-            '200',
-            '200italic',
-            '300',
-            '300italic',
-            'regular',
-            'italic',
-            '500',
-            '500italic',
-            '700',
-            '700italic',
+            { style: 'regular', weight: '100' },
+            { style: 'italic', weight: '100' },
+            { style: 'regular', weight: '300' },
+            { style: 'italic', weight: '300' },
+            { style: 'regular', weight: '400' },
+            { style: 'italic', weight: '400' },
+            { style: 'regular', weight: '500' },
+            { style: 'italic', weight: '500' },
+            { style: 'regular', weight: '700' },
+            { style: 'italic', weight: '700' },
         ]
     }
 ]
@@ -172,20 +183,22 @@ const server_fonts = [
     {
         type: 'system',
         name: 'OpenDyslexic',
+        info: 'https://opendyslexic.org/',
         sub_types: [
-            'regular',
-            'italic',
-            '700',
-            '700 italic',
-        ]
+            { style: 'regular', weight: '400' },
+            { style: 'italic', weight: '400' },
+            { style: 'regular', weight: '700' },
+            { style: 'italic', weight: '700' },
+        ],
     },
     {
         type: 'system',
         name: 'にしき的',
+        info: 'https://umihotaru.work/',
         sub_types: [
-            'regular',
-            'italic',
-        ]
+            { style: 'regular', weight: '400' },
+            { style: 'italic', weight: '400' },
+        ],
     }
 ]
 
@@ -202,10 +215,13 @@ export async function get_fonts() {
             fonts_available.add({
                 type: 'system',
                 name: font,
-                sub_types: [ 'regular', 'italic' ]
+                sub_types: [
+                    { style: 'regular', weight: '400' },
+                    { style: 'italic', weight: '400' },
+                ]
             })
         }
     }
 
-    return [ ...server_fonts, ...google_fonts, ...fonts_available ]
+    return [ ...server_fonts, ...google_fonts, ...fonts_available ] as Font[]
 }

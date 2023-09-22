@@ -4,7 +4,7 @@
     :color="appearanceStore.ui.color" :height="height - 55" tile>
 
     <div>
-      <a v-for="log in logs" class="font-weight-light"
+      <a v-for="log in logs"
         :class="{ 'fade-out': log.hide, 'final-text': log.isFinal, 'interim-text': !log.isFinal }">
         <a v-if="log.hide !== 2">{{ log.transcript }}&nbsp;&nbsp;</a>
         <v-expand-transition v-show="log.pause">
@@ -123,7 +123,8 @@ html {
   display: flex;
   flex-direction: column-reverse;
   font-family: v-bind(font_name);
-  font-style: v-bind(font_subtype);
+  font-style: v-bind('font_subtype.style');
+  font-weight: v-bind('font_subtype.weight');
   font-size: v-bind(font_size);
   overflow-y: auto;
   max-height: calc(100vh - v-bind(outer_size));

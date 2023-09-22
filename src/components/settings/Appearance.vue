@@ -15,17 +15,36 @@
                         variant="solo"
                         hide-details
                         return-object
+                        persistent-hint
                         :disabled="!fonts.length"
                     >
                         <template v-slot:append>
                             <v-select
                                 v-model="appearanceStore.text.font.sub_type"
                                 :items="appearanceStore.text.font.sub_types"
+                                item-title="style"
                                 :label="$t('settings.appearance.text.font_type')"
                                 variant="solo"
                                 hide-details
+                                return-object
                                 :disabled="!fonts.length"
-                            ></v-select>
+                            >
+                                <template v-slot:item="{ props, item }">
+                                    <v-list-item v-bind="props" :subtitle="item.raw.weight"></v-list-item>
+                                </template>
+                                <template v-slot:selection="{ item }">
+                                    {{ `${item.raw.style} ${item.raw.weight}` }}
+                                </template>
+                            </v-select>
+                        </template>
+                        <template v-slot:append-inner="{ props, item }">
+                            <v-btn
+                                v-if="appearanceStore.text.font.info"
+                                icon="mdi-information-outline"
+                                density="compact"
+                                @click="open_external(appearanceStore.text.font.info)"
+                                @focus="null"
+                            ></v-btn>
                         </template>
                     </v-autocomplete>
                 </v-col>
@@ -126,11 +145,13 @@ export default {
         }
     },
     methods: {
-
+        open_external(link: string) {
+            window.open(link, '_blank')
+        }
     },
     watch: {
         'appearanceStore.text.font': (v) => {
-            v.sub_type = 'regular'
+            v.sub_type = { style: 'regular', weight: '400' }
         }
     },
     async mounted() {
