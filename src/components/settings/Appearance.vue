@@ -37,7 +37,7 @@
                                 </template>
                             </v-select>
                         </template>
-                        <template v-slot:append-inner="{ props, item }">
+                        <template v-slot:append-inner>
                             <v-btn
                                 v-if="appearanceStore.text.font.info"
                                 icon="mdi-information-outline"
@@ -60,7 +60,7 @@
                 <v-col>
                     <v-select
                         v-model="appearanceStore.text.new_line_delay"
-                        :items="$tm('settings.appearance.text.new_line_delay.options')"
+                        :items="line_delay_options"
                         :label="$t('settings.appearance.text.new_line_delay.hint')"
                         hide-details
                     ></v-select>
@@ -142,11 +142,12 @@ export default {
     data() {
         return {
             fonts: [] as any[],
+            line_delay_options: []
         }
     },
     methods: {
-        open_external(link: string) {
-            window.open(link, '_blank')
+        open_external(link: string | null) {
+            if (link) window.open(link, '_blank')
         }
     },
     watch: {
@@ -156,6 +157,7 @@ export default {
     },
     async mounted() {
         this.fonts = await get_fonts()
+        this.line_delay_options = JSON.parse(JSON.stringify(this.$tm('settings.appearance.text.new_line_delay.options')))
     },
     setup() {
         const appearanceStore = useAppearanceStore()

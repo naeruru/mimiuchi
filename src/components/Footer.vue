@@ -44,7 +44,7 @@
                             <v-icon v-if="!listening">mdi-microphone-off</v-icon>
                             <v-icon v-else>mdi-microphone</v-icon>
                         </v-btn>
-                        <v-badge :model-value="!!connections" :content="connections ? connections : null" color="success" class="mr-4">
+                        <v-badge :model-value="!!connections" :content="connections ? connections : undefined" color="success" class="mr-4">
                             <v-btn @click="toggleBroadcast" :loading="loadingWebsocket" :disabled="loadingWebsocket"  :color="(broadcasting) ? 'success' : 'error'" size="small" icon variant="outlined">
                                 <v-icon v-if="!broadcasting">mdi-broadcast-off</v-icon>
                                 <v-icon v-else>mdi-broadcast</v-icon>
@@ -76,7 +76,7 @@ import { useWordReplaceStore } from  '../stores/word_replace'
 import { useSettingsStore } from  '../stores/settings'
 import { useSpeechStore } from  '../stores/speech'
 import { useAppearanceStore } from '../stores/appearance'
-import { useLogStore, Log } from '../stores/logs'
+import { useLogStore } from '../stores/logs'
 import { useOSCStore } from '../stores/osc'
 import { useConnectionStore } from "../stores/connections"
 
