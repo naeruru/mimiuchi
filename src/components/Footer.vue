@@ -16,7 +16,7 @@
             </v-btn>
         </template>
     </v-snackbar>
-    <v-footer app class="d-flex flex-column" height="55" permanent fixed>
+    <v-footer app class="d-flex flex-column" height="60" permanent fixed>
         <div class="d-flex w-100 align-center">
             
             <v-form
@@ -44,7 +44,7 @@
                             <v-icon v-if="!listening">mdi-microphone-off</v-icon>
                             <v-icon v-else>mdi-microphone</v-icon>
                         </v-btn>
-                        <v-badge :model-value="!!connections" :content="connections ? connections : null" color="success" class="mr-4">
+                        <v-badge :model-value="!!connections" :content="connections ? connections : undefined" color="success" class="mr-4">
                             <v-btn @click="toggleBroadcast" :loading="loadingWebsocket" :disabled="loadingWebsocket"  :color="(broadcasting) ? 'success' : 'error'" size="small" icon variant="outlined">
                                 <v-icon v-if="!broadcasting">mdi-broadcast-off</v-icon>
                                 <v-icon v-else>mdi-broadcast</v-icon>
@@ -76,7 +76,7 @@ import { useWordReplaceStore } from  '../stores/word_replace'
 import { useSettingsStore } from  '../stores/settings'
 import { useSpeechStore } from  '../stores/speech'
 import { useAppearanceStore } from '../stores/appearance'
-import { useLogStore, Log } from '../stores/logs'
+import { useLogStore } from '../stores/logs'
 import { useOSCStore } from '../stores/osc'
 import { useConnectionStore } from "../stores/connections"
 
@@ -102,6 +102,7 @@ export default {
             listening: false,
             listening_error: false,
             talking: false,
+            wait_interval: undefined as undefined | ReturnType<typeof setTimeout>,
 
             connections: 0,
 
@@ -160,10 +161,13 @@ export default {
                 this.speech.onerror = (event: any) => {
                     let desc = ''
                     if (event.error === 'no-speech') return // web-speech: no sound detected
-                    if (event.error === 'not-allowed') desc = this.snackbar_desc = this.$t('alerts.mic_error')
+                    if (event.error === 'not-allowed') desc = this.$t('alerts.mic_error')
+                    if (event.error === 'aborted') desc = this.$t('alerts.device_in_use')
                     this.listening = false
                     this.listening_error = true
                     this.show_snackbar('error', desc)
+                    this.listening = false
+                    this.speech.stop()
                 }
             } else {
                 this.speech.stop()
@@ -224,6 +228,12 @@ export default {
         onSubmit (input_override: string, isFinal: boolean = true) {
             let input = (input_override) ? input_override : this.input_text
 
+            if (this.wait_interval) clearTimeout(this.wait_interval)
+            if (this.appearanceStore.text.new_line_delay >= 0)
+                this.wait_interval = setTimeout(() => {
+                    this.logs[this.logs.length - 1].pause = true
+                }, this.appearanceStore.text.new_line_delay * 1000)
+
             // word replace
             input = this.replace_words(input)
 
@@ -257,14 +267,24 @@ export default {
 
             // finalized text
             if (isFinal) {
+                // timestamp
+                this.logs[i].time = new Date()
                 // text-to-speech
                 if (this.speechStore.tts.enabled && this.speechStore.tts.voice) this.tts(input)
 
                 // fadeout text
                 if (this.appearanceStore.text.enable_fade)
                     setTimeout(() => {
-                        this.logs[i].hide = 1
-                        setTimeout(() => this.logs[i].hide = 2, this.appearanceStore.text.fade_time * 1000)
+                        if(!this.logs[i].pause) return
+
+                        let pauses = 0
+                        // fade out all text since last pause
+                        while (i >= 0 && pauses < 2) {
+                            this.logs[i].hide = 1
+                            setTimeout((i) => this.logs[i].hide = 2, this.appearanceStore.text.fade_time * 1000, i)
+                            if (this.logs[i].pause) pauses += 1
+                            i -= 1
+                        }
                     }, this.appearanceStore.text.hide_after * 1000)
                 
                 // webhook

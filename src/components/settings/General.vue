@@ -25,6 +25,15 @@
                 <v-divider></v-divider>
             </v-row>
             <v-row>
+                <v-col :cols="12" class="d-flex flex-no-wrap justify-space-between">
+                    <v-card-title class="text-subtitle-1">{{ $t('settings.general.transcript') }}</v-card-title>
+                    <v-btn color="primary" class="mt-1" @click="logStore.export()">
+                        <v-icon>mdi-download</v-icon>
+                    </v-btn>
+                </v-col>
+                <v-divider></v-divider>
+            </v-row>
+            <v-row>
                 <v-col :cols="12" :md="12" class="d-flex flex-no-wrap justify-space-between">
                     <v-card-title class="text-subtitle-1">{{ $t('settings.general.reset.button') }}</v-card-title>
                     <v-btn color="error" class="mt-1">
@@ -67,6 +76,7 @@ import { useWordReplaceStore } from  '../../stores/word_replace'
 import { useSettingsStore } from  '../../stores/settings'
 import { useSpeechStore } from  '../../stores/speech'
 import { useConnectionStore } from '../../stores/connections'
+import { useLogStore } from '../../stores/logs'
 
 export default {
     name: 'SettingsGeneral',
@@ -114,13 +124,15 @@ export default {
         const settingsStore = useSettingsStore()
         const speechStore = useSpeechStore()
         const connectionStore = useConnectionStore()
+        const logStore = useLogStore()
         
         return {
             appearanceStore,
             wordReplaceStore,
             settingsStore,
             speechStore,
-            connectionStore
+            connectionStore,
+            logStore,
         }
     }
 }

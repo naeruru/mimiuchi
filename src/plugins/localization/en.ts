@@ -21,6 +21,7 @@ export default {
     alerts: {
         no_speech: 'Your browser does not support Web Speech API (Speech-to-text).',
         mic_error: 'Error enabling microphone. You must give permission to use it.',
+        device_in_use: 'Error: device in use by another tab.',
         broadcast_error: 'Error enabling broadcast. Make sure the desktop app is running.',
         websocket_error: 'Invalid websocket URL',
         version_mismatch: 'The desktop app has a different version than the web version. Consider updating, as things might break.'
@@ -31,6 +32,7 @@ export default {
             title: 'General Settings',
             description: 'General application settings',
             language: 'Select a UI language',
+            transcript: 'Download session transcript',
             reset: {
                 button: 'Reset all settings',
                 dialog: {
@@ -76,10 +78,46 @@ export default {
             description: 'Change the appearance of the app',
             text: {
                 title: 'Text Settings',
+                font_family: 'Font family',
+                font_type: 'Type',
                 font_size: 'Font Size',
+                fade: 'Fade text',
                 fade_after: 'Fade text after',
                 seconds: 'seconds',
                 fade_for: 'Fade text for',
+                new_line_delay: {
+                    hint: 'Start a new line when no text is sent',
+                    options: [
+                        {
+                            title: 'Instantly',
+                            value: 0,
+                        },
+                        {
+                            title: 'after 2 seconds',
+                            value: 2,
+                        },
+                        {
+                            title: 'after 4 seconds',
+                            value: 4,
+                        },
+                        {
+                            title: 'after 6 seconds',
+                            value: 6,
+                        },
+                        {
+                            title: 'after 8 seconds',
+                            value: 8,
+                        },
+                        {
+                            title: 'after 10 seconds',
+                            value: 10,
+                        },
+                        {
+                            title: 'Never',
+                            value: -1,
+                        },
+                    ]
+                },
                 color: 'Text color',
                 interim_color: 'Iterim text color'
             },
