@@ -119,7 +119,7 @@ export default {
                     ]
                 },
                 color: 'Text color',
-                interim_color: 'Iterim text color'
+                interim_color: 'Interim text color'
             },
             ui: {
                 title: 'UI Settings',

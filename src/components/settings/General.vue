@@ -26,8 +26,8 @@
             </v-row>
             <v-row>
                 <v-col :cols="12" class="d-flex flex-no-wrap justify-space-between">
-                    <v-card-title class="text-subtitle-1">{{ $t('settings.general.transcript') }}</v-card-title>
-                    <v-btn color="primary" class="mt-1" @click="logStore.export()">
+                    <v-card-text class="text-subtitle-1 font-weight-medium">{{ $t('settings.general.transcript') }}</v-card-text>
+                    <v-btn color="primary" class="mt-2" @click="logStore.export()">
                         <v-icon>mdi-download</v-icon>
                     </v-btn>
                 </v-col>
@@ -35,8 +35,8 @@
             </v-row>
             <v-row>
                 <v-col :cols="12" :md="12" class="d-flex flex-no-wrap justify-space-between">
-                    <v-card-title class="text-subtitle-1">{{ $t('settings.general.reset.button') }}</v-card-title>
-                    <v-btn color="error" class="mt-1">
+                    <v-card-text class="text-subtitle-1 font-weight-medium">{{ $t('settings.general.reset.button') }}</v-card-text>
+                    <v-btn color="error" class="mt-2">
                         <v-icon>mdi-restore</v-icon>
                         <v-dialog
                                 v-model="reset_dialog"

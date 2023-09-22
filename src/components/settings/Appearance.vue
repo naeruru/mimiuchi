@@ -62,6 +62,7 @@
                         v-model="appearanceStore.text.new_line_delay"
                         :items="line_delay_options"
                         :label="$t('settings.appearance.text.new_line_delay.hint')"
+                        variant="solo"
                         hide-details
                     ></v-select>
                 </v-col>
