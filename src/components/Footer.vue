@@ -290,7 +290,7 @@ export default {
                     }, this.appearanceStore.text.hide_after * 1000)
                 
                 // webhook
-                if (this.connectionStore.wh.enabled) {
+                if (this.connectionStore.wh.enabled && this.broadcasting) {
                     webhook.post(this.connectionStore.wh.url, { transcript: input })
                 }
             }
