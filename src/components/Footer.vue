@@ -228,6 +228,8 @@ export default {
         onSubmit (input_override: string, isFinal: boolean = true) {
             let input = (input_override) ? input_override : this.input_text
 
+            if (!input.length) return
+
             if (this.wait_interval) clearTimeout(this.wait_interval)
             if (this.appearanceStore.text.new_line_delay >= 0)
                 this.wait_interval = setTimeout(() => {
