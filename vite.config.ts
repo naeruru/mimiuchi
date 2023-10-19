@@ -17,6 +17,7 @@ export default defineConfig(({ command }) => {
   const sourcemap = isServe || !!process.env.VSCODE_DEBUG
 
   return {
+    base: './',
     define: {
       __APP_NAME__: JSON.stringify('mimiuchi'),
       __APP_VERSION__: JSON.stringify(process.env.npm_package_version)
@@ -67,7 +68,7 @@ export default defineConfig(({ command }) => {
       ]),
       // Use Node.js API in the Renderer-process
       renderer({
-        nodeIntegration: true,
+        nodeIntegration: false,
       }),
     ],
     server: process.env.VSCODE_DEBUG && (() => {

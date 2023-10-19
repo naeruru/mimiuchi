@@ -21,6 +21,7 @@ class WebSpeech {
 
     talking: boolean = false
     listening: boolean = false
+    listening_error: boolean = false
 
     speechStore = useSpeechStore()
 

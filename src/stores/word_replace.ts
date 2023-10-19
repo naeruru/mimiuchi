@@ -13,6 +13,12 @@ export const useWordReplaceStore = defineStore('wordreplace', {
 
     },
     actions: {
-
+        replace_words(input: string): string {
+            if (!this.enabled || !Object.keys(this.word_replacements).length) return input
+            const replace_re = new RegExp(Object.keys(this.word_replacements).join("|"),"gi")
+            return input.replace(replace_re, (matched) => {
+                return this.word_replacements[matched.toLowerCase()]
+            })
+        }
     }
 })

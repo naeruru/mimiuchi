@@ -109,6 +109,11 @@ export default {
                     value: "wordreplace",
                     icon: "mdi-swap-horizontal"
                 },
+                {
+                    title: this.$t('settings.translation.title'),
+                    value: "translation",
+                    icon: "mdi-translate"
+                },
             ]
         },
         connections() {

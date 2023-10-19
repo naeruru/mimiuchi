@@ -134,6 +134,16 @@ export default {
             replacing: 'Replacing',
             replacement: 'Replacement'
         },
+        translation: {
+            title: 'Translations',
+            description: 'Settings for translating to another language',
+            enabled: 'Enable translations',
+            type: 'Select a translation service',
+            source: 'Source',
+            target: 'Target',
+            ml_notice: '{0} is an ML-powered library that uses local compute resources (CPU) to generate translations on your device. On lower end computers, it might not run well.',
+            speech_lang: 'Your speech to text language is '
+        },
         connections: {
             title: 'Connections',
             description: 'Send data to other applications when using {icon}',

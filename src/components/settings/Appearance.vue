@@ -16,6 +16,7 @@
                         hide-details
                         return-object
                         persistent-hint
+                        auto-select-first
                         :disabled="!fonts.length"
                     >
                         <template v-slot:append>

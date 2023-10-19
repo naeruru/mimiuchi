@@ -134,6 +134,16 @@ export default {
             replacing: 'リプレース',
             replacement: 'リプレースメント'
         },
+        translation: {
+            title: '翻訳',
+            description: '他の言語に翻訳する設定',
+            enabled: '翻訳を有効にする',
+            type: '翻訳サービスの選択する',
+            source: '翻訳元言語',
+            target: '目標言語',
+            ml_notice: '{0}はCPUを使用して、デバイス上で翻訳を生成する機械学習を搭載したライブラリです。ローエンドのコンピュータでは、うまく動作しない場合があります。',
+            speech_lang: 'Speech-to-text言語は'
+        },
         connections: {
             title: '接続',
             description: '{icon}使用時に他のアプリにデータを送信',

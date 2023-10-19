@@ -4,6 +4,9 @@ import { defineStore } from 'pinia'
 export interface Log {
     transcript: string, // text that was said
     isFinal: boolean, // is final interpretation
+    translate: boolean, // is there a translation
+    translation?: string, // translation of transcript (if exists)
+    isTranslationFinal: boolean, // is final translation
     hide: number, // hide text from view
     time?: Date, // timestamp of transcript
     pause?: boolean, // if user paused
@@ -12,6 +15,8 @@ export interface Log {
 export const useLogStore = defineStore('logs', {
     state: () => ({
         logs: [] as Log[],
+        loading_result: false,
+        wait_interval: undefined as undefined | ReturnType<typeof setTimeout>,
     }),
     getters: {
 

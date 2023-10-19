@@ -1,12 +1,10 @@
 
 <template>
-  <v-card id="log-list" class="fill-height pa-4 overflow-auto log-list" v-resize="onResize"
-    :color="appearanceStore.ui.color" :height="height - 55" tile>
-
+  <v-card id="log-list" class="fill-height pa-4 overflow-auto log-list" v-resize="onResize" :color="appearanceStore.ui.color" :height="height - 55" tile>
     <div>
       <a v-for="log in logs"
-        :class="{ 'fade-out': log.hide, 'final-text': log.isFinal, 'interim-text': !log.isFinal }">
-        <a v-if="log.hide !== 2">{{ log.transcript }}&nbsp;&nbsp;</a>
+        :class="{ 'fade-out': log.hide, 'final-text': log.isFinal && log.isTranslationFinal, 'interim-text': !log.isFinal || (!log.isTranslationFinal && log.translate) }">
+        <a v-if="log.hide !== 2">{{ log.translation ? log.translation : log.transcript }}&nbsp;&nbsp;</a>
         <v-expand-transition v-show="log.pause">
           <div>
             <v-col class="pa-0"></v-col>
@@ -31,6 +29,7 @@ import WelcomeOverlay from "../components/overlays/WelcomeOverlay.vue"
 import { useSettingsStore } from '../stores/settings'
 import { useAppearanceStore } from '../stores/appearance'
 import { useLogStore } from '../stores/logs'
+import { useTranslationStore } from '../stores/translation'
 
 declare const window: any
 
@@ -88,6 +87,7 @@ export default {
     const settingsStore = useSettingsStore()
     const appearanceStore = useAppearanceStore()
     const logStore = useLogStore()
+    const translationStore = useTranslationStore()
 
 
     const font_size = `${appearanceStore.text.font_size}px`
@@ -102,6 +102,7 @@ export default {
       settingsStore,
       appearanceStore,
       logs: logStore.logs,
+      translationStore,
       font_size,
       fade_time,
       text_color,
