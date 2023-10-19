@@ -66,6 +66,18 @@
                         hide-details
                     ></v-autocomplete>
                 </v-col>
+                <v-col :cols="12">
+                    <v-card flat>
+                        <v-switch
+                            v-model="translationStore.show_original"
+                            :label="$t('settings.translation.show_original')"
+                            color="primary"
+                            hide-details
+                            inset
+                            class="mx-3"
+                        ></v-switch>
+                    </v-card>
+                </v-col>
             </v-row>
         </v-card-text>
     </v-card>

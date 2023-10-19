@@ -32,8 +32,6 @@ function initialize_ws(win: any, wss: any, port: number) {
                     }
                 } else if (message.type === 'text') {
                     win.webContents.send('receive-text-event', JSON.stringify(message.data))
-                } else if (message.type === 'translate') {
-                    win.webContents.send('receive-translation', JSON.stringify(message.data))
                 }
             })
             ws.send(`{"event": "connect", "msg":"connected to websocket ( •̀ ω •́ )", "version":"${pkg.version}"}`)

@@ -144,7 +144,7 @@ export default {
     data() {
         return {
             fonts: [] as any[],
-            line_delay_options: []
+            line_delay_options: [] as any[]
         }
     },
     methods: {

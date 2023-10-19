@@ -10,6 +10,7 @@ export const useTranslationStore = defineStore('translation', {
         source: 'eng_Latn',
         target: 'jpn_Jpan',
         download: -1, // percent downloaded 0-100. -1 = done
+        show_original: true,
     }),
     getters: {
 

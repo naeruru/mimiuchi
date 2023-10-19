@@ -4,7 +4,7 @@
     <div>
       <a v-for="log in logs"
         :class="{ 'fade-out': log.hide, 'final-text': log.isFinal && log.isTranslationFinal, 'interim-text': !log.isFinal || (!log.isTranslationFinal && log.translate) }">
-        <a v-if="log.hide !== 2">{{ log.translation ? log.translation : log.transcript }}&nbsp;&nbsp;</a>
+        <a v-if="log.hide !== 2">{{ (log.translation || !translationStore.show_original) ? log.translation : log.transcript }}&nbsp;&nbsp;</a>
         <v-expand-transition v-show="log.pause">
           <div>
             <v-col class="pa-0"></v-col>

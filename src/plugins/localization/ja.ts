@@ -141,6 +141,7 @@ export default {
             type: '翻訳サービスの選択する',
             source: '翻訳元言語',
             target: '目標言語',
+            show_original: '翻訳する前に元のテキストを表示する',
             ml_notice: '{0}はCPUを使用して、デバイス上で翻訳を生成する機械学習を搭載したライブラリです。ローエンドのコンピュータでは、うまく動作しない場合があります。',
             speech_lang: 'Speech-to-text言語は'
         },

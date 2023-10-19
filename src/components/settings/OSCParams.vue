@@ -130,7 +130,7 @@
                             </v-col>
                             <v-col :cols="12" :lg="8">
                                 <v-text-field v-if="new_assign.type !== 'bool'" v-model="new_assign.set" hide-details label="Value" type="number"></v-text-field>
-                                <v-select v-else v-model="new_assign.set" :items="['true', 'false']" hide-details label="Value"></v-select>
+                                <v-select v-else v-model="new_assign.set" :items="(['true', 'false'] as any[])" hide-details label="Value"></v-select>
                             </v-col>
                             <v-col :cols="12">
                                 <v-text-field 
