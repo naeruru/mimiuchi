@@ -1,18 +1,18 @@
+<p align="center">
+  <img src="https://mimiuchi.com/logo-256x256.png" width="100">
+</p>
 
 # mimiuchi: speech-to-text
 
-mimiuchi is a free, customizable, OSC capable, speech-to-text application for displaying text or relaying it to other applications like VRChat. Its customizable text window is also designed to be paired with applications like OBS. It runs on the web and electron, with little setup required beyond customization. You can try it out right now at [mimiuchi.com](https://mimiuchi.com/) with Chrome, Safari, or Edge. UI currently supports English and Japanese日本語！
-
-### Why?
-
-I support the idea of people having many ways to communicate and do things. It is important to give people those tools and make them easily accessible. This app will give another way for people to display text in different applications like OBS or VRC. It is free and focused on privacy as an end goal. An example of a very similar application is [web captioner](https://webcaptioner.com/). However, I want to expand upon it and make this version unique!
+mimiuchi is a free, customizable, OSC capable, speech-to-text application for displaying text or relaying it to other applications like VRChat. Its customizable text window is also designed to be paired with applications like OBS. It runs on the web, with little setup required beyond customization. You can try it out right now at [mimiuchi.com](https://mimiuchi.com/) with Chrome, Safari, or Edge. UI currently supports English and Japanese日本語！
 
 ### Features
 
 - Speech-to-text
 - Text-to-speech
+- On-device translations
 - OSC broadcasting (for apps like VRChat)
-- Custom OSC param execution via language triggers ("turn my marker on" -> `/avatar/parameter/Marker True`) (WIP)
+- (WIP) Custom OSC param execution via language triggers ("turn my marker on" -> `/avatar/parameter/Marker True`)
 - ...and many settings to customize the experience!
 
 ## How to use
@@ -23,21 +23,27 @@ Simply go to [mimiuchi.com](https://mimiuchi.com/) and press the mic button! You
 
 ### Using OSC
 
-Click the broadcast button to toggle OSC. Due to how VRChat OSC works, this will require the desktop app version. If you're using speech-to-text, the web version can relay all speech-to-text to the deskop app when broadcasting is on.
+Click the broadcast button to toggle OSC. Due to how VRChat OSC works, this will require the desktop app version which you can download [here](https://github.com/naeruru/mimiuchi/releases/). If you're using speech-to-text, the web version can relay all speech-to-text to the deskop app when broadcasting is on.
 
 ### Everything together
 
 Running both applications at once, you simply toggle on the `MIC` and `BROADCAST` button on the web app. it will then toggle the desktop on with it.
 
-#### website -> desktop
+website -> desktop
 
-![electron_iikWzoYPXL](https://user-images.githubusercontent.com/9059594/226288125-b09fcf3e-6a98-41e3-a84d-f382845e3a22.gif)
+![mimiuchi-ws_example](https://github.com/naeruru/mimiuchi/assets/9059594/4a85352f-7183-448e-931e-0ab07054231e)
 
-#### desktop -> VRChat
 
-![desktoptovrchat](https://user-images.githubusercontent.com/9059594/226288753-1232f6e4-08db-4dd7-a28f-f5506b9f7668.gif)
+website -> desktop -> VRChat
+
+![mimiuchi-vrchat_example](https://github.com/naeruru/mimiuchi/assets/9059594/666900a9-d176-4c39-a5dd-6a320a46cd8c)
+
 
 # Additional info
+
+### Why?
+
+I support the idea of people having many ways to communicate and do things. It is important to give people those tools and make them easily accessible. This app will give another way for people to display text in different applications like OBS or VRC. It is free and focused on privacy as an end goal. An example of a very similar application is [web captioner](https://webcaptioner.com/). However, I want to expand upon it and make this version unique!
 
 ## Web Speech API
 
@@ -60,7 +66,7 @@ in no particular order...
 - OBS websocket and 'text source' support
 - option for second 'control panel' type screen with focus on quick switching between settings
 - better generic osc support
-- translation support
+- ~~translation support~~✅
 - ~~webhook/websocket customization to connect to other apps that aren't related to me~~✅
 - documentation
 - steamvr integration
@@ -76,7 +82,7 @@ See the [release page](https://github.com/naeruru/mimiuchi/releases) to install 
 
 ### Requirements
 
-- [NodeJS 18.4.0+](https://nodejs.org/en/)
+- [NodeJS 18.x+](https://nodejs.org/en/)
 
 ### Setup
 
