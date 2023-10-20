@@ -68,7 +68,7 @@ class WebSpeech {
         // start recognition
         this.recognition.start()
         try {
-            await this.get_sensitivity()
+            if (!this.stream) await this.get_sensitivity()
         } catch {} // ios will deny the request on unsecure connections
 
         this.recognition.onresult = (event: any) => {
