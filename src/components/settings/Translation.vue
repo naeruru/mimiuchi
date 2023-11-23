@@ -3,6 +3,12 @@
         <v-divider></v-divider>
         <v-card-text>
             <v-row>
+                <v-col>
+                    <v-chip variant="outlined" label color="error" size="large">
+                        <v-icon start icon="mdi-alert"></v-icon>
+                        {{ $t('settings.translation.warning') }}
+                    </v-chip>
+                </v-col>
                 <v-col :cols="12">
                     <v-card flat>
                         <v-switch
@@ -95,7 +101,7 @@ export default {
         return {
             translation_types: [
                 {
-                    title: "Transformers.js",
+                    title: "Transformers.js (BETA)",
                     value: "Transformers.js",
                     type: "local",
                 },

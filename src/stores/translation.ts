@@ -31,13 +31,13 @@ export const useTranslationStore = defineStore('translation', {
                     logStore.loading_result = true
                     break
                 case 'complete':
-                    const { on_submit: on_submit2 } = useSpeechStore()
+                    const { on_submit} = useSpeechStore()
 
                     logStore.logs[e.data.index].translation = e.data.output[0].translation_text
                     logStore.loading_result = false
                     logStore.logs[e.data.index].isTranslationFinal = true
 
-                    on_submit2(logStore.logs[e.data.index], e.data.index)
+                    on_submit(logStore.logs[e.data.index], e.data.index)
                     break
             }
         },

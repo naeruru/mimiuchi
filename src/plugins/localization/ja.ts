@@ -137,6 +137,7 @@ export default {
         translation: {
             title: '翻訳',
             description: '他の言語に翻訳する設定',
+            warning: '翻訳は進行中です。完璧なものとして信用しないでください！',
             enabled: '翻訳を有効にする',
             type: '翻訳サービスの選択する',
             source: '翻訳元言語',

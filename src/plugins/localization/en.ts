@@ -137,6 +137,7 @@ export default {
         translation: {
             title: 'Translations',
             description: 'Settings for translating to another language',
+            warning: 'Translations are a work in progress. Do not trust them as perfect!',
             enabled: 'Enable translations',
             type: 'Select a translation service',
             source: 'Source',

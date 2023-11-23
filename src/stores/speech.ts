@@ -101,6 +101,8 @@ export const useSpeechStore = defineStore('speech', {
             speech.speak(input)
         },
         async on_submit(log: any, index: number) {
+            if (!log.transcript.replace(/\s/g, '').length) return
+
             const logStore = useLogStore()
             const { text } = useAppearanceStore()
             const oscStore = useOSCStore()
@@ -182,7 +184,8 @@ export const useSpeechStore = defineStore('speech', {
             // send text via osc
             if (is_electron() && (oscStore.osc_text) && defaultStore.broadcasting) {
                 if (log.isTranslationFinal && log.translation) {
-                    window.ipcRenderer.send("send-text-event", `{ "transcript": "${log.translation}", "hide_ui": ${!oscStore.show_keyboard} }`)
+                    const transcript = (translationStore.show_original) ? `${log.transcript} (${log.translation})` : log.translation
+                    window.ipcRenderer.send("send-text-event", `{ "transcript": "${transcript}", "hide_ui": ${!oscStore.show_keyboard} }`)
                 } else if (log.isFinal && !log.translate) {
                     window.ipcRenderer.send("send-text-event", `{ "transcript": "${log.transcript}", "hide_ui": ${!oscStore.show_keyboard} }`)
                 }
