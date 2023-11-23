@@ -1,6 +1,6 @@
 {
   "name": "mimiuchi",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "private": true,
   "description": "customizable, osc enabled text interface for relaying text to different types of applications",
   "author": "naeris <support@risu.dev>",
@@ -13,7 +13,7 @@
   "dependencies": {
     "@mdi/font": "5.9.55",
     "@types/node-osc": "^6.0.0",
-    "@xenova/transformers": "^2.6.2",
+    "@xenova/transformers": "^2.9.0",
     "electron-store": "^8.1.0",
     "node-osc": "^8.0.5",
     "pinia": "^2.1.6",
