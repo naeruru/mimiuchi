@@ -168,7 +168,7 @@ ipcMain.on("send-text-event", (event, args) => {
   const new_text = args.transcript.indexOf(' ') >= 0 ? args.transcript.match(/.{1,140}(\s|$)/g) : args.transcript.match(/.{1,140}/g)
   text_queue = [ ...text_queue, ...new_text ]
   if (text_queue.length >= 1) {
-    empty_queue(text_queue, args.hide_ui)
+    empty_queue(text_queue, args.hide_ui, args.sfx)
   }
 })
 

@@ -14,12 +14,12 @@ export function emit_osc(value: any, ip: string = '127.0.0.1', port: number = 90
     console.log(`${value[0]} -> ${value[1]}`)
 }
 
-export function empty_queue(queue: any, hide_ui: boolean = true, seconds: number = 8) {
-    emit_osc(['/chatbox/input', queue.length > 1 ? `${queue[0]} ...` : queue[0], hide_ui])
+export function empty_queue(queue: any, hide_ui: boolean = true, sfx: boolean = true, seconds: number = 8) {
+    emit_osc(['/chatbox/input', queue.length > 1 ? `${queue[0]} ...` : queue[0], hide_ui, sfx])
     queue.shift()
     if (queue.length) {
         setTimeout(() => emit_osc(['/chatbox/typing', true]), 400)
-        setTimeout(() => empty_queue(queue, hide_ui, seconds), seconds * 1000)
+        setTimeout(() => empty_queue(queue, hide_ui, sfx, seconds), seconds * 1000)
     }
 
 }

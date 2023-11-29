@@ -57,6 +57,18 @@
                             class="mx-3"
                         ></v-switch>
                     </v-card>
+
+                    <v-card class="mt-2">
+                        <v-switch
+                            v-model="oscStore.sfx"
+                            :disabled="!oscStore.osc_text || oscStore.show_keyboard"
+                            :label="$t('settings.osc.general.sfx')"
+                            color="primary"
+                            hide-details
+                            inset
+                            class="mx-3"
+                        ></v-switch>
+                    </v-card>
                 </v-col>
             </v-row>
             <v-row v-if="!is_electron()" class="justify-center">

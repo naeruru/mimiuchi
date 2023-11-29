@@ -170,6 +170,7 @@ export default {
                 typing_indicator: 'タイピング時にタイピングインジケーターを有効',
                 speech_indicator: 'Speech-to-text時のタイピングインジケーターを有効',
                 show_keyboard: 'テキスト送信時にVRChatでキーボードを開く',
+                sfx: 'テキスト送信後に効果音を再生',
                 unsupported: {
                     text: 'OSCの設定は{link}で利用できます。インストールすれば、{icon}ボタンでウェブサイト版とデスクトップ版を一緒に使うことができます（Speech-to-text▶︎OSC）(  ᐡᴗ  ̫ ᴗᐡ)',
                     link: 'デスクトップアプリ版',
