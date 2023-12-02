@@ -72,7 +72,7 @@ async function createWindow() {
     // Open devTool if the app is not packaged
     win.webContents.openDevTools()
   } else {
-    win.removeMenu()
+    // win.removeMenu()
     win.loadFile(indexHtml)
   }
 
