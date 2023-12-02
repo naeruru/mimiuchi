@@ -7,6 +7,7 @@ const store = new Store()
 
 import { emit_osc, empty_queue } from './modules/osc'
 import { initialize_ws, close_ws } from './modules/ws'
+import { check_update } from './modules/check_update'
 
 // The built directory structure	
 //	
@@ -191,4 +192,9 @@ ipcMain.on("start-ws", (event, args) => {
 })
 ipcMain.on("close-ws", (event, args) => {
   wss.close()
+})
+
+ipcMain.on("update-check", async (event) => {
+  const latest = await check_update()
+  win.webContents.send('update-check', latest)
 })

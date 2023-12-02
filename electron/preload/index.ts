@@ -112,7 +112,9 @@ let validChannels = [
   'websocket-error',
 
   'start-ws',
-  'close-ws'
+  'close-ws',
+
+  'update-check',
 ]
 
 // Expose ipcRenderer to the client

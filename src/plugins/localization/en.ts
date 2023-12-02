@@ -16,7 +16,8 @@ export default {
     },
     general: {
         type_message: 'Type a message',
-        beta: 'BETA'
+        beta: 'BETA',
+        update: 'Update',
     },
     alerts: {
         no_speech: 'Your browser does not support Web Speech API (Speech-to-text).',

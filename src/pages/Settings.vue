@@ -44,9 +44,15 @@
             <!-- <v-list :items="settings_list" density="compact" nav></v-list> -->
             <template v-slot:append>
                 <v-divider></v-divider>
-                <v-col class="d-flex justify-right mt-1">
+                <v-col class="d-flex justify-right mt-1 px-2">
+                    <v-btn v-if="update_available" size="small" variant="flat" prepend-icon="mdi-download" @click="open_external('https://github.com/naeruru/mimiuchi/releases/latest')">
+                        <template v-slot:prepend>
+                            <v-icon color="success" size="large"></v-icon>
+                        </template>
+                        {{ $t('general.update') }}
+                    </v-btn>
                     <v-spacer></v-spacer>
-                    <v-btn size="small" variant="flat" prepend-icon="mdi-tag" @click="open_external('https://github.com/naeruru/mimiuchi/releases')">v{{ APP_VERSION }}</v-btn>
+                    <v-btn size="small" variant="flat" prepend-icon="mdi-tag" @click="open_external(`https://github.com/naeruru/mimiuchi/releases/tag/v${APP_VERSION}`)">v{{ APP_VERSION }}</v-btn>
                 </v-col>
                 
             </template>
@@ -69,11 +75,14 @@ import is_electron from '../helpers/is_electron'
 import { useSettingsStore } from  '../stores/settings'
 import { useDisplay } from 'vuetify'
 
+declare const window: any
+
 export default {
     name: 'Settings',
     data() {
         return {
             APP_VERSION: __APP_VERSION__,
+            update_available: false,
             window_size: {
                 x: 0,
                 y: 0
@@ -148,8 +157,15 @@ export default {
         }
     },
     mounted() {
-        // if (!is_electron())
-        //     this.settings_osc = [this.settings_osc[0]]
+        if (is_electron()) {
+            window.ipcRenderer.removeListener('update-check')
+            window.ipcRenderer.send('update-check')
+            window.ipcRenderer.receive("update-check", (event: any, data: any) => {
+                if (event != `v${this.APP_VERSION}`) {
+                    this.update_available = true
+                }
+            })
+        }
     },
     setup() {
         const settingsStore = useSettingsStore()
