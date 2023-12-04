@@ -98,8 +98,6 @@
 <script lang="ts">
 import { useSpeechStore } from  '../../stores/speech'
 
-import is_electron from '../../helpers/is_electron'
-
 const synth = window.speechSynthesis
 
 export default {
@@ -142,7 +140,7 @@ export default {
         }
         this.loadVoices()
         if (speechSynthesis.onvoiceschanged !== undefined) {
-        speechSynthesis.onvoiceschanged = this.loadVoices
+            speechSynthesis.onvoiceschanged = this.loadVoices
         }
     },
     setup() {

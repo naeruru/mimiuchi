@@ -34,16 +34,20 @@
                         <template v-slot:item="{ props, item }">
                             <v-list-item v-bind="props">
                                 <template v-slot:append>
-                                    <v-icon icon="mdi-laptop"></v-icon>
+                                    <v-icon v-if="item.raw.type === 'local'" icon="mdi-laptop"></v-icon>
+                                    <v-icon v-if="item.raw.type === 'api'" icon="mdi-cloud-outline"></v-icon>
                                 </template>
                             </v-list-item>
                         </template>
                     </v-select>
                 </v-col>
-                <v-col v-if="translation_types.find(o => o.type === 'local')" :cols="12">
+                <v-col :cols="12">
                     <v-alert variant="outlined" type="info" prominent>
                         <v-alert-title class="text-subtitle-1">
-                            <i18n-t keypath="settings.translation.ml_notice" tag="label" scope="global">
+                            <i18n-t v-if="translation_types.find(o => o.value === translationStore.type && o.type === 'local')" keypath="settings.translation.ml_notice" tag="label" scope="global">
+                                <span class="text-primary">{{ translationStore.type }}</span>
+                            </i18n-t>
+                            <i18n-t v-if="translation_types.find(o => o.value === translationStore.type && o.type === 'api')" keypath="settings.translation.api_notice" tag="label" scope="global">
                                 <span class="text-primary">{{ translationStore.type }}</span>
                             </i18n-t>
                         </v-alert-title>
@@ -100,6 +104,11 @@ export default {
     data() {
         return {
             translation_types: [
+                {
+                    title: "DeepL",
+                    value: "DeepL",
+                    type: "api",
+                },
                 {
                     title: "Transformers.js (BETA)",
                     value: "Transformers.js",

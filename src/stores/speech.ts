@@ -146,13 +146,7 @@ export const useSpeechStore = defineStore('speech', {
 
                 // translate if not translating and enabled
                 if (translationStore.enabled && !log.translate && !log.translation) {
-                    logStore.logs[i].translate = true
-                    defaultStore.worker.postMessage({
-                        text: log.transcript,
-                        src_lang: translationStore.source,
-                        tgt_lang: translationStore.target,
-                        index: i,
-                    })
+                    translationStore.start_service(log, i)
                 }
 
                 // timestamp
