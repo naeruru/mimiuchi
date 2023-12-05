@@ -266,6 +266,10 @@ const WebSpeechLangs: Lang[] = [
         value: 'eu-ES'
     },
     {
+        title: 'French',
+        value: 'fr-FR'
+    },    
+    {
         title: 'Galego',
         value: 'gl-ES'
     },
