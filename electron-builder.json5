@@ -19,8 +19,8 @@
     ]
   },
   "linux": {
-      "icon": "public/logo-256x256.png",
-      "category": "utility"
+    "icon": "public/logo-256x256.png",
+    "category": "utility"
   },
   "win": {
     "target": [

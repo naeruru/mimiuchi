@@ -1,20 +1,20 @@
-
 <template>
-  <v-card id="log-list" class="fill-height pa-4 overflow-auto log-list" v-resize="onResize" :color="appearanceStore.ui.color" :height="height - 55" tile>
+  <v-card id="log-list" v-resize="onResize" class="fill-height pa-4 overflow-auto log-list" :color="appearanceStore.ui.color" :height="height - 55" tile>
     <div>
-      <a v-for="log in logs"
-        :class="{ 'fade-out': log.hide, 'final-text': log.isFinal && log.isTranslationFinal, 'interim-text': !log.isFinal || (!log.isTranslationFinal && log.translate) }">
+      <a
+        v-for="log in logs"
+        :class="{ 'fade-out': log.hide, 'final-text': log.isFinal && log.isTranslationFinal, 'interim-text': !log.isFinal || (!log.isTranslationFinal && log.translate) }"
+      >
         <a v-if="log.hide !== 2">{{ (log.translation || !translationStore.show_original) ? log.translation : log.transcript }}&nbsp;&nbsp;</a>
         <v-expand-transition v-show="log.pause">
           <div>
-            <v-col class="pa-0"></v-col>
+            <v-col class="pa-0" />
           </div>
         </v-expand-transition>
       </a>
     </div>
 
-
-    <WelcomeOverlay :overlay="overlay_main" :page="overlay_page"></WelcomeOverlay>
+    <WelcomeOverlay :overlay="overlay_main" :page="overlay_page" />
   </v-card>
 </template>
 
@@ -24,7 +24,7 @@ import { useDisplay } from 'vuetify'
 
 import is_electron from '../helpers/is_electron'
 
-import WelcomeOverlay from "../components/overlays/WelcomeOverlay.vue"
+import WelcomeOverlay from '../components/overlays/WelcomeOverlay.vue'
 
 import { useSettingsStore } from '../stores/settings'
 import { useAppearanceStore } from '../stores/appearance'
@@ -36,50 +36,7 @@ declare const window: any
 export default {
   name: 'Home',
   components: {
-    WelcomeOverlay
-  },
-  data() {
-    return {
-      // oscClient: client,
-      overlay_main: false,
-      overlay_page: 0,
-
-      ws: null as any,
-
-      listening: false,
-      listening_error: false,
-      talking: false,
-
-      loadingWebsocket: false,
-      broadcasting: false,
-
-      input_text: '',
-
-      snackbar: false,
-      snackbar_color: "error",
-      snackbar_icon: "",
-      snackbar_desc: '',
-
-      error_snackbar: false,
-      error_message: '',
-
-      windowSize: {
-        x: 0,
-        y: 0,
-      }
-    }
-  },
-  computed: {
-    outer_size: (() => is_electron() ? '90px' : '55px')
-  },
-  methods: {
-    onResize() {
-      this.windowSize = { x: window.innerWidth, y: window.innerHeight }
-    }
-  },
-  mounted() {
-    this.overlay_main = this.settingsStore.welcome
-    this.onResize()
+    WelcomeOverlay,
   },
   setup() {
     const { height } = useDisplay()
@@ -88,7 +45,6 @@ export default {
     const appearanceStore = useAppearanceStore()
     const logStore = useLogStore()
     const translationStore = useTranslationStore()
-
 
     const font_size = `${appearanceStore.text.font_size}px`
     const fade_time = `${appearanceStore.text.fade_time}s`
@@ -111,7 +67,50 @@ export default {
       font_subtype,
       height,
     }
-  }
+  },
+  data() {
+    return {
+      // oscClient: client,
+      overlay_main: false,
+      overlay_page: 0,
+
+      ws: null as any,
+
+      listening: false,
+      listening_error: false,
+      talking: false,
+
+      loadingWebsocket: false,
+      broadcasting: false,
+
+      input_text: '',
+
+      snackbar: false,
+      snackbar_color: 'error',
+      snackbar_icon: '',
+      snackbar_desc: '',
+
+      error_snackbar: false,
+      error_message: '',
+
+      windowSize: {
+        x: 0,
+        y: 0,
+      },
+    }
+  },
+  computed: {
+    outer_size: () => is_electron() ? '90px' : '55px',
+  },
+  mounted() {
+    this.overlay_main = this.settingsStore.welcome
+    this.onResize()
+  },
+  methods: {
+    onResize() {
+      this.windowSize = { x: window.innerWidth, y: window.innerHeight }
+    },
+  },
 }
 </script>
 
