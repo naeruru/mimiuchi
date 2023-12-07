@@ -5,7 +5,8 @@ import ja from './localization/ja'
 
 const messages = {
     en,
-    ja
+    ja,
+    es
 }
 
 const instance = createI18n({
