@@ -1,4 +1,5 @@
-import { createRouter, createWebHashHistory, createWebHistory, RouteRecordRaw } from 'vue-router'
+import type { RouteRecordRaw } from 'vue-router'
+import { createRouter, createWebHashHistory, createWebHistory } from 'vue-router'
 
 import Header from '../components/Header.vue'
 import Footer from '../components/Footer.vue'
@@ -22,8 +23,8 @@ const routes = [
     components: {
       default: Home,
       // Header,
-      Footer
-    }
+      Footer,
+    },
   },
   {
     path: '/settings/',
@@ -32,7 +33,7 @@ const routes = [
       default: Settings,
       panel: SettingsGeneral,
       Header,
-      Footer
+      Footer,
     },
     children: [
       {
@@ -41,7 +42,7 @@ const routes = [
         components: {
           default: Settings,
           panel: SettingsGeneral,
-          Header
+          Header,
         },
       },
       {
@@ -50,7 +51,7 @@ const routes = [
         components: {
           default: Settings,
           panel: STT,
-          Header
+          Header,
         },
       },
       {
@@ -59,7 +60,7 @@ const routes = [
         components: {
           default: Settings,
           panel: TTS,
-          Header
+          Header,
         },
       },
       {
@@ -68,7 +69,7 @@ const routes = [
         components: {
           default: Settings,
           panel: Appearance,
-          Header
+          Header,
         },
       },
       {
@@ -77,7 +78,7 @@ const routes = [
         components: {
           default: Settings,
           panel: WordReplace,
-          Header
+          Header,
         },
       },
       {
@@ -86,7 +87,7 @@ const routes = [
         components: {
           default: Settings,
           panel: Translation,
-          Header
+          Header,
         },
       },
       {
@@ -95,7 +96,7 @@ const routes = [
         components: {
           default: Settings,
           panel: Connections,
-          Header
+          Header,
         },
       },
       {
@@ -104,7 +105,7 @@ const routes = [
         components: {
           default: Settings,
           panel: OSC,
-          Header
+          Header,
         },
       },
       {
@@ -113,15 +114,14 @@ const routes = [
         components: {
           default: Settings,
           panel: OSCParams,
-          Header
+          Header,
         },
-      }
-    ]
-  }
+      },
+    ],
+  },
 ]
 
-
 export default createRouter({
-  history: (import.meta.env.IS_ELECTRON) ?  createWebHashHistory() : createWebHistory(import.meta.env.NODE_ENV === 'production' ? '/' : '/'),
+  history: (import.meta.env.IS_ELECTRON) ? createWebHashHistory() : createWebHistory(import.meta.env.NODE_ENV === 'production' ? '/' : '/'),
   routes: routes as RouteRecordRaw[],
 })

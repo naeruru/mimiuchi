@@ -3,10 +3,10 @@ import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import electron from 'vite-plugin-electron'
 import renderer from 'vite-plugin-electron-renderer'
+import vuetify from 'vite-plugin-vuetify'
 import pkg from './package.json'
 
 // https://github.com/vuetifyjs/vuetify-loader/tree/next/packages/vite-plugin
-import vuetify from 'vite-plugin-vuetify'
 
 // https://vitejs.dev/config/
 export default defineConfig(({ command }) => {
@@ -20,7 +20,7 @@ export default defineConfig(({ command }) => {
     base: './',
     define: {
       __APP_NAME__: JSON.stringify('mimiuchi'),
-      __APP_VERSION__: JSON.stringify(process.env.npm_package_version)
+      __APP_VERSION__: JSON.stringify(process.env.npm_package_version),
     },
     plugins: [
       vue(),
@@ -30,11 +30,10 @@ export default defineConfig(({ command }) => {
           // Main-Process entry file of the Electron App.
           entry: 'electron/main/index.ts',
           onstart(options) {
-            if (process.env.VSCODE_DEBUG) {
+            if (process.env.VSCODE_DEBUG)
               console.log(/* For `.vscode/.debug.script.mjs` */'[startup] Electron App')
-            } else {
+            else
               options.startup()
-            }
           },
           vite: {
             build: {
@@ -50,7 +49,7 @@ export default defineConfig(({ command }) => {
         {
           entry: 'electron/preload/index.ts',
           onstart(options) {
-            // Notify the Renderer-Process to reload the page when the Preload-Scripts build is complete, 
+            // Notify the Renderer-Process to reload the page when the Preload-Scripts build is complete,
             // instead of restarting the entire Electron App.
             options.reload()
           },
@@ -64,7 +63,7 @@ export default defineConfig(({ command }) => {
               },
             },
           },
-        }
+        },
       ]),
       // Use Node.js API in the Renderer-process
       renderer({

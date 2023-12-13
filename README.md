@@ -33,11 +33,9 @@ website -> desktop
 
 ![mimiuchi-ws_example](https://github.com/naeruru/mimiuchi/assets/9059594/4a85352f-7183-448e-931e-0ab07054231e)
 
-
 website -> desktop -> VRChat
 
 ![mimiuchi-vrchat_example](https://github.com/naeruru/mimiuchi/assets/9059594/666900a9-d176-4c39-a5dd-6a320a46cd8c)
-
 
 # Additional info
 

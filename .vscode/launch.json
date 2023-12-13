@@ -40,6 +40,6 @@
       "request": "attach",
       "type": "pwa-chrome",
       "timeout": 60000
-    },
+    }
   ]
 }

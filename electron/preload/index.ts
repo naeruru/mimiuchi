@@ -1,12 +1,15 @@
+// added to differentiate electron and website version
+import { contextBridge, ipcRenderer } from 'electron'
+
 function domReady(condition: DocumentReadyState[] = ['complete', 'interactive']) {
-  return new Promise(resolve => {
+  return new Promise((resolve) => {
     if (condition.includes(document.readyState)) {
       resolve(true)
-    } else {
+    }
+    else {
       document.addEventListener('readystatechange', () => {
-        if (condition.includes(document.readyState)) {
+        if (condition.includes(document.readyState))
           resolve(true)
-        }
       })
     }
   })
@@ -14,14 +17,12 @@ function domReady(condition: DocumentReadyState[] = ['complete', 'interactive'])
 
 const safeDOM = {
   append(parent: HTMLElement, child: HTMLElement) {
-    if (!Array.from(parent.children).find(e => e === child)) {
+    if (!Array.from(parent.children).find(e => e === child))
       return parent.appendChild(child)
-    }
   },
   remove(parent: HTMLElement, child: HTMLElement) {
-    if (Array.from(parent.children).find(e => e === child)) {
+    if (Array.from(parent.children).find(e => e === child))
       return parent.removeChild(child)
-    }
   },
 }
 
@@ -86,17 +87,13 @@ function useLoading() {
 const { appendLoading, removeLoading } = useLoading()
 domReady().then(appendLoading)
 
-window.onmessage = ev => {
+window.onmessage = (ev) => {
   ev.data.payload === 'removeLoading' && removeLoading()
 }
 
 setTimeout(removeLoading, 4999)
 
-
-// added to differentiate electron and website version
-import { contextBridge, ipcRenderer } from 'electron'
-
-let validChannels = [
+const validChannels = [
   'close_app',
   'toggle_maximize',
   'minimize',
@@ -106,7 +103,7 @@ let validChannels = [
   'send-text-event',
   'send-param-event',
   'receive-text-event',
-  
+
   'websocket-connect',
   'websocket-started',
   'websocket-error',
@@ -121,9 +118,8 @@ let validChannels = [
 contextBridge.exposeInMainWorld('ipcRenderer', {
   send: (channel, data) => {
     // let validChannels = ['typing-text-event', 'send-text-event', 'send-param-event', 'receive-text-event', 'websocket-connect']
-    if (validChannels.includes(channel)) {
+    if (validChannels.includes(channel))
       ipcRenderer.send(channel, data)
-    }
   },
   receive: (channel, func) => {
     // let validChannels = ['typing-text-event', 'send-text-event', 'send-param-event', 'receive-text-event', 'websocket-connect']
@@ -134,8 +130,7 @@ contextBridge.exposeInMainWorld('ipcRenderer', {
   },
   removeListener: (channel) => {
     // let validChannels = ['typing-text-event', 'send-text-event', 'send-param-event', 'receive-text-event', 'websocket-connect']
-    if (validChannels.includes(channel)) {
+    if (validChannels.includes(channel))
       ipcRenderer.removeAllListeners(channel)
-    }
-  }
+  },
 })
