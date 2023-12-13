@@ -87,12 +87,12 @@ export default {
                 value: "en"
             },
             {
-                title: "日本語（日本）",
-                value: "ja"
-            },
-            {
                 title: "Spanish (España)",
                 value: "es"
+            },
+            {
+                title: "日本語（日本）",
+                value: "ja"
             },
         ],
 
