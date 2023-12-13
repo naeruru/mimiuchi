@@ -4,13 +4,13 @@ import en from './localization/en'
 import ja from './localization/ja'
 
 const messages = {
-    en,
-    ja
+  en,
+  ja,
 }
 
 const instance = createI18n({
-    fallbackLocale: 'en',
-    messages
+  fallbackLocale: 'en',
+  messages,
 })
 
 export default instance

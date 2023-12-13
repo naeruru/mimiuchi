@@ -15,6 +15,6 @@ export default createVuetify({
     themes: {
       midnight_purple,
       cotton_candy,
-    }
-  }
+    },
+  },
 })

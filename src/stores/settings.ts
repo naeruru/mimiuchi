@@ -1,24 +1,23 @@
 import { defineStore } from 'pinia'
 
-
 export const useSettingsStore = defineStore('settings', {
-    state: () => ({
+  state: () => ({
 
-        welcome: true,
+    welcome: true,
 
-        language: navigator.language.split('-')[0],
-        
-        drawer: true,
+    language: navigator.language.split('-')[0],
 
-        stt_Settings: {
-            language: 'en-US',
-            confidence: 0.9
-        }
-    }),
-    getters: {
+    drawer: true,
 
+    stt_Settings: {
+      language: 'en-US',
+      confidence: 0.9,
     },
-    actions: {
+  }),
+  getters: {
 
-    }
+  },
+  actions: {
+
+  },
 })
