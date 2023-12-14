@@ -107,8 +107,8 @@ export default {
         value: 'en',
       },
       {
-        title: "Spanish (España)",
-        value: "es"
+        title: 'Spanish (España)',
+        value: 'es',
       },
       {
         title: '日本語（日本）',
