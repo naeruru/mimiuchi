@@ -141,8 +141,8 @@
 </template>
 
 <script lang="ts">
-import { useAppearanceStore } from '../../stores/appearance'
-import { get_fonts } from '../../helpers/get_fonts'
+import { useAppearanceStore } from '@/stores/appearance'
+import { get_fonts } from '@/helpers/get_fonts'
 
 export default {
   name: 'SettingsGeneral',

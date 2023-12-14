@@ -95,8 +95,8 @@
 </template>
 
 <script lang="ts">
-import { useOSCStore } from '../../stores/osc'
-import is_electron from '../../helpers/is_electron'
+import { useOSCStore } from '@/stores/osc'
+import is_electron from '@/helpers/is_electron'
 
 export default {
   name: 'SettingsGeneral',

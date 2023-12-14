@@ -10,7 +10,7 @@
         <v-avatar
           color="transparent"
         >
-          <v-img :src="logo" />
+          <v-img src="logo-256x256.png" />
         </v-avatar>
       </template>
       <v-card-text class="text-subtitle-1 py-2">
@@ -60,8 +60,7 @@
 </template>
 
 <script lang="ts">
-import logo from '../../assets/logo-256x256.png'
-import { useSettingsStore } from '../../stores/settings'
+import { useSettingsStore } from '@/stores/settings'
 
 export default {
   name: 'WelcomeOverlay',
@@ -80,7 +79,6 @@ export default {
   },
   data() {
     return {
-      logo,
       overlay_state: this.overlay,
       overlay_page: this.page,
     }

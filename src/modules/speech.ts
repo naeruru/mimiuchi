@@ -1,4 +1,4 @@
-import { WebSpeech, WebSpeechLangs } from './speech/WebSpeech'
+import { WebSpeech, WebSpeechLangs } from '@/modules/speech/WebSpeech'
 
 export {
   WebSpeech,

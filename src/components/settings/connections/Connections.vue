@@ -153,9 +153,9 @@
 </template>
 
 <script lang="ts">
-import is_electron from '../../../helpers/is_electron'
-import { useConnectionStore } from '../../../stores/connections'
-import ConnectionDialog from './dialogs/ConnectionDialog.vue'
+import ConnectionDialog from '@/components/settings/connections/dialogs/ConnectionDialog.vue'
+import is_electron from '@/helpers/is_electron'
+import { useConnectionStore } from '@/stores/connections'
 
 declare const window: any
 

@@ -1,9 +1,9 @@
 import { defineStore } from 'pinia'
 
-import type { WebSpeech } from '../modules/speech'
-import { i18n } from '../plugins/i18n'
-import is_electron from '../helpers/is_electron'
-import { useConnectionStore } from './connections'
+import { useConnectionStore } from '@/stores/connections'
+import type { WebSpeech } from '@/modules/speech'
+import { i18n } from '@/plugins/i18n'
+import is_electron from '@/helpers/is_electron'
 
 export const useDefaultStore = defineStore('default', {
   state: () => ({

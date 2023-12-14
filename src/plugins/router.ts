@@ -1,20 +1,20 @@
 import type { RouteRecordRaw } from 'vue-router'
 import { createRouter, createWebHashHistory, createWebHistory } from 'vue-router'
 
-import Header from '../components/Header.vue'
-import Footer from '../components/Footer.vue'
-import Home from '../pages/Home.vue'
+import Header from '@/components/Header.vue'
+import Footer from '@/components/Footer.vue'
+import Home from '@/pages/Home.vue'
 
-import Settings from '../pages/Settings.vue'
-import SettingsGeneral from '../components/settings/General.vue'
-import STT from '../components/settings/STT.vue'
-import TTS from '../components/settings/TTS.vue'
-import Appearance from '../components/settings/Appearance.vue'
-import WordReplace from '../components/settings/WordReplace.vue'
-import Translation from '../components/settings/Translation.vue'
-import Connections from '../components/settings/connections/Connections.vue'
-import OSC from '../components/settings/OSC.vue'
-import OSCParams from '../components/settings/OSCParams.vue'
+import Settings from '@/pages/Settings.vue'
+import SettingsGeneral from '@/components/settings/General.vue'
+import STT from '@/components/settings/STT.vue'
+import TTS from '@/components/settings/TTS.vue'
+import Appearance from '@/components/settings/Appearance.vue'
+import WordReplace from '@/components/settings/WordReplace.vue'
+import Translation from '@/components/settings/Translation.vue'
+import Connections from '@/components/settings/connections/Connections.vue'
+import OSC from '@/components/settings/OSC.vue'
+import OSCParams from '@/components/settings/OSCParams.vue'
 
 const routes = [
   {

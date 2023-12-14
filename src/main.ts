@@ -1,12 +1,12 @@
 import { createApp } from 'vue'
-import App from './App.vue'
-import vuetify from './plugins/vuetify'
-import router from './plugins/router'
-import i18n from './plugins/i18n'
+import App from '@/App.vue'
+import vuetify from '@/plugins/vuetify'
+import router from '@/plugins/router'
+import i18n from '@/plugins/i18n'
 
 // import { loadFonts } from './plugins/webfontloader'
 
-import './assets/fonts/fonts.css'
+import '@/assets/fonts/fonts.css'
 
 import { createPinia } from 'pinia'
 

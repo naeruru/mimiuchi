@@ -90,9 +90,9 @@
 </template>
 
 <script lang="ts">
-import { useTranslationStore } from '../../stores/translation'
-import { useSpeechStore } from '../../stores/speech'
-import translation_options from '../../constants/translation_options'
+import { useTranslationStore } from '@/stores/translation'
+import { useSpeechStore } from '@/stores/speech'
+import translation_options from '@/constants/translation_options'
 
 export default {
   name: 'SettingsTranslation',

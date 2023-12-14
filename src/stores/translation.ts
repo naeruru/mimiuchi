@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 
-import { useLogStore } from './logs'
-import { useSpeechStore } from './speech'
+import { useLogStore } from '@/stores/logs'
+import { useSpeechStore } from '@/stores/speech'
 
 export const useTranslationStore = defineStore('translation', {
   state: () => ({

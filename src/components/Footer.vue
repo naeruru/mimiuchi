@@ -86,18 +86,18 @@
 <script lang="ts">
 // import {ipcRenderer} from "electron"
 import { useDisplay } from 'vuetify'
-import is_electron from '../helpers/is_electron'
+import is_electron from '@/helpers/is_electron'
 
-import { useWordReplaceStore } from '../stores/word_replace'
-import { useSettingsStore } from '../stores/settings'
-import { useSpeechStore } from '../stores/speech'
-import { useAppearanceStore } from '../stores/appearance'
-import type { Log } from '../stores/logs'
-import { useLogStore } from '../stores/logs'
-import { useTranslationStore } from '../stores/translation'
-import { useOSCStore } from '../stores/osc'
-import { useConnectionStore } from '../stores/connections'
-import { useDefaultStore } from '../stores/default'
+import { useWordReplaceStore } from '@/stores/word_replace'
+import { useSettingsStore } from '@/stores/settings'
+import { useSpeechStore } from '@/stores/speech'
+import { useAppearanceStore } from '@/stores/appearance'
+import type { Log } from '@/stores/logs'
+import { useLogStore } from '@/stores/logs'
+import { useTranslationStore } from '@/stores/translation'
+import { useOSCStore } from '@/stores/osc'
+import { useConnectionStore } from '@/stores/connections'
+import { useDefaultStore } from '@/stores/default'
 
 declare const window: any
 

@@ -22,14 +22,14 @@
 // import {ipcRenderer} from "electron"
 import { useDisplay } from 'vuetify'
 
-import is_electron from '../helpers/is_electron'
+import is_electron from '@/helpers/is_electron'
 
-import WelcomeOverlay from '../components/overlays/WelcomeOverlay.vue'
+import WelcomeOverlay from '@/components/overlays/WelcomeOverlay.vue'
 
-import { useSettingsStore } from '../stores/settings'
-import { useAppearanceStore } from '../stores/appearance'
-import { useLogStore } from '../stores/logs'
-import { useTranslationStore } from '../stores/translation'
+import { useSettingsStore } from '@/stores/settings'
+import { useAppearanceStore } from '@/stores/appearance'
+import { useLogStore } from '@/stores/logs'
+import { useTranslationStore } from '@/stores/translation'
 
 declare const window: any
 

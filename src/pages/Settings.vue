@@ -72,8 +72,8 @@
 
 <script lang="ts">
 import { useDisplay } from 'vuetify'
-import is_electron from '../helpers/is_electron'
-import { useSettingsStore } from '../stores/settings'
+import is_electron from '@/helpers/is_electron'
+import { useSettingsStore } from '@/stores/settings'
 
 declare const window: any
 

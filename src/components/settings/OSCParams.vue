@@ -179,7 +179,7 @@
 </template>
 
 <script lang="ts">
-import { useOSCStore } from '../../stores/osc'
+import { useOSCStore } from '@/stores/osc'
 
 interface Param {
   route: string

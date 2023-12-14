@@ -89,10 +89,10 @@
 </template>
 
 <script lang="ts">
-import { useSpeechStore } from '../../stores/speech'
-import { WebSpeechLangs } from '../../modules/speech'
+import { useSpeechStore } from '@/stores/speech'
+import { WebSpeechLangs } from '@/modules/speech'
 
-import is_electron from '../../helpers/is_electron'
+import is_electron from '@/helpers/is_electron'
 
 declare interface MediaDevice {
   kind?: string
