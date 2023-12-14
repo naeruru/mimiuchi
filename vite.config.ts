@@ -1,4 +1,5 @@
 import { rmSync } from 'node:fs'
+import { URL, fileURLToPath } from 'node:url'
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import electron from 'vite-plugin-electron'
@@ -70,6 +71,11 @@ export default defineConfig(({ command }) => {
         nodeIntegration: false,
       }),
     ],
+    resolve: {
+      alias: [
+        { find: '@', replacement: fileURLToPath(new URL('./src', import.meta.url)) },
+      ],
+    },
     server: process.env.VSCODE_DEBUG && (() => {
       const url = new URL(pkg.debug.env.VITE_DEV_SERVER_URL)
       return {

@@ -1,4 +1,4 @@
-import { useSpeechStore } from '../../stores/speech'
+import { useSpeechStore } from '@/stores/speech'
 
 declare const window: any
 

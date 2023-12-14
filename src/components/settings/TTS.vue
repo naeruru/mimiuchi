@@ -95,7 +95,7 @@
 </template>
 
 <script lang="ts">
-import { useSpeechStore } from '../../stores/speech'
+import { useSpeechStore } from '@/stores/speech'
 
 const synth = window.speechSynthesis
 

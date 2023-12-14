@@ -23,8 +23,7 @@
 </template>
 
 <script lang='ts'>
-import { useSettingsStore } from '../stores/settings'
-import logo from '../assets/logo-256x256.png'
+import { useSettingsStore } from '@/stores/settings'
 
 export default {
   name: 'Header',
@@ -37,7 +36,6 @@ export default {
   data() {
     return {
       APP_NAME: __APP_NAME__,
-      logo,
     }
   },
   methods: {

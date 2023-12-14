@@ -44,11 +44,11 @@
 </template>
 
 <script lang="ts">
-import is_electron from '../../../../helpers/is_electron'
-import type { Connection } from '../../../../stores/connections'
-import { useConnectionStore } from '../../../../stores/connections'
-import WebSocketOptions from './WebSocketOptions.vue'
-import WebHookOptions from './WebHookOptions.vue'
+import WebSocketOptions from '@/components/settings/connections/dialogs/WebSocketOptions.vue'
+import WebHookOptions from '@/components/settings/connections/dialogs/WebHookOptions.vue'
+import is_electron from '@/helpers/is_electron'
+import type { Connection } from '@/stores/connections'
+import { useConnectionStore } from '@/stores/connections'
 
 declare const window: any
 

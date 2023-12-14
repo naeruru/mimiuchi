@@ -74,12 +74,12 @@
 </template>
 
 <script lang="ts">
-import { useAppearanceStore } from '../../stores/appearance'
-import { useWordReplaceStore } from '../../stores/word_replace'
-import { useSettingsStore } from '../../stores/settings'
-import { useSpeechStore } from '../../stores/speech'
-import { useConnectionStore } from '../../stores/connections'
-import { useLogStore } from '../../stores/logs'
+import { useAppearanceStore } from '@/stores/appearance'
+import { useWordReplaceStore } from '@/stores/word_replace'
+import { useSettingsStore } from '@/stores/settings'
+import { useSpeechStore } from '@/stores/speech'
+import { useConnectionStore } from '@/stores/connections'
+import { useLogStore } from '@/stores/logs'
 
 export default {
   name: 'SettingsGeneral',
@@ -107,8 +107,8 @@ export default {
         value: 'en',
       },
       {
-        title: "Spanish (España)",
-        value: "es"
+        title: 'Spanish (España)',
+        value: 'es',
       },
       {
         title: '日本語（日本）',

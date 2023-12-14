@@ -39,7 +39,7 @@
 </template>
 
 <script lang="ts">
-import { useWordReplaceStore } from '../../stores/word_replace'
+import { useWordReplaceStore } from '@/stores/word_replace'
 
 export default {
   name: 'WordReplace',

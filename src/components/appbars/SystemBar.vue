@@ -28,7 +28,7 @@
 </template>
 
 <script lang="ts">
-import is_electron from '../../helpers/is_electron'
+import is_electron from '@/helpers/is_electron'
 
 declare const window: any
 

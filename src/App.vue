@@ -10,17 +10,17 @@
 </template>
 
 <script lang="ts">
-import { useAppearanceStore } from './stores/appearance'
-import { useWordReplaceStore } from './stores/word_replace'
-import { useSettingsStore } from './stores/settings'
-import { useSpeechStore } from './stores/speech'
-import { useTranslationStore } from './stores/translation'
-import { useConnectionStore } from './stores/connections'
-import { useOSCStore } from './stores/osc'
+import { useAppearanceStore } from '@/stores/appearance'
+import { useWordReplaceStore } from '@/stores/word_replace'
+import { useSettingsStore } from '@/stores/settings'
+import { useSpeechStore } from '@/stores/speech'
+import { useTranslationStore } from '@/stores/translation'
+import { useConnectionStore } from '@/stores/connections'
+import { useOSCStore } from '@/stores/osc'
 
-import is_electron from './helpers/is_electron'
+import is_electron from '@/helpers/is_electron'
 
-import SystemBar from './components/appbars/SystemBar.vue'
+import SystemBar from '@/components/appbars/SystemBar.vue'
 
 declare const window: any
 

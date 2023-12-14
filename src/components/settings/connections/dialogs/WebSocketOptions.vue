@@ -19,9 +19,9 @@
 </template>
 
 <script lang="ts">
-import is_electron from '../../../../helpers/is_electron'
-import type { Connection } from '../../../../stores/connections'
-import { useConnectionStore } from '../../../../stores/connections'
+import is_electron from '@/helpers/is_electron'
+import type { Connection } from '@/stores/connections'
+import { useConnectionStore } from '@/stores/connections'
 
 export default {
   name: 'WebSocketOptions',

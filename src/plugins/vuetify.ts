@@ -6,8 +6,8 @@ import 'vuetify/styles'
 import { createVuetify } from 'vuetify'
 
 // themes
-import { midnight_purple } from './themes/midnight_purple'
-import { cotton_candy } from './themes/cotton_candy'
+import { midnight_purple } from '@/plugins/themes/midnight_purple'
+import { cotton_candy } from '@/plugins/themes/cotton_candy'
 
 export default createVuetify({
   theme: {
