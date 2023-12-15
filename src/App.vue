@@ -87,6 +87,10 @@ export default {
       this.$i18n.locale = this.settingsStore.language
     })
   },
+  created() {
+    if (this.is_electron())
+      this.$router.push('/')
+  }
 }
 </script>
 

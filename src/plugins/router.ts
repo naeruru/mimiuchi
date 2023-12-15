@@ -122,6 +122,6 @@ const routes = [
 ]
 
 export default createRouter({
-  history: (import.meta.env.IS_ELECTRON) ? createWebHashHistory() : createWebHistory(import.meta.env.NODE_ENV === 'production' ? '/' : '/'),
+  history: createWebHistory('/'),
   routes: routes as RouteRecordRaw[],
 })
