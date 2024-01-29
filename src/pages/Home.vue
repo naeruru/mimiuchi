@@ -3,7 +3,7 @@
     <div>
       <a
         v-for="log in logs"
-        :class="{ 'fade-out': log.hide, 'final-text': log.isFinal && log.isTranslationFinal, 'interim-text': !log.isFinal || (!log.isTranslationFinal && log.translate) }"
+        :class="{ 'fade-out': log.hide, 'final-text': log.isFinal || log.isTranslationFinal, 'interim-text': !log.isFinal || (!log.isTranslationFinal && log.translate) }"
       >
         <a v-if="log.hide !== 2">{{ (translationStore.enabled && (log.translation || !translationStore.show_original)) ? log.translation : log.transcript }}&nbsp;&nbsp;</a>
         <v-expand-transition v-show="log.pause">
