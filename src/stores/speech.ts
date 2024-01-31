@@ -195,10 +195,20 @@ export const useSpeechStore = defineStore('speech', {
       if (is_electron() && (oscStore.osc_text) && defaultStore.broadcasting) {
         if (log.isTranslationFinal && log.translation) {
           const transcript = (translationStore.show_original) ? `${log.transcript} (${log.translation})` : log.translation
-          window.ipcRenderer.send('send-text-event', `{ "transcript": "${transcript}", "hide_ui": ${!oscStore.show_keyboard}, "sfx": ${oscStore.sfx} }`)
+          const data = {
+            transcript,
+            hide_ui: !oscStore.show_keyboard,
+            sfx: oscStore.sfx,
+          }
+          window.ipcRenderer.send('send-text-event', JSON.stringify(data))
         }
         else if (log.isFinal && !log.translate) {
-          window.ipcRenderer.send('send-text-event', `{ "transcript": "${log.transcript}", "hide_ui": ${!oscStore.show_keyboard}, "sfx": ${oscStore.sfx} }`)
+          const data = {
+            transcript: log.transcript,
+            hide_ui: !oscStore.show_keyboard,
+            sfx: oscStore.sfx,
+          }
+          window.ipcRenderer.send('send-text-event', JSON.stringify(data))
         }
       }
       else if (defaultStore.ws) {

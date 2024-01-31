@@ -90,7 +90,7 @@ export default {
   created() {
     if (this.is_electron())
       this.$router.push('/')
-  }
+  },
 }
 </script>
 
