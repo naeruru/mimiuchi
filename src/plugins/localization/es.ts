@@ -54,6 +54,7 @@ export default {
       sensitivity_start: 'Probar',
       sensitivity_stop: 'Parar',
       device: 'Escuchando: ',
+      pinned_languages: 'Lenguajes fijados',
       language: 'Selecciones un lenguaje de escucha',
       unsupported: {
         text: 'Web Speech API (Voz a Texto) solo está disponible en {0}. (^・ω・^)',

@@ -11,6 +11,10 @@ import is_electron from '@/helpers/is_electron'
 import { i18n } from '@/plugins/i18n'
 import { WebSpeech } from '@/modules/speech'
 
+interface pinned_languages {
+  [key: string]: any;
+}
+
 declare const window: any
 
 export const useSpeechStore = defineStore('speech', {
@@ -34,6 +38,7 @@ export const useSpeechStore = defineStore('speech', {
       rate: 1,
       pitch: 1,
     },
+    pinned_languages: {} as pinned_languages,
   }),
   getters: {
 
@@ -215,5 +220,32 @@ export const useSpeechStore = defineStore('speech', {
         defaultStore.ws.send(`{"type": "text", "data": ${JSON.stringify(log)}}`)
       }
     },
+    pin_language(selected_language: any) {
+      const pins = this.pinned_languages
+
+      // Pin.
+      pins[selected_language.title] = selected_language
+
+      // Alphabetically sort.
+      const sortedKeys = Object.keys(pins).sort();
+      const sortedPins = {} as pinned_languages
+
+      sortedKeys.forEach(key => {
+        sortedPins[key] = pins[key]
+      })
+
+      this.pinned_languages = sortedPins
+    },
+    unpin_language(selected_language: any) {
+      const pins = this.pinned_languages
+
+      // Unpin.
+      delete pins[selected_language.title]
+    },
+    is_pinned_language(selected_language: any) {
+      const pins = this.pinned_languages
+
+      return pins.hasOwnProperty(selected_language.title)
+    }
   },
 })

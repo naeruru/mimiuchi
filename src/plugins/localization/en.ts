@@ -55,6 +55,7 @@ export default {
       sensitivity_start: 'Check',
       sensitivity_stop: 'Stop',
       device: 'Listening: ',
+      pinned_languages: 'Pinned languages',
       language: 'Select a speech detection language',
       unsupported: {
         text: 'Web Speech API Speech-to-Text is only available on the {0}. (^・ω・^)',
