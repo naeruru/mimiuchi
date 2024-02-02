@@ -172,10 +172,20 @@ export default {
           this.update_available = true
       })
     }
+
+    window.addEventListener('keydown', this.handleKeyDown)
+  },
+  unmounted() {
+    window.removeEventListener('keydown', this.handleKeyDown)
   },
   methods: {
     open_external(link: string) {
       window.open(link, '_blank')
+    },
+    handleKeyDown(event: KeyboardEvent) {
+      if (event.key === 'Escape') {
+        this.$router.push({ path: '/' })
+      }
     },
   },
 }
