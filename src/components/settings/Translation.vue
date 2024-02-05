@@ -11,14 +11,16 @@
         </v-col>
         <v-col :cols="12">
           <v-card flat>
-            <v-switch
-              v-model="translationStore.enabled"
-              :label="$t('settings.translation.enabled')"
-              color="primary"
-              hide-details
-              inset
-              class="mx-3"
-            />
+            <v-list-item :title="$t('settings.translation.enabled')">
+              <template #append>
+                <v-switch
+                  v-model="translationStore.enabled"
+                  color="primary"
+                  hide-details
+                  inset
+                />
+              </template>
+            </v-list-item>
           </v-card>
         </v-col>
         <v-col :cols="12">
@@ -74,14 +76,16 @@
         </v-col>
         <v-col :cols="12">
           <v-card flat>
-            <v-switch
-              v-model="translationStore.show_original"
-              :label="$t('settings.translation.show_original')"
-              color="primary"
-              hide-details
-              inset
-              class="mx-3"
-            />
+            <v-list-item :title="$t('settings.translation.show_original')">
+              <template #append>
+                <v-switch
+                  v-model="translationStore.show_original"
+                  color="primary"
+                  hide-details
+                  inset
+                />
+              </template>
+            </v-list-item>
           </v-card>
         </v-col>
       </v-row>

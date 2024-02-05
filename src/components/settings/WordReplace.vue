@@ -3,14 +3,16 @@
     <v-divider />
     <v-card-text>
       <v-card flat>
-        <v-switch
-          v-model="wordReplaceStore.enabled"
-          :label="$t('settings.word_replace.enabled')"
-          color="primary"
-          hide-details
-          inset
-          class="mx-3"
-        />
+        <v-list-item :title="$t('settings.word_replace.enabled')">
+          <template #append>
+            <v-switch
+              v-model="wordReplaceStore.enabled"
+              color="primary"
+              hide-details
+              inset
+            />
+          </template>
+        </v-list-item>
       </v-card>
       <div v-if="replacements.length" class="mt-6">
         <v-row v-for="(replacement, i) in replacements">

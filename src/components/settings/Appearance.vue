@@ -71,15 +71,18 @@
         </v-col>
         <v-divider />
         <v-col :cols="12" :md="12" class="pb-0">
-          <v-list-item :title="$t('settings.appearance.text.fade')">
-            <template #append>
-              <v-switch
-                v-model="appearanceStore.text.enable_fade"
-                color="primary"
-                inset hide-details
-              />
-            </template>
-          </v-list-item>
+          <v-card>
+            <v-list-item :title="$t('settings.appearance.text.fade')">
+              <template #append>
+                <v-switch
+                  v-model="appearanceStore.text.enable_fade"
+                  color="primary"
+                  hide-details
+                  inset
+                />
+              </template>
+            </v-list-item>
+          </v-card>
         </v-col>
         <v-col :cols="12" :sm="6">
           <v-text-field
