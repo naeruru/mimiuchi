@@ -183,9 +183,8 @@ export default {
       window.open(link, '_blank')
     },
     handleKeyDown(event: KeyboardEvent) {
-      if (event.key === 'Escape') {
+      if (event.key === 'Escape')
         this.$router.push({ path: '/' })
-      }
     },
   },
 }

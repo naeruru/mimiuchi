@@ -62,15 +62,19 @@
         </v-row>
 
         <v-col :cols="12">
-          <v-radio-group v-model="speechStore.stt.language" v-if="Object.keys(speechStore.pinned_languages).length > 0" :label="$t('settings.stt.pinned_languages')">
+          <v-radio-group v-if="Object.keys(speechStore.pinned_languages).length > 0" v-model="speechStore.stt.language" :label="$t('settings.stt.pinned_languages')">
             <v-card v-for="language in speechStore.pinned_languages" class="language-card pa-2 mb-2" :color="language.value === speechStore.stt.language ? 'primary' : 'default'" @click="speechStore.stt.language = language.value">
               <v-radio :label="language.title" :value="language.value">
                 <template #label>
                   <div class="d-flex flex-grow-1 justify-space-between me-2">
                     <div>{{ language.title }}</div>
                     <div class="pin-icon">
-                      <v-icon v-if="!is_pinned_language(language)" class="pin-icon-not-pinned" @click.prevent="pin_language(language)">mdi-star-outline</v-icon>
-                      <v-icon v-else class="pin-icon-pinned" @click.prevent="unpin_language(language)">mdi-star</v-icon>
+                      <v-icon v-if="!is_pinned_language(language)" class="pin-icon-not-pinned" @click.prevent="pin_language(language)">
+                        mdi-star-outline
+                      </v-icon>
+                      <v-icon v-else class="pin-icon-pinned" @click.prevent="unpin_language(language)">
+                        mdi-star
+                      </v-icon>
                     </div>
                   </div>
                 </template>
@@ -85,8 +89,12 @@
                   <div class="d-flex flex-grow-1 justify-space-between me-2">
                     <div>{{ language.title }}</div>
                     <div class="pin-icon">
-                      <v-icon v-if="!is_pinned_language(language)" class="pin-icon-not-pinned" @click.prevent="pin_language(language)">mdi-star-outline</v-icon>
-                      <v-icon v-else class="pin-icon-pinned" @click.prevent="unpin_language(language)">mdi-star</v-icon>
+                      <v-icon v-if="!is_pinned_language(language)" class="pin-icon-not-pinned" @click.prevent="pin_language(language)">
+                        mdi-star-outline
+                      </v-icon>
+                      <v-icon v-else class="pin-icon-pinned" @click.prevent="unpin_language(language)">
+                        mdi-star
+                      </v-icon>
                     </div>
                   </div>
                 </template>

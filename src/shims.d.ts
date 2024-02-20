@@ -10,8 +10,8 @@ declare module '*.vue' {
 }
 
 interface list_item {
-  title: string,
-  value: string,
+  title: string
+  value: string
 }
 
 declare const __APP_NAME__: string
