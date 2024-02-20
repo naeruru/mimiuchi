@@ -109,29 +109,6 @@
   </v-card>
 </template>
 
-<style>
-.language-card .v-selection-control .v-label {
-  width: 100%;
-}
-
-.language-card .pin-icon-not-pinned {
-  display: none !important;
-}
-
-.language-card:hover .pin-icon-not-pinned {
-  display: inline-block !important;
-}
-
-/* v-hover is unreliable and doesn't respond to layout changes. */
-.pin-icon-pinned:hover:before {
-  content: "\F1564" !important; /* mdi-star-minus */
-}
-
-.pin-icon-not-pinned:hover:before {
-  content: "\F1567" !important; /* mdi-star-plus-outline */
-}
-</style>
-
 <script lang="ts">
 import { useSpeechStore } from '@/stores/speech'
 import { WebSpeechLangs } from '@/modules/speech'
@@ -248,19 +225,38 @@ export default {
         })
       })
     },
-    pin_language(selected_language: any) {
+    pin_language(selected_language: list_item) {
       this.speechStore.pin_language(selected_language)
     },
-    unpin_language(selected_language: any) {
+    unpin_language(selected_language: list_item) {
       this.speechStore.unpin_language(selected_language)
     },
-    is_pinned_language(selected_language: any) {
+    is_pinned_language(selected_language: list_item) {
       return this.speechStore.is_pinned_language(selected_language)
     },
   },
 }
 </script>
 
-<style scoped>
+<style>
+.language-card .v-selection-control .v-label {
+  width: 100%;
+}
 
+.language-card .pin-icon-not-pinned {
+  display: none !important;
+}
+
+.language-card:hover .pin-icon-not-pinned {
+  display: inline-block !important;
+}
+
+/* v-hover is unreliable and doesn't respond to layout changes. */
+.pin-icon-pinned:hover:before {
+  content: "\F1564" !important; /* mdi-star-minus */
+}
+
+.pin-icon-not-pinned:hover:before {
+  content: "\F1567" !important; /* mdi-star-plus-outline */
+}
 </style>

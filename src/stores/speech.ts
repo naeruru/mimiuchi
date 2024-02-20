@@ -12,7 +12,7 @@ import { i18n } from '@/plugins/i18n'
 import { WebSpeech } from '@/modules/speech'
 
 interface pinned_languages {
-  [key: string]: any;
+  [key: string]: list_item;
 }
 
 declare const window: any
@@ -220,7 +220,7 @@ export const useSpeechStore = defineStore('speech', {
         defaultStore.ws.send(`{"type": "text", "data": ${JSON.stringify(log)}}`)
       }
     },
-    pin_language(selected_language: any) {
+    pin_language(selected_language: list_item) {
       const pins = this.pinned_languages
 
       // Pin.
@@ -236,13 +236,13 @@ export const useSpeechStore = defineStore('speech', {
 
       this.pinned_languages = sortedPins
     },
-    unpin_language(selected_language: any) {
+    unpin_language(selected_language: list_item) {
       const pins = this.pinned_languages
 
       // Unpin.
       delete pins[selected_language.title]
     },
-    is_pinned_language(selected_language: any) {
+    is_pinned_language(selected_language: list_item) {
       const pins = this.pinned_languages
 
       return pins.hasOwnProperty(selected_language.title)
