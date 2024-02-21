@@ -55,6 +55,7 @@ export default {
       sensitivity_start: 'マイクテスト',
       sensitivity_stop: 'テストを中...',
       device: 'デバイス： ',
+      pinned_languages: 'ピン留めされた言語',
       language: 'Speech-to-textの言語を選択',
       unsupported: {
         text: 'Web Speech APIのSpeech-to-Textは{0}で利用できます。(^・ω・^)',

@@ -5,7 +5,7 @@
       <v-row>
         <v-col :cols="12">
           <v-card>
-            <v-list-item :title="$t('settings.tts.enabled')  ">
+            <v-list-item :title="$t('settings.tts.enabled') ">
               <template #append>
                 <v-switch
                   v-model="speechStore.tts.enabled"

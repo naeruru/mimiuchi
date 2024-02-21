@@ -9,5 +9,10 @@ declare module '*.vue' {
   export default component
 }
 
+interface list_item {
+  title: string
+  value: string
+}
+
 declare const __APP_NAME__: string
 declare const __APP_VERSION__: string

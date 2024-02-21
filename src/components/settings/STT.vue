@@ -62,12 +62,41 @@
         </v-row>
 
         <v-col :cols="12">
-          <v-radio-group v-model="speechStore.stt.language" :label="$t('settings.stt.language')">
-            <v-text-field v-model="search_lang" class="mb-2" label="Search" variant="outlined" single-line hide-details />
-            <v-card v-for="(language, i) in filtered_lang" class="pa-2 mb-2" :color="language.value === speechStore.stt.language ? 'primary' : 'default'" @click="speechStore.stt.language = language.value">
+          <v-radio-group v-if="Object.keys(speechStore.pinned_languages).length > 0" v-model="speechStore.stt.language" :label="$t('settings.stt.pinned_languages')">
+            <v-card v-for="language in speechStore.pinned_languages" class="language-card pa-2 mb-2" :color="language.value === speechStore.stt.language ? 'primary' : 'default'" @click="speechStore.stt.language = language.value">
               <v-radio :label="language.title" :value="language.value">
                 <template #label>
-                  <div>{{ language.title }}</div>
+                  <div class="d-flex flex-grow-1 justify-space-between me-2">
+                    <div>{{ language.title }}</div>
+                    <div class="pin-icon">
+                      <v-icon v-if="!is_pinned_language(language)" class="pin-icon-not-pinned" @click.prevent="pin_language(language)">
+                        mdi-star-outline
+                      </v-icon>
+                      <v-icon v-else class="pin-icon-pinned" @click.prevent="unpin_language(language)">
+                        mdi-star
+                      </v-icon>
+                    </div>
+                  </div>
+                </template>
+              </v-radio>
+            </v-card>
+          </v-radio-group>
+          <v-radio-group v-model="speechStore.stt.language" :label="$t('settings.stt.language')">
+            <v-text-field v-model="search_lang" class="mb-2" label="Search" variant="outlined" single-line hide-details />
+            <v-card v-for="(language, i) in filtered_lang" class="language-card pa-2 mb-2" :color="language.value === speechStore.stt.language ? 'primary' : 'default'" @click="speechStore.stt.language = language.value">
+              <v-radio :label="language.title" :value="language.value">
+                <template #label>
+                  <div class="d-flex flex-grow-1 justify-space-between me-2">
+                    <div>{{ language.title }}</div>
+                    <div class="pin-icon">
+                      <v-icon v-if="!is_pinned_language(language)" class="pin-icon-not-pinned" @click.prevent="pin_language(language)">
+                        mdi-star-outline
+                      </v-icon>
+                      <v-icon v-else class="pin-icon-pinned" @click.prevent="unpin_language(language)">
+                        mdi-star
+                      </v-icon>
+                    </div>
+                  </div>
                 </template>
               </v-radio>
             </v-card>
@@ -204,10 +233,38 @@ export default {
         })
       })
     },
+    pin_language(selected_language: list_item) {
+      this.speechStore.pin_language(selected_language)
+    },
+    unpin_language(selected_language: list_item) {
+      this.speechStore.unpin_language(selected_language)
+    },
+    is_pinned_language(selected_language: list_item) {
+      return this.speechStore.is_pinned_language(selected_language)
+    },
   },
 }
 </script>
 
-<style scoped>
+<style>
+.language-card .v-selection-control .v-label {
+  width: 100%;
+}
 
+.language-card .pin-icon-not-pinned {
+  display: none !important;
+}
+
+.language-card:hover .pin-icon-not-pinned {
+  display: inline-block !important;
+}
+
+/* v-hover is unreliable and doesn't respond to layout changes. */
+.pin-icon-pinned:hover:before {
+  content: "\F1564" !important; /* mdi-star-minus */
+}
+
+.pin-icon-not-pinned:hover:before {
+  content: "\F1567" !important; /* mdi-star-plus-outline */
+}
 </style>
