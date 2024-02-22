@@ -157,7 +157,7 @@ export const useSpeechStore = defineStore('speech', {
         logStore.loading_result = false
 
         // translate if not translating and enabled
-        if (translationStore.enabled && !log.translate && !log.translation) {
+        if (is_electron() && translationStore.enabled && !log.translate && !log.translation) {
           logStore.logs[i].translate = true
           defaultStore.worker.postMessage({
             text: log.transcript,

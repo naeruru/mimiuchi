@@ -147,6 +147,10 @@ export default {
       show_original: 'Show original phrase before translating',
       ml_notice: '{0} is an ML-powered library that uses local compute resources (CPU) to generate translations on your device. On lower end computers, it might not run well.',
       speech_lang: 'Your Speech-to-text language is ',
+      unsupported: {
+        text: 'Translations are currently only available on the {0}. (^・ω・^)',
+        link: 'desktop version',
+      },
     },
     connections: {
       title: 'Connections',

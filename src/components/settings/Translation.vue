@@ -2,7 +2,7 @@
   <v-card :title="$t('settings.translation.title')" :subtitle="$t('settings.translation.description')" color="transparent" flat>
     <v-divider />
     <v-card-text>
-      <v-row>
+      <v-row v-if="is_electron()">
         <v-col>
           <v-chip variant="outlined" label color="error" size="large">
             <v-icon start icon="mdi-alert" />
@@ -89,6 +89,15 @@
           </v-card>
         </v-col>
       </v-row>
+      <v-card-text v-else>
+        <v-alert variant="outlined" type="warning" prominent>
+          <v-alert-title>
+            <i18n-t keypath="settings.translation.unsupported.text" tag="label" for="link" scope="global">
+              <a class="text-primary pointer" @click="openURL('https://github.com/naeruru/mimiuchi/releases')">{{ $t('settings.translation.unsupported.link') }}</a>
+            </i18n-t>
+          </v-alert-title>
+        </v-alert>
+      </v-card-text>
     </v-card-text>
   </v-card>
 </template>
@@ -97,6 +106,8 @@
 import { useTranslationStore } from '@/stores/translation'
 import { useSpeechStore } from '@/stores/speech'
 import translation_options from '@/constants/translation_options'
+
+import is_electron from '@/helpers/is_electron'
 
 export default {
   name: 'SettingsTranslation',
@@ -107,6 +118,7 @@ export default {
     return {
       translationStore,
       stt_language: speechStore.stt.language,
+      is_electron,
     }
   },
   data() {
@@ -125,9 +137,8 @@ export default {
 
   },
   methods: {
-    open_external(link: string | null) {
-      if (link)
-        window.open(link, '_blank')
+    openURL(url: string) {
+      window.open(url, '_blank')
     },
   },
 }

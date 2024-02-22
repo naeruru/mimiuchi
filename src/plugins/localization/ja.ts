@@ -147,6 +147,10 @@ export default {
       show_original: '翻訳する前に元のテキストを表示する',
       ml_notice: '{0}はCPUを使用して、デバイス上で翻訳を生成する機械学習を搭載したライブラリです。ローエンドのコンピュータでは、うまく動作しない場合があります。',
       speech_lang: 'Speech-to-text言語は',
+      unsupported: {
+        text: '翻訳サービスは{0}で利用できます。 (^・ω・^)',
+        link: 'デスクトップアプリ版',
+      },
     },
     connections: {
       title: '接続',

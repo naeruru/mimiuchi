@@ -80,6 +80,7 @@ import { useSettingsStore } from '@/stores/settings'
 import { useSpeechStore } from '@/stores/speech'
 import { useConnectionStore } from '@/stores/connections'
 import { useLogStore } from '@/stores/logs'
+import { useTranslationStore } from '@/stores/translation'
 
 export default {
   name: 'SettingsGeneral',
@@ -90,6 +91,7 @@ export default {
     const speechStore = useSpeechStore()
     const connectionStore = useConnectionStore()
     const logStore = useLogStore()
+    const translationStore = useTranslationStore()
 
     return {
       appearanceStore,
@@ -98,6 +100,7 @@ export default {
       speechStore,
       connectionStore,
       logStore,
+      translationStore,
     }
   },
   data: () => ({
@@ -141,6 +144,8 @@ export default {
         this.speechStore.$reset()
       if (this.connection)
         this.connectionStore.$reset()
+      if (this.translationStore)
+        this.translationStore.$reset()
       this.reset_dialog = false
       this.snackbar_text = this.$t('settings.general.reset.snackbar.title')
       this.snackbar = true

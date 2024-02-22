@@ -146,6 +146,10 @@ export default {
       show_original: 'Mostrar frase original antes de traducir',
       ml_notice: '{0} es una biblioteca basada en ML que utiliza recursos locales (CPU) para generar traducciones en su dispositivo. En dispositivos de gama baja, es posible que no funcione bien.',
       speech_lang: 'Tu lenguaje para Voz a Texto es ',
+      unsupported: {
+        text: 'Traducciones solo está disponible en {0}. (^・ω・^)',
+        link: 'Aplicación de Escritorio',
+      },
     },
     connections: {
       title: 'Conexiones',
