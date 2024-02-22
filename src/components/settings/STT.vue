@@ -251,11 +251,11 @@ export default {
   width: 100%;
 }
 
-.language-card .pin-icon-not-pinned {
+.language-card .pin-icon-not-pinned:before {
   display: none !important;
 }
 
-.language-card:hover .pin-icon-not-pinned {
+.language-card:hover .pin-icon-not-pinned:before {
   display: inline-block !important;
 }
 
