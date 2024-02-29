@@ -13,14 +13,19 @@ export const useWordReplaceStore = defineStore('wordreplace', {
 
   },
   actions: {
+    escapeRegExp(input: string) {
+      return input.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') // Escape regex metacharacters.
+    },
     replace_words(input: string): string {
       if (!this.enabled || !Object.keys(this.word_replacements).length)
         return input
 
       // Replace words.
       // Keys are case-sensitive (e.g., "Hello" and "hello" are different replacement keys).
-      // Word boundaries (\b) prevent abnormal replacements (e.g, "script" → "HELLO" would cause "description" → "deHELLOion").
-      const replace_re = new RegExp("\\b(" + Object.keys(this.word_replacements).join("|") + ")\\b", "g");
+      // Word boundaries prevent abnormal replacements (e.g, "script" → "HELLO" would cause "description" → "deHELLOion").
+      // The shortest censored word is expected to have at least 2 asterisks.
+      const joined = Object.keys(this.word_replacements).map(key => this.escapeRegExp(key)).join("|")
+      const replace_re = new RegExp(`\\b(${joined})(?![\\w*]{2,})`, "g")
       
       return input.replace(replace_re, (matched) => {
         return this.word_replacements[matched]
