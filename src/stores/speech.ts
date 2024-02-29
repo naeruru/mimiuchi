@@ -109,7 +109,7 @@ export const useSpeechStore = defineStore('speech', {
       speech.speak(input)
     },
     async on_submit(log: any, index: number) {
-      if (!log.transcript.replace(/\s/g, '').length)
+      if (!log.transcript.trim()) // If the submitted input is only whitespace, do nothing. This may occur if the user only submitted whitespace.
         return
 
       const logStore = useLogStore()
@@ -124,6 +124,11 @@ export const useSpeechStore = defineStore('speech', {
 
       // word replace
       log.transcript = replace_words(log.transcript)
+      if (!log.transcript.trim()) { // If the processed input is only whitespace, do nothing. This may occur if the entire log transcript was replaced with whitespace.
+        logStore.loading_result = false
+        
+        return
+      }
 
       // scroll to bottom
       const loglist = document.getElementById('loglist')
