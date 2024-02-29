@@ -58,7 +58,7 @@ export default {
   unmounted() {
     this.wordReplaceStore.word_replacements = {}
     this.replacements.forEach((entry) => {
-      this.wordReplaceStore.word_replacements[entry.replacing.toLowerCase()] = entry.replacement
+      this.wordReplaceStore.word_replacements[entry.replacing] = entry.replacement
     })
   },
   mounted() {
