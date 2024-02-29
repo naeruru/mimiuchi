@@ -21,9 +21,7 @@ export const useWordReplaceStore = defineStore('wordreplace', {
         return input
 
       // Replace words.
-      // Keys are case-sensitive (e.g., "Hello" and "hello" are different replacement keys).
-      // Longer keys have higher priority. (E.g., "Hello world" → "apple", "Hello" → "banana". The transcript "Hello world" will become "apple" instead of "banana world".) Keys are sorted when Word Replace is unmounted.
-      // Users are responsible for defining their own word boundaries. This design choice has more support for various languages and speech styles.
+      // Longer keys have higher priority (e.g., with "Hello world" → "apple" and "Hello" → "banana", the transcript "Hello world" will become "apple".). Keys are sorted in the Word Replace component.
       const joined = Object.keys(this.word_replacements)
         .map(key => this.escapeRegExp(key))
         .join("|")
@@ -31,7 +29,7 @@ export const useWordReplaceStore = defineStore('wordreplace', {
       const replace_re = new RegExp(joined, "g")
       
       return input.replace(replace_re, (matched) => {
-        return this.word_replacements[matched]
+        return this.word_replacements[matched.toLowerCase()]
       })
     },
   },

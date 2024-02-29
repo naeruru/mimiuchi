@@ -61,7 +61,7 @@ export default {
       .sort((a, b) => a.replacing.localeCompare(b.replacing)) // Sort keys by locale (e.g., alphabetical sort). This is cosmetic.
       .sort((a, b) => b.replacing.length - a.replacing.length) // Sort keys by string length: longer strings to shorter strings.
       .forEach((entry) => {
-        this.wordReplaceStore.word_replacements[entry.replacing] = entry.replacement
+        this.wordReplaceStore.word_replacements[entry.replacing.toLowerCase()] = entry.replacement
     })
   },
   mounted() {
