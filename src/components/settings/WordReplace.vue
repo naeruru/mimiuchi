@@ -58,17 +58,8 @@ export default {
   unmounted() {
     this.wordReplaceStore.word_replacements = {}
     this.replacements
-      .sort((a, b) => {
-        // Sort keys by string length: longer strings to shorter strings.
-        const comparison = b.replacing.length - a.replacing.length;
-
-        // If the lengths are equal, sort keys by locale (e.g., alphabetical sort). This is cosmetic.
-        if (comparison === 0) {
-          return a.replacing.localeCompare(b.replacing);
-        }
-
-        return comparison;
-      })
+      .sort((a, b) => a.replacing.localeCompare(b.replacing)) // Sort keys by locale (e.g., alphabetical sort). This is cosmetic.
+      .sort((a, b) => b.replacing.length - a.replacing.length) // Sort keys by string length: longer strings to shorter strings.
       .forEach((entry) => {
         this.wordReplaceStore.word_replacements[entry.replacing] = entry.replacement
     })
