@@ -87,11 +87,19 @@ export default {
   }),
   unmounted() {
     this.wordReplaceStore.word_replacements = {}
+
     this.replacements
       .sort((a, b) => a.replacing.localeCompare(b.replacing)) // Sort keys by locale (e.g., alphabetical sort). This is cosmetic.
       .sort((a, b) => b.replacing.length - a.replacing.length) // Sort keys by string length: longer strings to shorter strings.
       .forEach((entry) => {
-        this.wordReplaceStore.word_replacements[entry.replacing.toLowerCase()] = entry.replacement
+        this.wordReplaceStore.word_replacements[entry.replacing] = entry.replacement
+    })
+
+    this.wordReplaceStore.word_replacements_lowercase = {}
+
+    Object.keys(this.wordReplaceStore.word_replacements).forEach(key => {
+      const keyLowerCase = key.toLowerCase();
+      this.wordReplaceStore.word_replacements_lowercase[keyLowerCase] = this.wordReplaceStore.word_replacements[key];
     })
   },
   mounted() {
