@@ -14,6 +14,36 @@
           </template>
         </v-list-item>
       </v-card>
+      <v-row class="mt-6">
+        <v-col :cols="12" :sm="6">
+          <v-card flat>
+            <v-list-item :title="$t('settings.word_replace.match_whole_word')">
+              <template #append>
+                <v-switch
+                  v-model="wordReplaceStore.match_whole_word"
+                  color="primary"
+                  hide-details
+                  inset
+                />
+              </template>
+            </v-list-item>
+          </v-card>
+        </v-col>
+        <v-col :cols="12" :sm="6">
+          <v-card flat>
+            <v-list-item :title="$t('settings.word_replace.match_case')">
+              <template #append>
+                <v-switch
+                  v-model="wordReplaceStore.match_case"
+                  color="primary"
+                  hide-details
+                  inset
+                />
+              </template>
+            </v-list-item>
+          </v-card>
+        </v-col>
+      </v-row>
       <div v-if="replacements.length" class="mt-6">
         <v-row v-for="(replacement, i) in replacements">
           <v-col :cols="12" :sm="6">
