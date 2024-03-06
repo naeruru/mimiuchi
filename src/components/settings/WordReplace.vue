@@ -98,8 +98,13 @@ export default {
     this.wordReplaceStore.word_replacements_lowercase = {}
 
     Object.keys(this.wordReplaceStore.word_replacements).forEach(key => {
-      const keyLowerCase = key.toLowerCase();
-      this.wordReplaceStore.word_replacements_lowercase[keyLowerCase] = this.wordReplaceStore.word_replacements[key];
+      const keyLowerCase = key.toLowerCase()
+
+      // First-come, first-served.
+      // For example, the replacement keys "Hello" and "hello" are both transformed to lowercase as "hello".
+      // When ordered by locale, their order is ["hello", "Hello"]. The replacement entry for "hello" will be used in case-insensitive replacements.
+      if (!this.wordReplaceStore.word_replacements_lowercase[keyLowerCase])
+        this.wordReplaceStore.word_replacements_lowercase[keyLowerCase] = this.wordReplaceStore.word_replacements[key]
     })
   },
   mounted() {
