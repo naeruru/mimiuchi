@@ -93,11 +93,11 @@ export default {
       .sort((a, b) => b.replacing.length - a.replacing.length) // Sort keys by string length: longer strings to shorter strings.
       .forEach((entry) => {
         this.wordReplaceStore.word_replacements[entry.replacing] = entry.replacement
-    })
+      })
 
     this.wordReplaceStore.word_replacements_lowercase = {}
 
-    Object.keys(this.wordReplaceStore.word_replacements).forEach(key => {
+    Object.keys(this.wordReplaceStore.word_replacements).forEach((key) => {
       const keyLowerCase = key.toLowerCase()
 
       // First-come, first-served.

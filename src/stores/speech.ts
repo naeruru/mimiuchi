@@ -126,7 +126,7 @@ export const useSpeechStore = defineStore('speech', {
       log.transcript = replace_words(log.transcript)
       if (!log.transcript.trim()) { // If the processed input is only whitespace, do nothing. This may occur if the entire log transcript was replaced with whitespace.
         logStore.loading_result = false
-        
+
         return
       }
 

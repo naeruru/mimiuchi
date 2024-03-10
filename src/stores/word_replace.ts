@@ -39,7 +39,7 @@ export const useWordReplaceStore = defineStore('wordreplace', {
         joinedKeys = Object.keys(this.word_replacements)
       }
 
-      joinedKeys = joinedKeys.map(key => this.escapeRegExp(key)).join("|")
+      joinedKeys = joinedKeys.map(key => this.escapeRegExp(key)).join('|')
 
       // Build pattern depending on options.
       let pattern
@@ -47,9 +47,9 @@ export const useWordReplaceStore = defineStore('wordreplace', {
       if (!this.match_whole_word) // Option. Word/phrase match. Word boundaries prevent unexpected replacements (e.g, "script" → "HELLO" would undesirably cause "description" → "deHELLOion").
         pattern = joinedKeys
       else
-        pattern = "(?<![\\w*])(" + joinedKeys + ")(?![\\w*])"
+        pattern = `(?<![\\w*])(${joinedKeys})(?![\\w*])`
 
-      const replace_re = new RegExp(pattern, "g")
+      const replace_re = new RegExp(pattern, 'g')
 
       return inputInterpretation.replace(replace_re, (matched) => {
         if (!this.match_case)
