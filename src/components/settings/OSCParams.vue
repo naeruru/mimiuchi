@@ -1,14 +1,14 @@
 <template>
   <v-card color="transparent" flat>
-    <v-card-title>
-      Custom Params
-      <v-chip prepend-icon="mdi-alert-circle-outline" color="warning" class="ml-2" variant="elevated">
+    <template v-slot:title>
+      <span v-html="$t('settings.osc.params.title')"></span>
+      <v-chip prepend-icon="mdi-alert-circle-outline" color="warning" class="ml-2" variant="elevated" size="small">
         Subject to change
       </v-chip>
-    </v-card-title>
-    <v-card-subtitle class="overflow-hidden">
-      Add custom param triggers here.
-    </v-card-subtitle>
+    </template>
+    <template v-slot:subtitle>
+      <span>Add custom param triggers here</span>
+    </template>
     <v-divider />
     <v-card-text>
       <v-card v-for="(param, i) in oscStore.osc_params" v-if="oscStore.osc_params.length" class="mb-4">
