@@ -226,7 +226,27 @@ export default {
                 const matchesAssign = reAssign.exec(input)
                 if (matchesAssign) {
                   this.show_snackbar('secondary', `<code>${custom_param.route} = ${assign.set}</code>`)
-                  window.ipcRenderer.send('send-param-event', { ip: custom_param.ip, port: custom_param.port, route: custom_param.route, value: assign.set })
+
+                  let newValue
+
+                  switch (assign.type) {
+                    case 'int':
+                    case 'float':
+                      newValue = Number(assign.set)
+                      
+                      break
+                    case 'bool':
+                      if (assign.set === "true")
+                        newValue = true
+                      else if (assign.set === "false")
+                        newValue = false
+                      else
+                        newValue = Boolean(assign.set)
+
+                      break
+                  }
+
+                  window.ipcRenderer.send('send-param-event', { ip: custom_param.ip, port: custom_param.port, route: custom_param.route, value: newValue })
                 }
               })
             }
