@@ -16,7 +16,7 @@
           <v-card-title class="d-flex align-center">
             {{ param.route }}
             <v-spacer />
-            <v-btn disabled class="ml-4" flat variant="text" size="small" color="primary" append-icon="mdi-pencil">
+            <v-btn class="ml-4" flat variant="text" size="small" color="primary" append-icon="mdi-pencil" @click="openEditDialog(i)">
               Edit
             </v-btn>
             <v-btn class="ml-4" flat variant="text" size="small" color="error" append-icon="mdi-delete" @click="delete_param(i)">
@@ -52,6 +52,7 @@
                     :value="assign"
                     :title="assign.keyword"
                     :subtitle="`set ${assign.type} to ${assign.set}`"
+                    class="assignment-display"
                   />
                 </v-list>
               </v-col>
@@ -70,9 +71,9 @@
     </v-card-text>
 
     <v-row justify="center">
-      <v-dialog v-model="add_dialog" width="50vw" persistent>
+      <v-dialog v-model="param_dialog" width="50vw" persistent>
         <v-card>
-          <v-card-title>Add custom param trigger</v-card-title>
+          <v-card-title>{{ `${!editing ? 'Add' : 'Edit'} custom param trigger` }}</v-card-title>
           <v-card-text>
             <v-row>
               <!-- <v-col :cols="12">
@@ -133,6 +134,8 @@
                     :value="assign"
                     :title="assign.keyword"
                     :subtitle="`set ${assign.type} to ${assign.set}`"
+                    @click="remove_assign(i)"
+                    class="assignment-editable"
                   />
                 </v-list>
               </v-col>
@@ -165,11 +168,11 @@
           </div>
           <v-card-actions>
             <v-spacer />
-            <v-btn @click="add_dialog = false">
+            <v-btn @click="closeDialog">
               cancel
             </v-btn>
-            <v-btn color="primary" @click="add_param">
-              add
+            <v-btn color="primary" @click="confirm_param">
+              confirm
             </v-btn>
           </v-card-actions>
         </v-card>
@@ -177,6 +180,16 @@
     </v-row>
   </v-card>
 </template>
+
+<style>
+.assignment-display {
+  pointer-events: none;
+}
+
+.assignment-editable:hover {
+  text-decoration: line-through;
+}
+</style>
 
 <script lang="ts">
 import { useOSCStore } from '@/stores/osc'
@@ -210,7 +223,10 @@ export default {
     }
   },
   data: () => ({
-    add_dialog: false,
+    param_dialog: false,
+
+    editing_index: 0,
+    editing: false,
 
     trigger_phrase: '',
 
@@ -232,9 +248,39 @@ export default {
   }),
   methods: {
     openAddDialog() {
-      this.new_param.ip = this.oscStore.ip
-      this.new_param.port = this.oscStore.port
-      this.add_dialog = true
+      // Reset the dialog's fields.
+      this.new_param = {
+        ip: this.oscStore.ip,
+        port: this.oscStore.port,
+        route: '/avatar/parameters/',
+        keywords: [],
+        assigns: [],
+      }
+
+      this.trigger_phrase = ''
+      
+      this.new_assign = {
+        keyword: '',
+        type: 'bool',
+        set: true,
+      }
+
+      // Open the dialog.
+      this.param_dialog = true
+    },
+    openEditDialog(i: number) {
+      this.openAddDialog()
+
+      this.editing = true
+      this.editing_index = i
+
+      const existingParam = this.oscStore.osc_params[i]
+      this.new_param = JSON.parse(JSON.stringify(existingParam)) // Deep copy.
+    },
+    closeDialog()
+    {
+      this.editing = false
+      this.param_dialog = false
     },
     add_trigger() {
       if (this.trigger_phrase !== '') {
@@ -246,23 +292,30 @@ export default {
       this.new_param.keywords.splice(i, 1)
     },
     add_assign() {
-      this.new_param.assigns.push(this.new_assign)
+      const assign = this.new_assign
+      this.new_param.assigns.push(assign)
+
+      // Partially reset the assign fields.
       this.new_assign = {
         keyword: '',
-        type: 'bool',
-        set: true,
+        type: assign.type,
+        set: assign.set,
       }
     },
-    add_param() {
-      this.oscStore.osc_params.push(this.new_param)
-      this.add_dialog = false
-      this.new_param = {
-        ip: '',
-        port: '',
-        route: '/avatar/parameters/',
-        keywords: [],
-        assigns: [],
+    remove_assign(i: number) {
+      this.new_param.assigns.splice(i, 1)
+    },
+    confirm_param() {
+      if (!this.editing) {
+        this.oscStore.osc_params.push(this.new_param)
       }
+      else {
+        this.oscStore.osc_params[this.editing_index] = JSON.parse(JSON.stringify(this.new_param)) // Deep copy.
+
+        this.editing = false
+      }
+
+      this.param_dialog = false
     },
     delete_param(i: number) {
       this.oscStore.osc_params.splice(i, 1)
