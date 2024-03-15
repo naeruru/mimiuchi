@@ -214,6 +214,8 @@ export default {
             let matchesKey = null
 
             custom_param.keywords.forEach((keyword) => {
+              if (matchesKey) return
+
               const key_check = `(^|\\s)(${keyword.text})($|[^a-zA-Z\\d])`
               const reKey = new RegExp(key_check, 'ig')
               matchesKey = reKey.exec(input)
