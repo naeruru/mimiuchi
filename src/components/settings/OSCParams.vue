@@ -140,11 +140,11 @@
                 </v-list>
               </v-col>
               <v-col :cols="12" :lg="4">
-                <v-select v-model="new_assign.type" :items="var_types" hide-details label="Value type" />
+                <v-select v-model="new_assign.type" :items="var_types" hide-details label="Value type" @update:modelValue="validate_assign_value_field" />
               </v-col>
               <v-col :cols="12" :lg="8">
-                <v-text-field v-if="new_assign.type !== 'bool'" v-model="new_assign.set" hide-details label="Value" type="number" />
-                <v-select v-else v-model="new_assign.set" :items="['true', 'false'] as any[]" hide-details label="Value" />
+                <v-text-field v-if="new_assign.type !== 'bool'" v-model="new_assign.set" hide-details label="Value" type="number" @input="validate_assign_value_field" />
+                <v-select v-else v-model="new_assign.set" :items="['true', 'false'] as string[]" hide-details label="Value" />
               </v-col>
               <v-col :cols="12">
                 <v-text-field
@@ -204,7 +204,7 @@ interface Keyword {
 interface Assign {
   keyword: string
   type: string
-  set: boolean | number | string
+  set: string // Receive user-input as a string. Parse it when finally sending a payload.
 }
 
 export default {
@@ -234,7 +234,7 @@ export default {
     new_assign: {
       keyword: '',
       type: 'bool',
-      set: true as (boolean | number | string),
+      set: 'true',
     },
 
     new_param: {
@@ -243,7 +243,7 @@ export default {
       port: '',
       route: '/avatar/parameters/',
       keywords: [] as Keyword[], // [{enabled: boolean, text: string}?],
-      assigns: [] as Assign[], // [{keyword: string, type: string, set: boolean}?]
+      assigns: [] as Assign[], // [{keyword: string, type: string, set: string}?]
     },
   }),
   methods: {
@@ -262,7 +262,7 @@ export default {
       this.new_assign = {
         keyword: '',
         type: 'bool',
-        set: true,
+        set: 'true',
       }
 
       // Open the dialog.
@@ -282,6 +282,35 @@ export default {
       this.editing = false
       this.param_dialog = false
     },
+    validate_assign_value_field() {
+      const assign = this.new_assign
+
+      switch (assign.type) {
+        case 'int':
+          if (assign.set == '' || isNaN(Number(assign.set))) // Invalid input.
+            assign.set = "0"
+          else { // Valid input.
+            // Display.
+            assign.set = String(parseInt(assign.set))
+          }
+
+          break
+        case 'float':
+          if (assign.set == '' || isNaN(Number(assign.set))) // Invalid input.
+            assign.set = "0"
+          else { // Valid input.
+            // Display.
+            assign.set = String(parseFloat(assign.set))
+          }
+          
+          break
+        case 'bool':
+          if (assign.set !== 'true' && assign.set !== 'false')
+            assign.set = "true"
+
+          break
+      }
+    },
     add_trigger() {
       if (this.trigger_phrase !== '') {
         this.new_param.keywords.push({ enabled: true, text: this.trigger_phrase })
@@ -293,6 +322,11 @@ export default {
     },
     add_assign() {
       const assign = this.new_assign
+
+      // Validation.
+      if (assign.keyword == '') // The assign keyword field is empty.
+        return
+
       this.new_param.assigns.push(assign)
 
       // Partially reset the assign fields.
