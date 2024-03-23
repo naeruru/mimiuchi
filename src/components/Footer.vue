@@ -211,7 +211,7 @@ export default {
         // unless switch to nlp first.....
         if (this.oscStore.osc_params.length) {
           this.oscStore.osc_params.forEach((custom_param) => {
-            let matchesKey = null
+            let matchesKey: RegExpExecArray | null = null
 
             custom_param.keywords.forEach((keyword) => {
               if (matchesKey) return
