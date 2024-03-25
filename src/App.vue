@@ -87,10 +87,6 @@ export default {
     this.settingsStore.$subscribe((language, state) => {
       this.$i18n.locale = this.settingsStore.language
     })
-
-    // temp word replace upgrade
-    this.wordReplaceStore.update()
-    console.log(this.wordReplaceStore.word_replacements)
   },
   created() {
     if (this.is_electron())

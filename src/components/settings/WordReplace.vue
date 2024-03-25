@@ -46,10 +46,10 @@
       </v-row>
       <div v-if="replacements.length" class="mt-6">
         <v-row v-for="(replacement, i) in replacements">
-          <v-col :cols="12" :sm="6">
-            <v-text-field v-model="replacement.replacing" :label="$t('settings.word_replace.replacing')" append-icon="mdi-arrow-right-bold" hide-details />
+          <v-col :cols="12" :sm="6" class="pt-1 pb-0">
+            <v-text-field v-model="replacement.replacing" :label="$t('settings.word_replace.replacing')" :rules="[exists]" append-icon="mdi-arrow-right-bold" />
           </v-col>
-          <v-col :cols="10" :sm="6">
+          <v-col :cols="10" :sm="6" class="pt-1 pb-0">
             <v-text-field v-model="replacement.replacement" :label="$t('settings.word_replace.replacement')" hide-details>
               <template #append>
                 <v-btn size="x-small" color="red" icon="mdi-minus" @click="remove_entry(i)" />
@@ -92,10 +92,7 @@ export default {
       .sort((a, b) => a.replacing.localeCompare(b.replacing)) // Sort keys by locale (e.g., alphabetical sort). This is cosmetic.
       .sort((a, b) => b.replacing.length - a.replacing.length) // Sort keys by string length: longer strings to shorter strings.
       .forEach((entry) => {
-        this.wordReplaceStore.word_replacements[entry.replacing.toLowerCase()] = {
-          replace: entry.replacing,
-          replacement: entry.replacement
-        }
+        this.wordReplaceStore.word_replacements[entry.replacing] = entry.replacement
       })
 
     this.wordReplaceStore.word_replacements_lowercase = {}
@@ -111,15 +108,13 @@ export default {
     })
   },
   mounted() {
-    this.replacements = Object.entries(this.wordReplaceStore.word_replacements).map(([_, obj]) => ({
-      replacing: obj.replace,
-      replacement: obj.replacement,
+    this.replacements = Object.entries(this.wordReplaceStore.word_replacements).map(([replacing, replacement]) => ({
+      replacing,
+      replacement,
     }))
-    // console.log(this.replacements)
   },
   methods: {
     add_entry() {
-      // this.wordReplaceStore.word_replacements[""] = ""
       this.replacements.push({
         replacing: '',
         replacement: '',
@@ -127,7 +122,9 @@ export default {
     },
     remove_entry(i: number) {
       this.replacements.splice(i, 1)
-      // delete this.wordReplaceStore.word_replacements[this.replacement_list[i].replacing]
+    },
+    exists(value: string) {
+      return !value || this.replacements.filter((e: any) => value === e.replacing).length < 2 || `${value} already exists`
     },
   },
 }
