@@ -287,7 +287,7 @@ export default {
 
       switch (assign.type) {
         case 'int':
-          if (assign.set == '' || isNaN(Number(assign.set))) // Invalid input.
+          if (assign.set === "" || isNaN(Number(assign.set))) // Invalid input.
             assign.set = "0"
           else { // Valid input.
             // Display.
@@ -296,26 +296,28 @@ export default {
 
           break
         case 'float':
-          if (assign.set == '' || isNaN(Number(assign.set))) // Invalid input.
+          if (assign.set === "" || isNaN(Number(assign.set))) // Invalid input.
             assign.set = "0"
           else { // Valid input.
             // Display.
-            assign.set = String(parseFloat(assign.set))
+            assign.set = assign.set.replace(/^0+(?=\d)/, '') // Remove leading zeros in front of the number.
           }
-          
+
           break
         case 'bool':
-          if (assign.set !== 'true' && assign.set !== 'false')
+          if (assign.set !== "true" && assign.set !== "false") // Invalid input.
             assign.set = "true"
 
           break
       }
     },
     add_trigger() {
-      if (this.trigger_phrase !== '') {
-        this.new_param.keywords.push({ enabled: true, text: this.trigger_phrase })
-        this.trigger_phrase = ''
-      }
+      if (!this.trigger_phrase.trim()) // The trigger phrase field is empty.
+        return
+
+      this.new_param.keywords.push({ enabled: true, text: this.trigger_phrase })
+
+      this.trigger_phrase = ''
     },
     remove_trigger(i: number) {
       this.new_param.keywords.splice(i, 1)
@@ -324,9 +326,20 @@ export default {
       const assign = this.new_assign
 
       // Validation.
-      if (assign.keyword == '') // The assign keyword field is empty.
+      if (!assign.keyword.trim()) // The assign keyword field is empty.
         return
 
+      // Display.
+      if (assign.type === "float") {
+        if (!assign.set.includes('.')) { // 123 → 123.0
+          assign.set = assign.set + ".0"
+        }
+        else if (assign.set.endsWith('.')) { // 123. → 123.0
+          assign.set = assign.set + "0"
+        }
+      }
+
+      // Store.
       this.new_param.assigns.push(assign)
 
       // Partially reset the assign fields.
