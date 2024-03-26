@@ -108,7 +108,7 @@
               <v-col :cols="12">
                 <v-text-field
                   v-model="trigger_phrase"
-                  label="Add trigger word"
+                  label="Add trigger word/phrase"
                   hide-details
                   append-icon="mdi-plus"
                   @click:append="add_trigger"
