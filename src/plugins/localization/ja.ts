@@ -132,6 +132,8 @@ export default {
       title: 'テキストリプレース',
       description: 'ここで置き換えるテキストを追加します',
       enabled: 'テキストリプレース',
+      match_whole_word: '単語単位',
+      match_case: '大文字/小文字を区別',
       info: '新しい置き換えを追加する場合は「＋」バタンを使用してください',
       replacing: 'リプレース',
       replacement: 'リプレースメント',

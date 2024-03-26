@@ -131,6 +131,8 @@ export default {
       title: 'Sustitución de palabras',
       description: 'Agregue palabras o frases para reemplazar aquí',
       enabled: 'Permitir reemplazar palabras o frases',
+      match_whole_word: 'Sólo palabras completas',
+      match_case: 'Coincidir mayúsculas/minúsculas',
       info: 'Utilice el botón + para agregar un nuevo reemplazo.',
       replacing: 'Reemplazando ',
       replacement: 'Reemplazo',

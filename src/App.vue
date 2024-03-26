@@ -72,6 +72,7 @@ export default {
       settingsStore,
       connectionStore,
       is_electron,
+      wordReplaceStore,
     }
   },
   unmounted() {

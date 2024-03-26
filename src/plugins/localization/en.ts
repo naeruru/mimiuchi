@@ -132,6 +132,8 @@ export default {
       title: 'Word Replace',
       description: 'Add words or phrases to replace here',
       enabled: 'Enable replacing words or phrases',
+      match_whole_word: 'Match whole word only',
+      match_case: 'Match case',
       info: 'Use the + button to add a new replacement!',
       replacing: 'Replacing',
       replacement: 'Replacement',
