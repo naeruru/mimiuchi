@@ -312,10 +312,12 @@ export default {
       }
     },
     add_trigger() {
-      if (this.trigger_phrase !== '') {
-        this.new_param.keywords.push({ enabled: true, text: this.trigger_phrase })
-        this.trigger_phrase = ''
-      }
+      if (!this.trigger_phrase.trim()) // The trigger phrase field is empty.
+        return
+
+      this.new_param.keywords.push({ enabled: true, text: this.trigger_phrase })
+
+      this.trigger_phrase = ''
     },
     remove_trigger(i: number) {
       this.new_param.keywords.splice(i, 1)
@@ -324,7 +326,7 @@ export default {
       const assign = this.new_assign
 
       // Validation.
-      if (assign.keyword == '') // The assign keyword field is empty.
+      if (!assign.keyword.trim()) // The assign keyword field is empty.
         return
 
       // Display.
