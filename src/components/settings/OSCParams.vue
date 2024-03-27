@@ -109,7 +109,7 @@
     </v-card-text>
     <!-- Profile Dialog -->
     <v-row justify="center">
-      <v-dialog v-model="profile_dialog" width="50vw" persistent>
+      <v-dialog v-model="profile_dialog" width="50vw">
         <v-card>
           <v-card-title>Add new profile</v-card-title>
           <v-card-text>
@@ -134,7 +134,7 @@
     </v-row>
     <!-- Profile Delete Dialog -->
     <v-row justify="center">
-      <v-dialog v-model="profile_delete_dialog" width="50vw" persistent>
+      <v-dialog v-model="profile_delete_dialog" width="50vw">
         <v-card>
           <v-card-title>Delete profile</v-card-title>
           <v-card-text>{{ `Are you sure that you want to delete "${profile_delete_target}"?` }}</v-card-text>
