@@ -90,7 +90,7 @@
                 <v-list density="compact">
                   <v-list-item
                     :value="param"
-                    :title="param.behavior"
+                    :title="`${param.activation_signal}${param.activation_signal === 'Pulse' ? ` (${param.pulse_delay}ms)` : ''}`"
                   />
                 </v-list>
               </v-col>
@@ -246,8 +246,11 @@
               <v-col :cols="12">
                 <strong>Behavior:</strong>
               </v-col>
-              <v-col :cols="12">
-                <v-select v-model="new_param.behavior" :items="['Constant', 'Pulse'] as string[]" hide-details label="Activation signal" />
+              <v-col :cols="6">
+                <v-select v-model="new_param.activation_signal" :items="['Constant', 'Pulse'] as string[]" hide-details label="Activation signal" />
+              </v-col>
+              <v-col :cols="6">
+                <v-text-field v-if="new_param.activation_signal === 'Pulse'" v-model="new_param.pulse_delay" hide-details label="Pulse duration (milliseconds)" type="number" @input="new_param.pulse_delay = Math.round(new_param.pulse_delay)" />
               </v-col>
             </v-row>
           </v-card-text>
@@ -345,10 +348,10 @@ export default {
       keywords: [] as Keyword[], // [{enabled: boolean, text: string}?],
       assigns: [] as Assign[], // [{keyword: string, type: string, set: string}?]
 
-      // The behavior or activation signal of the param trigger.
       // "Constant" (Default): set the parameter to this value.
       // "Pulse": set the parameter to this value, then reset it (0, 0.0, false) after some time.
-      behavior: 'Constant',
+      activation_signal: 'Constant',
+      pulse_delay: 0,
     },
   }),
   methods: {
@@ -381,7 +384,8 @@ export default {
         route: '/avatar/parameters/',
         keywords: [],
         assigns: [],
-        behavior: 'Constant',
+        activation_signal: 'Constant',
+        pulse_delay: 1000,
       }
 
       this.trigger_phrase = ''
