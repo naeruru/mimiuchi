@@ -126,7 +126,7 @@
               cancel
             </v-btn>
             <v-btn color="primary" @click="confirmNewProfile">
-              confirm
+              add
             </v-btn>
           </v-card-actions>
         </v-card>
@@ -144,7 +144,7 @@
               cancel
             </v-btn>
             <v-btn color="primary" @click="delete_profile_final()">
-              confirm
+              delete
             </v-btn>
           </v-card-actions>
         </v-card>
