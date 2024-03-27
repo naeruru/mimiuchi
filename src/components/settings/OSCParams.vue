@@ -132,6 +132,24 @@
         </v-card>
       </v-dialog>
     </v-row>
+    <!-- Profile Delete Dialog -->
+    <v-row justify="center">
+      <v-dialog v-model="profile_delete_dialog" width="50vw" persistent>
+        <v-card>
+          <v-card-title>Delete profile</v-card-title>
+          <v-card-text>{{ `Are you sure that you want to delete "${profile_delete_target}"?` }}</v-card-text>
+          <v-card-actions>
+            <v-spacer />
+            <v-btn @click="profile_delete_dialog = false">
+              cancel
+            </v-btn>
+            <v-btn color="primary" @click="delete_profile_final()">
+              confirm
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+    </v-row>
     <!-- Param Trigger Dialog -->
     <v-row justify="center">
       <v-dialog v-model="param_dialog" width="50vw" persistent>
@@ -302,6 +320,9 @@ export default {
     profile_dialog: false,
     new_profile_name: '',
 
+    profile_delete_dialog: false,
+    profile_delete_target: '',
+
     param_dialog: false,
 
     editing_index: 0,
@@ -470,9 +491,16 @@ export default {
     },
     delete_profile(profile_name: string) {
       this.oscStore.current_profile = "Default"
+      this.profile_delete_target = profile_name
 
-      delete this.oscStore.osc_profiles[profile_name]
+      this.profile_delete_dialog = true
     },
+    delete_profile_final()
+    {
+      delete this.oscStore.osc_profiles[this.profile_delete_target]
+
+      this.profile_delete_dialog = false
+    }
   },
 }
 </script>
