@@ -209,8 +209,8 @@ export default {
         // use https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/search
         // to see which assign is the closest to the keyword found
         // unless switch to nlp first.....
-        if (this.oscStore.osc_params.length) {
-          this.oscStore.osc_params.forEach((custom_param) => {
+        if (this.oscStore.osc_profiles[this.oscStore.current_profile].length) {
+          this.oscStore.osc_profiles[this.oscStore.current_profile].forEach((custom_param) => {
             let matchesKey: RegExpExecArray | null = null
 
             custom_param.keywords.forEach((keyword) => {
