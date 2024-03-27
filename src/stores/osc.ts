@@ -14,7 +14,7 @@ interface Keyword {
 interface Assign {
   keyword: string
   type: string
-  set: boolean | number | string
+  set: string
 }
 
 export const useOSCStore = defineStore('osc', {
