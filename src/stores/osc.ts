@@ -3,14 +3,14 @@ import { defineStore } from 'pinia'
 interface Profile {
   [name: string]: Param[];
 }
-
 interface Param {
   ip: string
   port: string
   route: string
   keywords: Keyword[]
   assigns: Assign[]
-  behavior: string
+  activation_signal: string
+  pulse_delay: number
 }
 interface Keyword {
   enabled: boolean
