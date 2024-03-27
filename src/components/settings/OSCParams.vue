@@ -175,7 +175,7 @@
                 <strong>Behavior:</strong>
               </v-col>
               <v-col :cols="12">
-                <v-select v-model="new_param.behavior" :items="['constant', 'pulse'] as string[]" hide-details label="Activation signal" />
+                <v-select v-model="new_param.behavior" :items="['Constant', 'Pulse'] as string[]" hide-details label="Activation signal" />
               </v-col>
             </v-row>
           </v-card-text>
@@ -268,9 +268,9 @@ export default {
       assigns: [] as Assign[], // [{keyword: string, type: string, set: string}?]
 
       // The behavior or activation signal of the param trigger.
-      // "constant" (Default): set the parameter to this value.
-      // "pulse": set the parameter to this value, then reset it (0, 0.0, false) after some time.
-      behavior: 'constant',
+      // "Constant" (Default): set the parameter to this value.
+      // "Pulse": set the parameter to this value, then reset it (0, 0.0, false) after some time.
+      behavior: 'Constant',
     },
   }),
   methods: {
@@ -282,7 +282,7 @@ export default {
         route: '/avatar/parameters/',
         keywords: [],
         assigns: [],
-        behavior: 'constant',
+        behavior: 'Constant',
       }
 
       this.trigger_phrase = ''

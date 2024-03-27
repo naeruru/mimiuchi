@@ -250,7 +250,7 @@ export default {
 
                   window.ipcRenderer.send('send-param-event', { ip: custom_param.ip, port: custom_param.port, route: custom_param.route, value: newValue })
 
-                  if (custom_param.behavior === "pulse") {
+                  if (custom_param.behavior === "Pulse") {
                     setTimeout(() => {
 
                       switch (assign.type) {
