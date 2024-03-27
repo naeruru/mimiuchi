@@ -37,7 +37,7 @@
           </v-select>
         </v-col>
         <v-card-actions class="pa-3" style="height: 80px">
-          <v-btn color="primary" variant="outlined" size="small" icon="mdi-plus" @click="profile_dialog = true" />
+          <v-btn color="primary" variant="outlined" size="small" icon="mdi-plus" @click="openAddProfileDialog" />
         </v-card-actions>
       </v-row>
       <v-card v-if="Object.keys(oscStore.osc_profiles[oscStore.current_profile]).length > 0" v-for="(param, i) in oscStore.osc_profiles[oscStore.current_profile]" class="mb-4">
@@ -103,7 +103,7 @@
       </p>
       <v-card class="mt-2" color="transparent" flat>
         <v-card-actions>
-          <v-btn color="primary" variant="outlined" size="small" icon="mdi-plus" @click="openAddDialog" />
+          <v-btn color="primary" variant="outlined" size="small" icon="mdi-plus" @click="openAddParamDialog" />
         </v-card-actions>
       </v-card>
     </v-card-text>
@@ -352,6 +352,11 @@ export default {
     },
   }),
   methods: {
+    openAddProfileDialog() {
+      this.new_profile_name = ''
+
+      this.profile_dialog = true
+    },
     confirmNewProfile() {
       if (!this.new_profile_name.trim()) {
         return
@@ -368,7 +373,7 @@ export default {
 
       this.profile_dialog = false
     },
-    openAddDialog() {
+    openAddParamDialog() {
       // Reset the dialog's fields.
       this.new_param = {
         ip: this.oscStore.ip,
@@ -391,7 +396,7 @@ export default {
       this.param_dialog = true
     },
     openEditDialog(i: number) {
-      this.openAddDialog()
+      this.openAddParamDialog()
 
       this.editing = true
       this.editing_index = i
