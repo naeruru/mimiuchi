@@ -81,7 +81,7 @@
                     :value="assign"
                     :title="assign.keyword"
                     :subtitle="`set ${assign.type} to ${assign.set}`"
-                    class="assignment-display"
+                    class="display-only"
                   />
                 </v-list>
               </v-col>
@@ -91,6 +91,7 @@
                   <v-list-item
                     :value="param"
                     :title="`${param.activation_signal}${param.activation_signal === 'Pulse' ? ` (${param.pulse_delay}ms)` : ''}`"
+                    class="display-only"
                   />
                 </v-list>
               </v-col>
@@ -279,7 +280,7 @@
 </template>
 
 <style>
-.assignment-display {
+.display-only {
   pointer-events: none;
 }
 
