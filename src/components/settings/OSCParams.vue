@@ -7,7 +7,7 @@
       </v-chip>
     </template>
     <template v-slot:subtitle>
-      <span>Add custom param triggers here</span>
+      <span v-html="$t('settings.osc.params.description')"></span>
     </template>
     <v-divider />
     <v-card-text>
@@ -15,7 +15,7 @@
         <v-col :cols="10" class="d-flex align-center">
           <v-select
             v-model="oscStore.current_profile"
-            label="Select a profile"
+            :label="$t('settings.osc.params.menu.profile')"
             :items="Object.keys(oscStore.osc_profiles)"
             variant="outlined"
             :menu-props="{ closeOnContentClick: true }"
@@ -46,10 +46,10 @@
             {{ param.route }}
             <v-spacer />
             <v-btn class="ml-4" flat variant="text" size="small" color="primary" append-icon="mdi-pencil" @click="openEditDialog(i)">
-              Edit
+              {{ $t('settings.osc.params.param.button.edit') }}
             </v-btn>
             <v-btn class="ml-4" flat variant="text" size="small" color="error" append-icon="mdi-delete" @click="delete_param(i)">
-              Delete
+              {{ $t('settings.osc.params.param.button.delete') }}
             </v-btn>
           </v-card-title>
           <v-divider />
@@ -59,14 +59,14 @@
                                 <v-text-field v-model="param.name" label="Name" hide-details></v-text-field>
                             </v-col> -->
               <v-col :cols="12" :md="6">
-                <v-text-field v-model="param.ip" label="Default OSC IP" variant="outlined" hide-details readonly />
+                <v-text-field v-model="param.ip" :label="$t('settings.osc.general.osc_ip')" variant="outlined" hide-details readonly />
               </v-col>
               <v-col>
-                <v-text-field v-model="param.port" label="Default OSC Port" variant="outlined" hide-details readonly />
+                <v-text-field v-model="param.port" :label="$t('settings.osc.general.osc_port')" variant="outlined" hide-details readonly />
               </v-col>
 
               <v-col :cols="12">
-                <strong>Trigger phrases:</strong>
+                <strong v-html="$t('settings.osc.params.param.trigger_phrases')"></strong>
               </v-col>
               <v-col :cols="12">
                 <v-chip v-for="(keyword, i) in param.keywords" v-model="keyword.enabled" class="mx-1 mb-2" label color="secondary" size="small">
@@ -74,7 +74,7 @@
                 </v-chip>
               </v-col>
               <v-col :cols="12">
-                <strong>Assign phrases:</strong>
+                <strong v-html="$t('settings.osc.params.param.assign_phrases')"></strong>
                 <v-list density="compact">
                   <v-list-item
                     v-for="(assign, i) in param.assigns"
@@ -86,11 +86,11 @@
                 </v-list>
               </v-col>
               <v-col :cols="12">
-                <strong>Behavior:</strong>
+                <strong v-html="$t('settings.osc.params.param.behavior')"></strong>
                 <v-list density="compact">
                   <v-list-item
                     :value="param"
-                    :title="`${param.activation_signal}${param.activation_signal === 'Pulse' ? ` (${param.pulse_delay}ms)` : ''}`"
+                    :title="`${$t('settings.osc.params.param.activation_signal_options.' + param.activation_signal)}${param.activation_signal === 'pulse' ? ` (${param.pulse_delay}ms)` : ''}`"
                     class="display-only"
                   />
                 </v-list>
@@ -99,9 +99,7 @@
           </v-card-text>
         </v-card>
       </v-card>
-      <p v-else>
-        Use the + button to add a new custom param trigger!
-      </p>
+      <p v-else v-html="$t('settings.osc.params.empty')"></p>
       <v-card class="mt-2" color="transparent" flat>
         <v-card-actions>
           <v-btn color="primary" variant="outlined" size="small" icon="mdi-plus" @click="openAddParamDialog" />
@@ -112,11 +110,11 @@
     <v-row justify="center">
       <v-dialog v-model="profile_dialog" width="50vw">
         <v-card>
-          <v-card-title>Add new profile</v-card-title>
+          <v-card-title>{{ $t('settings.osc.params.menu.profile_add') }}</v-card-title>
           <v-card-text>
             <v-row>
               <v-col :cols="12">
-                <v-text-field v-model="new_profile_name" label="Profile name" hide-details />
+                <v-text-field v-model="new_profile_name" :label="$t('settings.osc.params.menu.profile_add_label')" hide-details />
               </v-col>
             </v-row>
           </v-card-text>
@@ -124,10 +122,10 @@
           <v-card-actions>
             <v-spacer />
             <v-btn @click="profile_dialog = false">
-              cancel
+              {{ $t('settings.osc.params.button.cancel') }}
             </v-btn>
             <v-btn color="primary" @click="confirmNewProfile">
-              confirm
+              {{ $t('settings.osc.params.button.add') }}
             </v-btn>
           </v-card-actions>
         </v-card>
@@ -137,15 +135,15 @@
     <v-row justify="center">
       <v-dialog v-model="profile_delete_dialog" width="50vw">
         <v-card>
-          <v-card-title>Delete profile</v-card-title>
-          <v-card-text>{{ `Are you sure that you want to delete "${profile_delete_target}"?` }}</v-card-text>
+          <v-card-title>{{ $t('settings.osc.params.menu.profile_delete') }}</v-card-title>
+          <v-card-text>{{ $t('settings.osc.params.menu.profile_delete_text') }}</v-card-text>
           <v-card-actions>
             <v-spacer />
             <v-btn @click="profile_delete_dialog = false">
-              cancel
+              {{ $t('settings.osc.params.button.cancel') }}
             </v-btn>
             <v-btn color="primary" @click="delete_profile_final()">
-              confirm
+              {{ $t('settings.osc.params.button.delete') }}
             </v-btn>
           </v-card-actions>
         </v-card>
@@ -155,14 +153,15 @@
     <v-row justify="center">
       <v-dialog v-model="param_dialog" width="50vw" persistent>
         <v-card>
-          <v-card-title>{{ `${!editing ? 'Add' : 'Edit'} custom param trigger` }}</v-card-title>
+          <v-card-title v-if="!editing">{{ $t('settings.osc.params.param.dialog_title.adding') }}</v-card-title>
+          <v-card-title v-else>{{ $t('settings.osc.params.param.dialog_title.editing') }}</v-card-title>
           <v-card-text>
             <v-row>
               <!-- <v-col :cols="12">
                                 <v-text-field v-model="new_param.name" label="Name" hide-details></v-text-field>
                             </v-col> -->
               <v-col :cols="12">
-                <v-text-field v-model="new_param.route" label="Param route" hide-details />
+                <v-text-field v-model="new_param.route" :label="$t('settings.osc.params.param.address')" hide-details />
               </v-col>
               <v-col :cols="12" :md="6">
                 <v-text-field v-model="new_param.ip" label="OSC IP" hide-details />
@@ -179,18 +178,27 @@
             <v-row>
               <!-- <v-col :cols="12"><strong>Trigger phrases</strong></v-col> -->
               <v-col>
-                <strong>Trigger phrases:</strong>
+                <strong v-html="$t('settings.osc.params.param.trigger_phrases')"></strong>
                 <v-chip v-if="!new_param.keywords.length" variant="text">
-                  none :c
+                  {{ $t('settings.osc.params.param.empty') }}
                 </v-chip>
-                <v-chip v-for="(keyword, i) in new_param.keywords" v-else v-model="keyword.enabled" class="mx-1 mb-2" label color="secondary" size="small" closable @click:close="remove_trigger(i)">
+                <v-chip
+                  v-else v-model="keyword.enabled"
+                  v-for="(keyword, i) in new_param.keywords"
+                  class="mx-1 mb-2"
+                  label
+                  color="secondary"
+                  size="small"
+                  closable
+                  @click:close="remove_trigger(i)"
+                >
                   {{ keyword.text }}
                 </v-chip>
               </v-col>
               <v-col :cols="12">
                 <v-text-field
                   v-model="trigger_phrase"
-                  label="Add trigger word/phrase"
+                  :label="$t('settings.osc.params.param.trigger_phrases_add')"
                   hide-details
                   append-icon="mdi-plus"
                   @click:append="add_trigger"
@@ -205,9 +213,9 @@
           <v-card-text class="mt-2">
             <v-row>
               <v-col :cols="12">
-                <strong>Assign phrases:</strong>
+                <strong v-html="$t('settings.osc.params.param.assign_phrases')"></strong>
                 <v-chip v-if="!new_param.assigns.length" variant="text">
-                  none :c
+                  {{ $t('settings.osc.params.param.empty') }}
                 </v-chip>
                 <v-list density="compact">
                   <v-list-item
@@ -221,16 +229,35 @@
                 </v-list>
               </v-col>
               <v-col :cols="12" :lg="4">
-                <v-select v-model="new_assign.type" :items="var_types" hide-details label="Value type" @update:modelValue="validate_assign_value_field" />
+                <v-select
+                  v-model="new_assign.type"
+                  :items="var_types"
+                  hide-details
+                  :label="$t('settings.osc.params.param.assign_phrases_type')"
+                  @update:modelValue="validate_assign_value_field"
+                />
               </v-col>
               <v-col :cols="12" :lg="8">
-                <v-text-field v-if="new_assign.type !== 'bool'" v-model="new_assign.set" hide-details label="Value" type="number" @input="validate_assign_value_field" />
-                <v-select v-else v-model="new_assign.set" :items="['true', 'false'] as string[]" hide-details label="Value" />
+                <v-text-field
+                  v-if="new_assign.type !== 'bool'"
+                  v-model="new_assign.set"
+                  hide-details
+                  :label="$t('settings.osc.params.param.assign_phrases_value')"
+                  type="number"
+                  @input="validate_assign_value_field"
+                />
+                <v-select
+                  v-else
+                  v-model="new_assign.set"
+                  :items="['true', 'false']"
+                  hide-details
+                  :label="$t('settings.osc.params.param.assign_phrases_value')"
+                />
               </v-col>
               <v-col :cols="12">
                 <v-text-field
                   v-model="new_assign.keyword"
-                  label="Add assign word/phrase (ex: on)"
+                  :label="$t('settings.osc.params.param.assign_phrases_add')"
                   hide-details
                   append-icon="mdi-plus"
                   @click:append="add_assign"
@@ -245,13 +272,30 @@
           <v-card-text class="mt-2">
             <v-row>
               <v-col :cols="12">
-                <strong>Behavior:</strong>
+                <strong v-html="$t('settings.osc.params.param.behavior')"></strong>
               </v-col>
               <v-col :cols="6">
-                <v-select v-model="new_param.activation_signal" :items="['Constant', 'Pulse'] as string[]" hide-details label="Activation signal" />
+                <v-select
+                  v-model="new_param.activation_signal"
+                  :items="[
+                    { name: $t('settings.osc.params.param.activation_signal_options.constant'), value: 'constant' },
+                    { name: $t('settings.osc.params.param.activation_signal_options.pulse'), value: 'pulse' }
+                  ]"
+                  item-title="name"
+                  item-value="value"
+                  hide-details
+                  :label="$t('settings.osc.params.param.activation_signal')"
+                />
               </v-col>
               <v-col :cols="6">
-                <v-text-field v-if="new_param.activation_signal === 'Pulse'" v-model="new_param.pulse_delay" hide-details label="Pulse duration (milliseconds)" type="number" @input="new_param.pulse_delay = Math.round(new_param.pulse_delay)" />
+                <v-text-field
+                  v-if="new_param.activation_signal === 'pulse'"
+                  v-model="new_param.pulse_delay"
+                  hide-details
+                  :label="$t('settings.osc.params.param.activation_signal_options.pulse_duration')"
+                  type="number"
+                  @input="new_param.pulse_delay = Math.round(new_param.pulse_delay)"
+                />
               </v-col>
             </v-row>
           </v-card-text>
@@ -267,10 +311,10 @@
           <v-card-actions>
             <v-spacer />
             <v-btn @click="closeDialog">
-              cancel
+              {{ $t('settings.osc.params.button.cancel') }}
             </v-btn>
             <v-btn color="primary" @click="confirm_param">
-              confirm
+              {{ $t('settings.osc.params.button.confirm') }}
             </v-btn>
           </v-card-actions>
         </v-card>
@@ -349,9 +393,9 @@ export default {
       keywords: [] as Keyword[], // [{enabled: boolean, text: string}?],
       assigns: [] as Assign[], // [{keyword: string, type: string, set: string}?]
 
-      // "Constant" (Default): set the parameter to this value.
-      // "Pulse": set the parameter to this value, then reset it (0, 0.0, false) after some time.
-      activation_signal: 'Constant',
+      // "constant" (Default): set the parameter to this value.
+      // "pulse": set the parameter to this value, then reset it (0, 0.0, false) after some time.
+      activation_signal: 'constant',
       pulse_delay: 0,
     },
   }),
@@ -385,7 +429,7 @@ export default {
         route: '/avatar/parameters/',
         keywords: [],
         assigns: [],
-        activation_signal: 'Constant',
+        activation_signal: 'constant',
         pulse_delay: 1000,
       }
 
