@@ -1,5 +1,5 @@
 <template>
-  <v-card color="transparent" flat>
+  <v-card color="transparent" flat class="pb-16">
     <template v-slot:title>
       <span v-html="$t('settings.osc.params.title')"></span>
       <v-chip prepend-icon="mdi-alert-circle-outline" color="warning" class="ml-2" variant="elevated" size="small">
