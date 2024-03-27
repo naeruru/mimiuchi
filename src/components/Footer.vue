@@ -229,7 +229,7 @@ export default {
                 if (matchesAssign) {
                   this.show_snackbar('secondary', `<code>${custom_param.route} = ${assign.set}</code>`)
 
-                  let newValue
+                  let newValue : number | boolean | null = null
 
                   switch (assign.type) {
                     case 'int':
@@ -249,6 +249,25 @@ export default {
                   }
 
                   window.ipcRenderer.send('send-param-event', { ip: custom_param.ip, port: custom_param.port, route: custom_param.route, value: newValue })
+
+                  if (custom_param.behavior === "Pulse") {
+                    setTimeout(() => {
+
+                      switch (assign.type) {
+                        case 'int':
+                        case 'float':
+                          newValue = 0
+
+                          break
+                        case 'bool':
+                          newValue = false
+
+                          break
+                      }
+
+                      window.ipcRenderer.send('send-param-event', { ip: custom_param.ip, port: custom_param.port, route: custom_param.route, value: newValue })
+                    }, 200)
+                  }
                 }
               })
             }

@@ -6,6 +6,7 @@ interface Param {
   route: string
   keywords: Keyword[]
   assigns: Assign[]
+  behavior: string
 }
 interface Keyword {
   enabled: boolean

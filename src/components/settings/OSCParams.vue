@@ -56,6 +56,15 @@
                   />
                 </v-list>
               </v-col>
+              <v-col :cols="12">
+                <strong>Behavior:</strong>
+                <v-list density="compact">
+                  <v-list-item
+                    :value="param"
+                    :title="param.behavior"
+                  />
+                </v-list>
+              </v-col>
             </v-row>
           </v-card-text>
         </v-card>
@@ -122,7 +131,6 @@
 
           <v-card-text class="mt-2">
             <v-row>
-              <!-- <v-col :cols="12"><strong>Trigger phrases</strong></v-col> -->
               <v-col :cols="12">
                 <strong>Assign phrases:</strong>
                 <v-chip v-if="!new_param.assigns.length" variant="text">
@@ -159,7 +167,21 @@
             </v-row>
           </v-card-text>
 
+          <v-divider class="mx-4" />
+
+          <v-card-text class="mt-2">
+            <v-row>
+              <v-col :cols="12">
+                <strong>Behavior:</strong>
+              </v-col>
+              <v-col :cols="12">
+                <v-select v-model="new_param.behavior" :items="['Constant', 'Pulse'] as string[]" hide-details label="Activation signal" />
+              </v-col>
+            </v-row>
+          </v-card-text>
+
           <v-divider class="mt-4" />
+
           <div v-if="new_param.keywords.length && new_param.assigns.length" class="ma-2">
             <v-list-item
               :title="`Example phrase: 'set ${new_param.keywords[0]?.text} to ${new_param.assigns[0]?.keyword}'`"
@@ -244,6 +266,11 @@ export default {
       route: '/avatar/parameters/',
       keywords: [] as Keyword[], // [{enabled: boolean, text: string}?],
       assigns: [] as Assign[], // [{keyword: string, type: string, set: string}?]
+
+      // The behavior or activation signal of the param trigger.
+      // "Constant" (Default): set the parameter to this value.
+      // "Pulse": set the parameter to this value, then reset it (0, 0.0, false) after some time.
+      behavior: 'Constant',
     },
   }),
   methods: {
@@ -255,6 +282,7 @@ export default {
         route: '/avatar/parameters/',
         keywords: [],
         assigns: [],
+        behavior: 'Constant',
       }
 
       this.trigger_phrase = ''
