@@ -192,12 +192,19 @@ export default {
           add: '追加',
           delete: '削除',
         },
-        menu: {
-          profile: 'プロファイル選択',
-          profile_add: 'プロファイルを追加',
-          profile_add_label: 'プロファイル名',
-          profile_delete: 'プロファイルを削除',
-          profile_delete_text: 'このプロファイルを削除してもよろしいですか？',
+        profile: {
+          label: 'プロファイル選択',
+          dialog: {
+            title: {
+              add: 'プロファイルを追加',
+              edit: 'プロファイル名を変更',
+            },
+            field_label: 'プロファイル名',
+          },
+          delete_dialog: {
+            title: 'プロファイルを削除',
+            text: 'このプロファイルを削除してもよろしいですか？',
+          },
         },
         param: {
           button: {
@@ -205,8 +212,8 @@ export default {
             delete: '削除'
           },
           dialog_title: {
-            adding: 'パラメータトリガーを追加',
-            editing: 'パラメータトリガーを編集',
+            add: 'パラメータトリガーを追加',
+            edit: 'パラメータトリガーを編集',
           },
           address: "パラメーターアドレス",
           empty: '無し (；ω；)',
