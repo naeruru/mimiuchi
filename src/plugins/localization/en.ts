@@ -192,12 +192,19 @@ export default {
           add: 'ADD',
           delete: 'DELETE'
         },
-        menu: {
-          profile: 'Select a profile',
-          profile_add: 'Add new profile',
-          profile_add_label: 'Profile name',
-          profile_delete: 'Delete profile',
-          profile_delete_text: 'Are you sure that you want to delete this profile?',
+        profile: {
+          label: 'Select a profile',
+          dialog: {
+            title: {
+              add: 'Add new profile',
+              edit: 'Rename profile',
+            },
+            field_label: 'Profile name',
+          },
+          delete_dialog: {
+            title: 'Delete profile',
+            text: 'Are you sure that you want to delete this profile?',
+          },
         },
         param: {
           button: {
@@ -205,8 +212,8 @@ export default {
             delete: 'DELETE'
           },
           dialog_title: {
-            adding: 'Add parameter trigger',
-            editing: 'Edit parameter trigger',
+            add: 'Add parameter trigger',
+            edit: 'Edit parameter trigger',
           },
           address: "Parameter address",
           empty: 'none :c',

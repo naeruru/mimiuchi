@@ -15,7 +15,7 @@
         <v-col :cols="10" class="d-flex align-center">
           <v-select
             v-model="oscStore.current_profile"
-            :label="$t('settings.osc.params.menu.profile')"
+            :label="$t('settings.osc.params.profile.label')"
             :items="Object.keys(oscStore.osc_profiles)"
             variant="outlined"
             :menu-props="{ closeOnContentClick: true }"
@@ -27,7 +27,12 @@
                     {{ item.title }}
                   </v-list-item-title>
                   <v-list-item-action>
-                    <v-btn icon variant="plain" @click.stop="delete_profile(item.title)">
+                    <v-btn icon variant="plain" density="comfortable" @click.stop="openRenameProfileDialog(item.title)">
+                      <v-icon v-if="item.title !== 'Default'">mdi-pencil-outline</v-icon>
+                    </v-btn>
+                  </v-list-item-action>
+                  <v-list-item-action class="ml-2">
+                    <v-btn icon variant="plain" density="comfortable" @click.stop="delete_profile(item.title)">
                       <v-icon v-if="item.title !== 'Default'">mdi-close</v-icon>
                     </v-btn>
                   </v-list-item-action>
@@ -45,7 +50,7 @@
           <v-card-title class="d-flex align-center">
             {{ param.route }}
             <v-spacer />
-            <v-btn class="ml-4" flat variant="text" size="small" color="primary" append-icon="mdi-pencil" @click="openEditDialog(i)">
+            <v-btn class="ml-4" flat variant="text" size="small" color="primary" append-icon="mdi-pencil" @click="openEditParamDialog(i)">
               {{ $t('settings.osc.params.param.button.edit') }}
             </v-btn>
             <v-btn class="ml-4" flat variant="text" size="small" color="error" append-icon="mdi-delete" @click="delete_param(i)">
@@ -110,22 +115,26 @@
     <v-row justify="center">
       <v-dialog v-model="profile_dialog" width="50vw">
         <v-card>
-          <v-card-title>{{ $t('settings.osc.params.menu.profile_add') }}</v-card-title>
+          <v-card-title v-if="!profile_editing">{{ $t('settings.osc.params.profile.dialog.title.add') }}</v-card-title>
+          <v-card-title v-else>{{ $t('settings.osc.params.profile.dialog.title.edit') }}</v-card-title>
           <v-card-text>
             <v-row>
               <v-col :cols="12">
-                <v-text-field v-model="new_profile_name" :label="$t('settings.osc.params.menu.profile_add_label')" hide-details />
+                <v-text-field v-model="new_profile_name" :label="$t('settings.osc.params.profile.dialog.field_label')" hide-details />
               </v-col>
             </v-row>
           </v-card-text>
 
           <v-card-actions>
             <v-spacer />
-            <v-btn @click="profile_dialog = false">
+            <v-btn @click="closeProfileDialog">
               {{ $t('settings.osc.params.button.cancel') }}
             </v-btn>
-            <v-btn color="primary" @click="confirmNewProfile">
+            <v-btn v-if="!profile_editing" color="primary" @click="confirmNewProfile">
               {{ $t('settings.osc.params.button.add') }}
+            </v-btn>
+            <v-btn v-else color="primary" @click="confirmNewProfile">
+              {{ $t('settings.osc.params.button.confirm') }}
             </v-btn>
           </v-card-actions>
         </v-card>
@@ -135,8 +144,8 @@
     <v-row justify="center">
       <v-dialog v-model="profile_delete_dialog" width="50vw">
         <v-card>
-          <v-card-title>{{ $t('settings.osc.params.menu.profile_delete') }}</v-card-title>
-          <v-card-text>{{ $t('settings.osc.params.menu.profile_delete_text') }}</v-card-text>
+          <v-card-title>{{ $t('settings.osc.params.profile.delete_dialog.title') }}</v-card-title>
+          <v-card-text>{{ $t('settings.osc.params.profile.delete_dialog.text') }}</v-card-text>
           <v-card-actions>
             <v-spacer />
             <v-btn @click="profile_delete_dialog = false">
@@ -153,8 +162,8 @@
     <v-row justify="center">
       <v-dialog v-model="param_dialog" width="50vw" persistent>
         <v-card>
-          <v-card-title v-if="!editing">{{ $t('settings.osc.params.param.dialog_title.adding') }}</v-card-title>
-          <v-card-title v-else>{{ $t('settings.osc.params.param.dialog_title.editing') }}</v-card-title>
+          <v-card-title v-if="!param_editing">{{ $t('settings.osc.params.param.dialog_title.add') }}</v-card-title>
+          <v-card-title v-else>{{ $t('settings.osc.params.param.dialog_title.edit') }}</v-card-title>
           <v-card-text>
             <v-row>
               <!-- <v-col :cols="12">
@@ -310,7 +319,7 @@
           </div>
           <v-card-actions>
             <v-spacer />
-            <v-btn @click="closeDialog">
+            <v-btn @click="closeParamDialog">
               {{ $t('settings.osc.params.button.cancel') }}
             </v-btn>
             <v-btn color="primary" @click="confirm_param">
@@ -368,13 +377,16 @@ export default {
     profile_dialog: false,
     new_profile_name: '',
 
+    profile_editing: false,
+    profile_editing_key: '',
+
     profile_delete_dialog: false,
     profile_delete_target: '',
 
     param_dialog: false,
 
-    editing_index: 0,
-    editing: false,
+    param_editing: false,
+    param_editing_index: 0,
 
     trigger_phrase: '',
 
@@ -413,13 +425,49 @@ export default {
       if (this.new_profile_name in this.oscStore.osc_profiles) // The profile name is already being used.
         return
 
-      this.oscStore.osc_profiles[this.new_profile_name] = []
-      this.oscStore.current_profile = this.new_profile_name
+      if (this.profile_editing) {
+        this.oscStore.osc_profiles[this.new_profile_name] = this.oscStore.osc_profiles[this.profile_editing_key]
+
+        if (this.oscStore.current_profile === this.profile_editing_key)
+          this.oscStore.current_profile = "Default"
+
+        delete this.oscStore.osc_profiles[this.profile_editing_key]
+      }
+      else {
+        this.oscStore.osc_profiles[this.new_profile_name] = []
+        this.oscStore.current_profile = this.new_profile_name
+      }
 
       // Reset the dialog's field.
       this.new_profile_name = ''
 
       this.profile_dialog = false
+    },
+    openRenameProfileDialog(profile_name: string) {
+      this.profile_editing = true
+      this.profile_editing_key = profile_name
+      this.new_profile_name = profile_name
+
+      this.profile_dialog = true
+    },
+    closeProfileDialog()
+    {
+      this.profile_editing = false
+      this.profile_dialog = false
+    },
+    delete_profile(profile_name: string) {
+      if (this.oscStore.current_profile === profile_name)
+        this.oscStore.current_profile = "Default"
+
+      this.profile_delete_target = profile_name
+
+      this.profile_delete_dialog = true
+    },
+    delete_profile_final()
+    {
+      delete this.oscStore.osc_profiles[this.profile_delete_target]
+
+      this.profile_delete_dialog = false
     },
     openAddParamDialog() {
       // Reset the dialog's fields.
@@ -444,18 +492,18 @@ export default {
       // Open the dialog.
       this.param_dialog = true
     },
-    openEditDialog(i: number) {
+    openEditParamDialog(i: number) {
       this.openAddParamDialog()
 
-      this.editing = true
-      this.editing_index = i
+      this.param_editing = true
+      this.param_editing_index = i
 
       const existingParam = this.oscStore.osc_profiles[this.oscStore.current_profile][i]
       this.new_param = JSON.parse(JSON.stringify(existingParam)) // Deep copy.
     },
-    closeDialog()
+    closeParamDialog()
     {
-      this.editing = false
+      this.param_editing = false
       this.param_dialog = false
     },
     validate_assign_value_field() {
@@ -529,13 +577,13 @@ export default {
       this.new_param.assigns.splice(i, 1)
     },
     confirm_param() {
-      if (!this.editing) {
+      if (!this.param_editing) {
         this.oscStore.osc_profiles[this.oscStore.current_profile].push(this.new_param)
       }
       else {
-        this.oscStore.osc_profiles[this.oscStore.current_profile][this.editing_index] = JSON.parse(JSON.stringify(this.new_param)) // Deep copy.
+        this.oscStore.osc_profiles[this.oscStore.current_profile][this.param_editing_index] = JSON.parse(JSON.stringify(this.new_param)) // Deep copy.
 
-        this.editing = false
+        this.param_editing = false
       }
 
       this.param_dialog = false
@@ -543,18 +591,6 @@ export default {
     delete_param(i: number) {
       this.oscStore.osc_profiles[this.oscStore.current_profile].splice(i, 1)
     },
-    delete_profile(profile_name: string) {
-      this.oscStore.current_profile = "Default"
-      this.profile_delete_target = profile_name
-
-      this.profile_delete_dialog = true
-    },
-    delete_profile_final()
-    {
-      delete this.oscStore.osc_profiles[this.profile_delete_target]
-
-      this.profile_delete_dialog = false
-    }
   },
 }
 </script>
