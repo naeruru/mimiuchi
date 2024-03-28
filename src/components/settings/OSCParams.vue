@@ -16,7 +16,7 @@
           <v-select
             v-model="oscStore.current_profile"
             :label="$t('settings.osc.params.profile.label')"
-            :items="Object.keys(oscStore.osc_profiles)"
+            :items="sorted_profiles"
             variant="outlined"
             :menu-props="{ closeOnContentClick: true }"
           >
@@ -114,7 +114,7 @@
     <!-- Profile Dialog -->
     <v-row justify="center">
       <v-dialog v-model="profile_dialog" width="50vw">
-        <v-card>
+        <v-card v-click-outside="closeProfileDialog">
           <v-card-title v-if="!profile_editing">{{ $t('settings.osc.params.profile.dialog.title.add') }}</v-card-title>
           <v-card-title v-else>{{ $t('settings.osc.params.profile.dialog.title.edit') }}</v-card-title>
           <v-card-text>
@@ -145,6 +145,7 @@
       <v-dialog v-model="profile_delete_dialog" width="50vw">
         <v-card>
           <v-card-title>{{ $t('settings.osc.params.profile.delete_dialog.title') }}</v-card-title>
+          <v-card-text>{{ `${profile_delete_target}` }}</v-card-text>
           <v-card-text>{{ $t('settings.osc.params.profile.delete_dialog.text') }}</v-card-text>
           <v-card-actions>
             <v-spacer />
@@ -411,6 +412,18 @@ export default {
       pulse_delay: 0,
     },
   }),
+  computed: {
+    sorted_profiles() {
+      return Object.keys(this.oscStore.osc_profiles).sort((a, b) => {
+        if (a === "Default")
+          return -1 // The profile "Default" is always first.
+        else if (b === "Default")
+          return 1 
+        else
+          return a.localeCompare(b)
+      })
+    },
+  },
   methods: {
     openAddProfileDialog() {
       this.new_profile_name = ''
@@ -429,9 +442,11 @@ export default {
         this.oscStore.osc_profiles[this.new_profile_name] = this.oscStore.osc_profiles[this.profile_editing_key]
 
         if (this.oscStore.current_profile === this.profile_editing_key)
-          this.oscStore.current_profile = "Default"
+          this.oscStore.current_profile = this.new_profile_name
 
         delete this.oscStore.osc_profiles[this.profile_editing_key]
+
+        this.profile_editing = false
       }
       else {
         this.oscStore.osc_profiles[this.new_profile_name] = []
@@ -456,15 +471,15 @@ export default {
       this.profile_dialog = false
     },
     delete_profile(profile_name: string) {
-      if (this.oscStore.current_profile === profile_name)
-        this.oscStore.current_profile = "Default"
-
       this.profile_delete_target = profile_name
 
       this.profile_delete_dialog = true
     },
     delete_profile_final()
     {
+      if (this.oscStore.current_profile === this.profile_delete_target)
+        this.oscStore.current_profile = "Default"
+
       delete this.oscStore.osc_profiles[this.profile_delete_target]
 
       this.profile_delete_dialog = false
