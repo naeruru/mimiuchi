@@ -251,16 +251,17 @@ export default {
                   window.ipcRenderer.send('send-param-event', { ip: custom_param.ip, port: custom_param.port, route: custom_param.route, value: newValue })
 
                   if (custom_param.activation_signal === "Pulse") {
+                    // The value should reset after some time.
                     setTimeout(() => {
 
                       switch (assign.type) {
                         case 'int':
                         case 'float':
-                          newValue = 0
+                          newValue = (Number(newValue) > 0) ? 0 : 1
 
                           break
                         case 'bool':
-                          newValue = false
+                          newValue = !newValue
 
                           break
                       }
