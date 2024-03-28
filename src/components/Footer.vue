@@ -209,11 +209,13 @@ export default {
         // use https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/search
         // to see which assign is the closest to the keyword found
         // unless switch to nlp first.....
-        if (this.oscStore.osc_params.length) {
-          this.oscStore.osc_params.forEach((custom_param) => {
-            let matchesKey = null
+        if (this.oscStore.osc_profiles[this.oscStore.current_profile].length) {
+          this.oscStore.osc_profiles[this.oscStore.current_profile].forEach((custom_param) => {
+            let matchesKey: RegExpExecArray | null = null
 
             custom_param.keywords.forEach((keyword) => {
+              if (matchesKey) return
+
               const key_check = `(^|\\s)(${keyword.text})($|[^a-zA-Z\\d])`
               const reKey = new RegExp(key_check, 'ig')
               matchesKey = reKey.exec(input)
@@ -226,7 +228,50 @@ export default {
                 const matchesAssign = reAssign.exec(input)
                 if (matchesAssign) {
                   this.show_snackbar('secondary', `<code>${custom_param.route} = ${assign.set}</code>`)
-                  window.ipcRenderer.send('send-param-event', { ip: custom_param.ip, port: custom_param.port, route: custom_param.route, value: assign.set })
+
+                  let newValue : number | boolean | null = null
+
+                  switch (assign.type) {
+                    case 'int':
+                    case 'float':
+                      newValue = Number(assign.set)
+                      
+                      break
+                    case 'bool':
+                      if (assign.set === "true")
+                        newValue = true
+                      else if (assign.set === "false")
+                        newValue = false
+                      else
+                        newValue = Boolean(assign.set)
+
+                      break
+                  }
+
+                  window.ipcRenderer.send('send-param-event', { ip: custom_param.ip, port: custom_param.port, route: custom_param.route, value: newValue })
+
+                  if (custom_param.activation_signal === "pulse") {
+                    // The value should reset after some time.
+                    setTimeout(() => {
+
+                      switch (assign.type) {
+                        case 'int':
+                        case 'float':
+                          if (Number(newValue) > 0)
+                            newValue = 0
+                          else
+                            newValue = 1
+
+                          break
+                        case 'bool':
+                          newValue = !newValue
+
+                          break
+                      }
+
+                      window.ipcRenderer.send('send-param-event', { ip: custom_param.ip, port: custom_param.port, route: custom_param.route, value: newValue })
+                    }, custom_param.pulse_delay)
+                  }
                 }
               })
             }

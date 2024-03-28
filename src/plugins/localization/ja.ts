@@ -172,8 +172,8 @@ export default {
       general: {
         title: 'OSC設定',
         description: 'OSC接続の設定',
-        osc_ip: 'デフォルトのOSC IP',
-        osc_port: 'デフォルトのOSC Port',
+        osc_ip: 'OSC IP',
+        osc_port: 'OSC Port',
         enabled: 'OSCで全文送信（ブロードキャスト中）',
         typing_indicator: 'タイピング時にタイピングインジケーターを有効',
         speech_indicator: 'Speech-to-text時のタイピングインジケーターを有効',
@@ -186,7 +186,54 @@ export default {
         },
       },
       params: {
-        title: 'カスタムパラメータ',
+        title: 'パラメータトリガー',
+        description: 'カスタムパラメータトリガーを追加',
+        button: {
+          cancel: 'キャンセル',
+          confirm: 'OK',
+          add: '追加',
+          delete: '削除',
+        },
+        profile: {
+          label: 'プロファイル選択',
+          dialog: {
+            title: {
+              add: 'プロファイルを追加',
+              edit: 'プロファイル名を変更',
+            },
+            field_label: 'プロファイル名',
+          },
+          delete_dialog: {
+            title: 'プロファイルを削除',
+            text: 'このプロファイルを削除してもよろしいですか？',
+          },
+        },
+        param: {
+          button: {
+            edit: '編集',
+            delete: '削除'
+          },
+          dialog_title: {
+            add: 'パラメータトリガーを追加',
+            edit: 'パラメータトリガーを編集',
+          },
+          address: "パラメーターアドレス",
+          empty: '無し (；ω；)',
+          trigger_phrases: 'トリガーフレーズ：',
+          trigger_phrases_add: 'トリガーフレーズを追加',
+          assign_phrases: '代入フレーズ：',
+          assign_phrases_type: '型',
+          assign_phrases_value: '値',
+          assign_phrases_add: '代入フレーズを追加',
+          behavior: '挙動：',
+          activation_signal: 'アクティベーション信号',
+          activation_signal_options: {
+              constant: '定数',
+              pulse: 'パルス',
+              pulse_duration: 'パルス幅'
+          },
+        },
+        empty: 'カスタムパラメータトリガーを追加するには＋ボタンを使用してください！',
       },
     },
   },
