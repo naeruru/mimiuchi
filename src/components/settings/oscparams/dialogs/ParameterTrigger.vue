@@ -142,6 +142,7 @@
               hide-details
               :label="$t('settings.osc.params.param.activation_signal_options.pulse_duration')"
               type="number"
+              suffix="ms"
               @input="new_param.pulse_delay = Math.round(new_param.pulse_delay)"
             />
           </v-col>
@@ -246,9 +247,8 @@ export default {
           type: 'bool',
           set: 'true',
         }
-        console.log(this.editingIndex)
+        
         if (this.mode === 'edit') {
-          console.log('editing')
           const existingParam = this.oscStore.osc_profiles[this.oscStore.current_profile][this.editingIndex as number]
           this.new_param = JSON.parse(JSON.stringify(existingParam)) // Deep copy.
         }

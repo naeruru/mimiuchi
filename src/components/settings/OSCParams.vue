@@ -29,24 +29,24 @@
                   <v-list-item-title class="flex-grow-1">
                     {{ item.title }}
                   </v-list-item-title>
-                  <v-list-item-action>
+                  <v-list-item-action v-if="item.title !== 'Default'">
                     <v-btn
                       icon
                       variant="plain"
                       density="comfortable"
                       @click.stop="openEditProfileDialog(item.title)"
                     >
-                      <v-icon v-if="item.title !== 'Default'">mdi-pencil-outline</v-icon>
+                      <v-icon>mdi-pencil-outline</v-icon>
                     </v-btn>
                   </v-list-item-action>
-                  <v-list-item-action class="ml-2">
+                  <v-list-item-action v-if="item.title !== 'Default'" class="ml-2">
                     <v-btn
                       icon
                       variant="plain"
                       density="comfortable"
                       @click.stop="openDeleteProfileDialog(item.title)"
                     >
-                      <v-icon v-if="item.title !== 'Default'">mdi-close</v-icon>
+                      <v-icon>mdi-close</v-icon>
                     </v-btn>
                   </v-list-item-action>
                 </div>
@@ -66,14 +66,22 @@
       </v-row>
 
       <!-- Parameter Triggers -->
-      <v-card
+      <v-expansion-panels
         v-if="Object.keys(oscStore.osc_profiles[oscStore.current_profile]).length > 0"
         v-for="(param, i) in oscStore.osc_profiles[oscStore.current_profile]"
         class="mb-4"
       >
-        <v-card color="rgba(0, 0, 0, 0)">
-          <v-card-title class="d-flex align-center">
-            {{ param.route }}
+        <v-expansion-panel>
+          <v-expansion-panel-title ripple class="param d-flex align-center">
+            <v-text-field
+              v-model="param.route"
+              variant="plain"
+              flat
+              density="compact"
+              hide-details
+              readonly
+              class="param-route w-100"
+            />
             <v-spacer />
             <v-btn
               class="ml-4"
@@ -82,86 +90,92 @@
               size="small"
               color="primary"
               append-icon="mdi-pencil"
-              @click="openEditParamDialog(i)"
+              @click.stop="openEditParamDialog(i)"
             >
               {{ $t('settings.osc.params.param.button.edit') }}
             </v-btn>
             <v-btn
-              class="ml-4"
+              class="ml-4 mr-4"
               flat variant="text"
               size="small"
               color="error"
               append-icon="mdi-delete"
-              @click="deleteParam(i)"
+              @click.stop="deleteParam(i)"
             >
               {{ $t('settings.osc.params.param.button.delete') }}
             </v-btn>
-          </v-card-title>
-          <v-divider />
-          <v-card-text>
-            <v-row>
-              <!-- <v-col :cols="12">
-                <v-text-field v-model="param.name" label="Name" hide-details></v-text-field>
-              </v-col> -->
-              <v-col :cols="12" :md="6">
-                <v-text-field
-                  v-model="param.ip"
-                  :label="$t('settings.osc.general.osc_ip')"
-                  variant="outlined"
-                  hide-details readonly
-                />
-              </v-col>
-              <v-col>
-                <v-text-field
-                  v-model="param.port"
-                  :label="$t('settings.osc.general.osc_port')"
-                  variant="outlined"
-                  hide-details
-                  readonly
-                />
-              </v-col>
+          </v-expansion-panel-title>
+          <v-expansion-panel-text>
+            <v-card flat>
+              <v-card-text>
+                <v-row>
+                  <!-- <v-col :cols="12">
+                    <v-text-field v-model="param.name" label="Name" hide-details></v-text-field>
+                  </v-col> -->
+                  <v-col :cols="12" :md="6">
+                    <v-text-field
+                      v-model="param.ip"
+                      :label="$t('settings.osc.general.osc_ip')"
+                      flat
+                      variant="solo-filled"
+                      hide-details
+                      readonly
+                    />
+                  </v-col>
+                  <v-col>
+                    <v-text-field
+                      v-model="param.port"
+                      :label="$t('settings.osc.general.osc_port')"
+                      flat
+                      variant="solo-filled"
+                      hide-details
+                      readonly
+                    />
+                  </v-col>
 
-              <v-col :cols="12">
-                <strong v-html="$t('settings.osc.params.param.trigger_phrases')"></strong>
-              </v-col>
-              <v-col :cols="12">
-                <v-chip
-                  v-for="(keyword, i) in param.keywords"
-                  v-model="keyword.enabled"
-                  class="mx-1 mb-2"
-                  label
-                  color="secondary"
-                  size="small"
-                >
-                  {{ keyword.text }}
-                </v-chip>
-              </v-col>
-              <v-col :cols="12">
-                <strong v-html="$t('settings.osc.params.param.assign_phrases')"></strong>
-                <v-list density="compact">
-                  <v-list-item
-                    v-for="(assign, i) in param.assigns"
-                    :value="assign"
-                    :title="assign.keyword"
-                    :subtitle="`set ${assign.type} to ${assign.set}`"
-                    class="display-only"
-                  />
-                </v-list>
-              </v-col>
-              <v-col :cols="12">
-                <strong v-html="$t('settings.osc.params.param.behavior')"></strong>
-                <v-list density="compact">
-                  <v-list-item
-                    :value="param"
-                    :title="`${$t('settings.osc.params.param.activation_signal_options.' + param.activation_signal)}${param.activation_signal === 'pulse' ? ` (${param.pulse_delay}ms)` : ''}`"
-                    class="display-only"
-                  />
-                </v-list>
-              </v-col>
-            </v-row>
-          </v-card-text>
-        </v-card>
-      </v-card>
+                  <v-col :cols="12">
+                    <strong v-html="$t('settings.osc.params.param.trigger_phrases')"></strong>
+                  </v-col>
+                  <v-col :cols="12">
+                    <v-chip
+                      v-for="(keyword, i) in param.keywords"
+                      v-model="keyword.enabled"
+                      class="mx-1 mb-2"
+                      label
+                      color="secondary"
+                      size="small"
+                    >
+                      {{ keyword.text }}
+                    </v-chip>
+                  </v-col>
+                  <v-col :cols="12">
+                    <strong v-html="$t('settings.osc.params.param.assign_phrases')"></strong>
+                    <v-list density="compact">
+                      <v-list-item
+                        v-for="(assign, i) in param.assigns"
+                        :value="assign"
+                        :title="assign.keyword"
+                        :subtitle="`set ${assign.type} to ${assign.set}`"
+                        class="display-only"
+                      />
+                    </v-list>
+                  </v-col>
+                  <v-col :cols="12">
+                    <strong v-html="$t('settings.osc.params.param.behavior')"></strong>
+                    <v-list density="compact">
+                      <v-list-item
+                        :value="param"
+                        :title="`${$t('settings.osc.params.param.activation_signal_options.' + param.activation_signal)}${param.activation_signal === 'pulse' ? ` (${param.pulse_delay}ms)` : ''}`"
+                        class="display-only"
+                      />
+                    </v-list>
+                  </v-col>
+                </v-row>
+              </v-card-text>
+            </v-card>
+          </v-expansion-panel-text>
+        </v-expansion-panel>
+      </v-expansion-panels>
       <p v-else v-html="$t('settings.osc.params.empty')"></p>
       <v-card class="mt-2" color="transparent" flat>
         <v-card-actions>
@@ -184,11 +198,19 @@
           <v-card-text>
             <v-row>
               <v-col :cols="12">
-                <v-text-field
-                  v-model="new_profile_name"
-                  :label="$t('settings.osc.params.profile.dialog.field_label')"
-                  hide-details
-                />
+                <v-form v-model="new_profile_name_valid" @submit.prevent="new_profile_name_valid ? confirmAddProfileDialog() : null">
+                  <v-text-field
+                    v-model="new_profile_name"
+                    :label="$t('settings.osc.params.profile.dialog.field_label')"
+                    :rules="[
+                      rules.required,
+                      rules.empty,
+                      rules.already_taken(new_profile_name, oscStore.osc_profiles)
+                    ]"
+                    autofocus
+                    spellcheck="false"
+                  />
+                </v-form>
               </v-col>
             </v-row>
           </v-card-text>
@@ -197,7 +219,11 @@
             <v-btn @click="closeAddProfileDialog">
               {{ $t('settings.osc.params.button.cancel') }}
             </v-btn>
-            <v-btn color="primary" @click="confirmAddProfileDialog">
+            <v-btn
+              color="primary"
+              @click="confirmAddProfileDialog"
+              :disabled="!new_profile_name_valid"  
+            >
               {{ $t('settings.osc.params.button.add') }}
             </v-btn>
           </v-card-actions>
@@ -213,11 +239,19 @@
           <v-card-text>
             <v-row>
               <v-col :cols="12">
-                <v-text-field
-                  v-model="new_profile_name"
-                  :label="$t('settings.osc.params.profile.dialog.field_label')"
-                  hide-details
-                />
+                <v-form v-model="new_profile_name_valid" @submit.prevent="new_profile_name_valid ? confirmEditProfileDialog() : null">
+                  <v-text-field
+                    v-model="new_profile_name"
+                    :label="$t('settings.osc.params.profile.dialog.field_label')"
+                    :rules="[
+                      rules.required,
+                      rules.empty,
+                      rules.already_taken(new_profile_name, oscStore.osc_profiles)
+                    ]"
+                    autofocus
+                    spellcheck="false"
+                  />
+                </v-form>
               </v-col>
             </v-row>
           </v-card-text>
@@ -226,7 +260,11 @@
             <v-btn @click="closeEditProfileDialog">
               {{ $t('settings.osc.params.button.cancel') }}
             </v-btn>
-            <v-btn color="primary" @click="confirmEditProfileDialog">
+            <v-btn
+              color="primary"
+              @click="confirmEditProfileDialog"
+              :disabled="!new_profile_name_valid"
+            >
               {{ $t('settings.osc.params.button.confirm') }}
             </v-btn>
           </v-card-actions>
@@ -266,6 +304,27 @@
 </template>
 
 <style>
+.v-expansion-panel-title__overlay {
+  background-color: initial !important;
+}
+
+.param:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.param-route {
+  /* This typography imitates Vuetify's class text-button. In the corresponding v-text-field, this class works, but Vuetify's class does not work. */
+  font-size: 0.875rem !important;
+  font-weight: 500;
+  line-height: 2.25rem;
+  letter-spacing: 0.0892857143em !important;
+}
+
+.param-route input {
+  padding: 0 !important;
+  cursor: pointer;
+}
+
 .display-only {
   pointer-events: none;
 }
@@ -297,6 +356,7 @@ export default {
   },
   data: () => ({
     new_profile_name: '',
+    new_profile_name_valid: false,
     
     profile_add_dialog: false,
     
@@ -309,6 +369,12 @@ export default {
     param_dialog: false,
     param_dialog_mode: '', // "add", "edit"
     param_editing_index: NaN,
+
+    rules: {
+      required: (value: string) => !!value || 'Required',
+      empty: (value: string) => !!value.trim() || 'Cannot be empty',
+      already_taken: (value: string, collection: object) => !(value in collection) || 'Already in use',
+    },
   }),
   computed: {
     sortedProfiles() {
@@ -323,22 +389,24 @@ export default {
     },
   },
   methods: {
+    clearFocus() {
+      const focusedElement = document.activeElement as HTMLElement
+
+      if (focusedElement)
+        focusedElement.blur()
+    },
     openAddProfileDialog() {
+      this.clearFocus()
+
       this.new_profile_name = ''
 
       this.profile_add_dialog = true
     },
     confirmAddProfileDialog() {
-      if (!this.new_profile_name.trim()) // The profile name field is empty.
-        return
-
-      if (this.new_profile_name in this.oscStore.osc_profiles) // The profile name is already being used.
-        return
-
       this.oscStore.osc_profiles[this.new_profile_name] = []
       this.oscStore.current_profile = this.new_profile_name
 
-      this.new_profile_name = '' // Reset the dialog's field.
+      this.new_profile_name = ''
 
       this.profile_add_dialog = false
     },
@@ -347,18 +415,14 @@ export default {
       this.profile_add_dialog = false
     },
     openEditProfileDialog(profile_name: string) {
+      this.clearFocus()
+
       this.editing_profile_name = profile_name
       this.new_profile_name = profile_name
 
       this.profile_edit_dialog = true
     },
     confirmEditProfileDialog() {
-      if (!this.new_profile_name.trim()) // The profile name field is empty.
-        return
-
-      if (this.new_profile_name in this.oscStore.osc_profiles) // The profile name is already being used.
-        return
-
       this.oscStore.osc_profiles[this.new_profile_name] = this.oscStore.osc_profiles[this.editing_profile_name]
 
       if (this.oscStore.current_profile === this.editing_profile_name)
@@ -366,12 +430,14 @@ export default {
 
       delete this.oscStore.osc_profiles[this.editing_profile_name]
 
-      this.new_profile_name = '' // Reset the dialog's field.
+      this.new_profile_name = ''
 
       this.profile_edit_dialog = false
     },
     closeEditProfileDialog()
     {
+      this.new_profile_name = ''
+
       this.profile_edit_dialog = false
     },
     openDeleteProfileDialog(profile_name: string) {
