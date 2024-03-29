@@ -22,7 +22,7 @@
           >
             <template v-slot:item="{ item }">
               <v-list-item @click="oscStore.current_profile = item.title">
-                <v-list-item-content class="d-flex align-center">
+                <div class="d-flex align-center">
                   <v-list-item-title class="flex-grow-1">
                     {{ item.title }}
                   </v-list-item-title>
@@ -36,7 +36,7 @@
                       <v-icon v-if="item.title !== 'Default'">mdi-close</v-icon>
                     </v-btn>
                   </v-list-item-action>
-                </v-list-item-content>
+                </div>
               </v-list-item>
             </template>
           </v-select>
