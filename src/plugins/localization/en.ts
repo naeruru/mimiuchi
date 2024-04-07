@@ -219,16 +219,17 @@ export default {
           empty: 'none :c',
           trigger_phrases: 'Trigger phrases:',
           trigger_phrases_add: 'Add trigger word/phrase',
-          assign_phrases: 'Assign phrases:',
-          assign_phrases_type: "Value type",
-          assign_phrases_value: 'Value',
-          assign_phrases_add: 'Add assign word/phrase (e.g., on)',
-          behavior: 'Behavior:',
-          activation_signal: 'Activation signal',
-          activation_signal_options: {
-            constant: 'Constant',
-            pulse: 'Pulse',
-            pulse_duration: 'Pulse duration (milliseconds)'
+          assign: {
+            phrases: 'Assign phrases:',
+            phrases_type: "Value type",
+            phrases_value: 'Value ', // This leading space is for displaying "Value 1" and "Value 2".
+            phrases_add: 'Add assign word/phrase (e.g., on)',
+            behavior: 'Behavior',
+            behavior_options: {
+              default: 'Default',
+              pulse: 'Pulse',
+              pulse_wait: 'Wait'
+            },
           },
         },
         empty: 'Use the + button to add a new custom parameter trigger!',

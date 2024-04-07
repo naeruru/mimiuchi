@@ -219,16 +219,17 @@ export default {
           empty: '無し (；ω；)',
           trigger_phrases: 'トリガーフレーズ：',
           trigger_phrases_add: 'トリガーフレーズを追加',
-          assign_phrases: '代入フレーズ：',
-          assign_phrases_type: '型',
-          assign_phrases_value: '値',
-          assign_phrases_add: '代入フレーズを追加',
-          behavior: '挙動：',
-          activation_signal: 'アクティベーション信号',
-          activation_signal_options: {
-              constant: '定数',
-              pulse: 'パルス',
-              pulse_duration: 'パルス幅'
+          assign: {
+            phrases: '代入フレーズ：',
+            phrases_type: '型',
+            phrases_value: '値',
+            phrases_add: '代入フレーズを追加',
+            behavior: '挙動',
+            behavior_options: {
+                default: 'デフォルト',
+                pulse: 'パルス',
+                pulse_wait: '待機時間'
+            },
           },
         },
         empty: 'カスタムパラメータトリガーを追加するには＋ボタンを使用してください！',

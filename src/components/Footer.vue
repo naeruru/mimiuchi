@@ -227,47 +227,53 @@ export default {
                 const reAssign = new RegExp(assign_check, 'ig')
                 const matchesAssign = reAssign.exec(input)
                 if (matchesAssign) {
-                  this.show_snackbar('secondary', `<code>${custom_param.route} = ${assign.set}</code>`)
+                  this.show_snackbar('secondary', `<code>${custom_param.route} = ${assign.set1}</code>`)
 
                   let newValue : number | boolean | null = null
 
                   switch (assign.type) {
                     case 'int':
                     case 'float':
-                      newValue = Number(assign.set)
+                      newValue = Number(assign.set1)
                       
                       break
                     case 'bool':
-                      if (assign.set === "true")
+                      if (assign.set1 === "true")
                         newValue = true
-                      else if (assign.set === "false")
+                      else if (assign.set1 === "false")
                         newValue = false
                       else
-                        newValue = Boolean(assign.set)
+                        newValue = Boolean(assign.set1)
 
                       break
                   }
 
                   window.ipcRenderer.send('send-param-event', { ip: custom_param.ip, port: custom_param.port, route: custom_param.route, value: newValue })
 
-                  if (custom_param.activation_signal === "pulse") {
+                  if (assign.activation === "pulse") {
                     // The value should reset after some time.
                     setTimeout(() => {
+                      this.show_snackbar('secondary', `<code>${custom_param.route} = ${assign.set2}</code>`)
 
                       switch (assign.type) {
                         case 'int':
                         case 'float':
-                          newValue = (Number(newValue) > 0) ? 0 : 1
+                          newValue = Number(assign.set2)
 
                           break
                         case 'bool':
-                          newValue = !newValue
+                          if (assign.set2 === "true")
+                            newValue = true
+                          else if (assign.set2 === "false")
+                            newValue = false
+                          else
+                            newValue = Boolean(assign.set2)
 
                           break
                       }
 
                       window.ipcRenderer.send('send-param-event', { ip: custom_param.ip, port: custom_param.port, route: custom_param.route, value: newValue })
-                    }, custom_param.pulse_delay)
+                    }, assign.pulse_duration)
                   }
                 }
               })

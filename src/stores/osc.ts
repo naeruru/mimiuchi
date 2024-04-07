@@ -9,8 +9,6 @@ interface Param {
   route: string
   keywords: Keyword[]
   assigns: Assign[]
-  activation_signal: string
-  pulse_delay: number
 }
 interface Keyword {
   enabled: boolean
@@ -19,7 +17,10 @@ interface Keyword {
 interface Assign {
   keyword: string
   type: string
-  set: string
+  set1: string
+  set2: string
+  activation: string
+  pulse_duration: number
 }
 
 export const useOSCStore = defineStore('osc', {

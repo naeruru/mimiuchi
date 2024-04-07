@@ -149,23 +149,13 @@
                     </v-chip>
                   </v-col>
                   <v-col :cols="12">
-                    <strong v-html="$t('settings.osc.params.param.assign_phrases')"></strong>
+                    <strong v-html="$t('settings.osc.params.param.assign.phrases')"></strong>
                     <v-list density="compact">
                       <v-list-item
                         v-for="(assign, i) in param.assigns"
                         :value="assign"
                         :title="assign.keyword"
-                        :subtitle="`set ${assign.type} to ${assign.set}`"
-                        class="display-only"
-                      />
-                    </v-list>
-                  </v-col>
-                  <v-col :cols="12">
-                    <strong v-html="$t('settings.osc.params.param.behavior')"></strong>
-                    <v-list density="compact">
-                      <v-list-item
-                        :value="param"
-                        :title="`${$t('settings.osc.params.param.activation_signal_options.' + param.activation_signal)}${param.activation_signal === 'pulse' ? ` (${param.pulse_delay}ms)` : ''}`"
+                        :subtitle="displayAssignSubtitle(assign)"
                         class="display-only"
                       />
                     </v-list>
@@ -355,6 +345,12 @@ export default {
     }
   },
   data: () => ({
+    rules: {
+      required: (value: string) => !!value || 'Required',
+      empty: (value: string) => !!value.trim() || 'Cannot be empty',
+      already_taken: (value: string, collection: object) => !(value in collection) || 'Already in use',
+    },
+    
     new_profile_name: '',
     new_profile_name_valid: false,
     
@@ -369,12 +365,6 @@ export default {
     param_dialog: false,
     param_dialog_mode: '', // "add", "edit"
     param_editing_index: NaN,
-
-    rules: {
-      required: (value: string) => !!value || 'Required',
-      empty: (value: string) => !!value.trim() || 'Cannot be empty',
-      already_taken: (value: string, collection: object) => !(value in collection) || 'Already in use',
-    },
   }),
   computed: {
     sortedProfiles() {
@@ -452,6 +442,14 @@ export default {
       delete this.oscStore.osc_profiles[this.profile_delete_target]
 
       this.profile_delete_dialog = false
+    },
+    displayAssignSubtitle(assign_object: any) {
+      let subtitle = `set ${assign_object.type} to ${assign_object.set1}`
+
+      if (assign_object.activation === 'pulse')
+        subtitle = subtitle + `, wait ${assign_object.pulse_duration}ms, set ${assign_object.type} to ${assign_object.set2}`
+
+      return subtitle
     },
     openAddParamDialog() {
       this.param_dialog_mode = "add"

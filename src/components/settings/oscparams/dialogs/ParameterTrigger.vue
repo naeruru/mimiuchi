@@ -61,7 +61,7 @@
       <v-card-text class="mt-2">
         <v-row>
           <v-col :cols="12">
-            <strong v-html="$t('settings.osc.params.param.assign_phrases')"></strong>
+            <strong v-html="$t('settings.osc.params.param.assign.phrases')"></strong>
             <v-chip v-if="!new_param.assigns.length" variant="text">
               {{ $t('settings.osc.params.param.empty') }}
             </v-chip>
@@ -70,80 +70,133 @@
                 v-for="(assign, i) in new_param.assigns"
                 :value="assign"
                 :title="assign.keyword"
-                :subtitle="`set ${assign.type} to ${assign.set}`"
+                :subtitle="displayAssignSubtitle(assign)"
                 @click="deleteAssign(i)"
                 class="assignment-editable"
               />
             </v-list>
           </v-col>
-          <v-col :cols="12" :lg="4">
+          <v-col :cols="12" :lg="6">
             <v-select
               v-model="new_assign.type"
               :items="value_types"
               hide-details
-              :label="$t('settings.osc.params.param.assign_phrases_type')"
-              @update:modelValue="validateAssignValue"
+              :label="$t('settings.osc.params.param.assign.phrases_type')"
+              @update:modelValue="validateAssignValueAll"
             />
           </v-col>
-          <v-col :cols="12" :lg="8">
-            <v-text-field
-              v-if="new_assign.type !== 'bool'"
-              v-model="new_assign.set"
-              hide-details
-              :label="$t('settings.osc.params.param.assign_phrases_value')"
-              type="number"
-              @input="validateAssignValue"
-            />
+          <v-col :cols="12" :lg="6">
             <v-select
-              v-else
-              v-model="new_assign.set"
-              :items="['true', 'false']"
-              hide-details
-              :label="$t('settings.osc.params.param.assign_phrases_value')"
-            />
-          </v-col>
-          <v-col :cols="12">
-            <v-text-field
-              v-model="new_assign.keyword"
-              :label="$t('settings.osc.params.param.assign_phrases_add')"
-              hide-details
-              append-icon="mdi-plus"
-              @click:append="addAssign"
-              @keydown.enter="addAssign"
-            />
-          </v-col>
-        </v-row>
-      </v-card-text>
-
-      <v-divider class="mx-4" />
-
-      <v-card-text class="mt-2">
-        <v-row>
-          <v-col :cols="12">
-            <strong v-html="$t('settings.osc.params.param.behavior')"></strong>
-          </v-col>
-          <v-col :cols="6">
-            <v-select
-              v-model="new_param.activation_signal"
+              v-model="new_assign.activation"
               :items="[
-                { name: $t('settings.osc.params.param.activation_signal_options.constant'), value: 'constant' },
-                { name: $t('settings.osc.params.param.activation_signal_options.pulse'), value: 'pulse' }
+                { name: $t('settings.osc.params.param.assign.behavior_options.default'), value: 'default' },
+                { name: $t('settings.osc.params.param.assign.behavior_options.pulse'), value: 'pulse' }
               ]"
               item-title="name"
               item-value="value"
               hide-details
-              :label="$t('settings.osc.params.param.activation_signal')"
+              :label="$t('settings.osc.params.param.assign.behavior')"
+              @update:modelValue="validateAssignValueAll"
             />
           </v-col>
-          <v-col :cols="6">
+        </v-row>
+
+        <!-- This row is displayed if the assign activation is "default". -->
+        <v-row v-if="new_assign.activation === 'default'">
+          <v-col :cols="12" :lg="6">
             <v-text-field
-              v-if="new_param.activation_signal === 'pulse'"
-              v-model="new_param.pulse_delay"
+              v-if="new_assign.type !== 'bool'"
+              v-model="new_assign.set1"
               hide-details
-              :label="$t('settings.osc.params.param.activation_signal_options.pulse_duration')"
+              :label="$t('settings.osc.params.param.assign.phrases_value')"
+              type="number"
+              @input="validateAssignValue1"
+            />
+            <v-select
+              v-else
+              v-model="new_assign.set1"
+              :items="['true', 'false']"
+              hide-details
+              :label="$t('settings.osc.params.param.assign.phrases_value')"
+            />
+          </v-col>
+        </v-row>
+
+        <!-- This row is displayed if the assign activation is "pulse". -->
+        <v-row v-if="new_assign.activation === 'pulse'">
+          <v-col :cols="12" :lg="3">
+            <v-text-field
+              v-if="new_assign.type !== 'bool'"
+              v-model="new_assign.set1"
+              hide-details
+              :label="$t('settings.osc.params.param.assign.phrases_value') + '1'"
+              type="number"
+              @input="validateAssignValue1"
+            />
+            <v-select
+              v-else
+              v-model="new_assign.set1"
+              :items="['true', 'false']"
+              hide-details
+              :label="$t('settings.osc.params.param.assign.phrases_value') + '1'"
+            />
+          </v-col>
+
+          <v-spacer />
+
+          <v-col>
+            <v-icon class="h-100 align-center">mdi-arrow-right-bold</v-icon>
+          </v-col>
+
+          <v-spacer />
+
+          <v-col :cols="12" :lg="3">
+            <v-text-field
+              v-model="new_assign.pulse_duration"
+              hide-details
+              :label="$t('settings.osc.params.param.assign.behavior_options.pulse_wait')"
               type="number"
               suffix="ms"
-              @input="new_param.pulse_delay = Math.round(new_param.pulse_delay)"
+              @input="new_assign.pulse_duration = Math.round(new_assign.pulse_duration)"
+            />
+          </v-col>
+
+          <v-spacer />
+
+          <v-col>
+            <v-icon class="h-100 align-center">mdi-arrow-right-bold</v-icon>
+          </v-col>
+
+          <v-spacer />
+
+          <v-col :cols="12" :lg="3">
+            <v-text-field
+              v-if="new_assign.type !== 'bool'"
+              v-model="new_assign.set2"
+              hide-details
+              :label="$t('settings.osc.params.param.assign.phrases_value') + '2'"
+              type="number"
+              @input="validateAssignValue2"
+            />
+            <v-select
+              v-else
+              v-model="new_assign.set2"
+              :items="['true', 'false']"
+              hide-details
+              :label="$t('settings.osc.params.param.assign.phrases_value') + '2'"
+            />
+          </v-col>
+        </v-row>
+
+        <v-row>
+          <v-col :cols="12">
+            <v-text-field
+              v-model="new_assign.keyword"
+              :label="$t('settings.osc.params.param.assign.phrases_add')"
+              hide-details
+              append-icon="mdi-plus"
+              @click:append="addAssign"
+              @keydown.enter="addAssign"
             />
           </v-col>
         </v-row>
@@ -154,7 +207,7 @@
       <div v-if="new_param.keywords.length && new_param.assigns.length" class="ma-2">
         <v-list-item
           :title="`Example phrase: 'set ${new_param.keywords[0]?.text} to ${new_param.assigns[0]?.keyword}'`"
-          :subtitle="`${new_param.route} -> ${new_param.assigns[0]?.set}`"
+          :subtitle="`${new_param.route} -> ${new_param.assigns[0]?.set1}`"
         />
       </div>
       <v-card-actions>
@@ -183,7 +236,10 @@ interface Keyword {
 interface Assign {
   keyword: string
   type: string
-  set: string // Receive user-input as a string. Parse it when finally sending a payload.
+  set1: string // Receive user-input as a string. Parse it when finally sending a payload.
+  set2: string
+  activation: string
+  pulse_duration: number
 }
 
 export default {
@@ -209,7 +265,13 @@ export default {
     new_assign: {
       keyword: '',
       type: 'bool',
-      set: 'true',
+      set1: 'true',
+      set2: 'false',
+
+      // "default": set the parameter to a value.
+      // "pulse": set the parameter to a value, wait some time, then set the parameter to another value.
+      activation: 'default',
+      pulse_duration: 0,
     },
 
     new_param: {
@@ -219,11 +281,6 @@ export default {
       route: '/avatar/parameters/',
       keywords: [] as Keyword[], // [{enabled: boolean, text: string}?],
       assigns: [] as Assign[], // [{keyword: string, type: string, set: string}?]
-
-      // "constant" (Default): set the parameter to this value.
-      // "pulse": set the parameter to this value, then reset it (0, 0.0, false) after some time.
-      activation_signal: 'constant',
-      pulse_delay: 0,
     },
   }),
   watch: {
@@ -236,16 +293,17 @@ export default {
           route: '/avatar/parameters/',
           keywords: [],
           assigns: [],
-          activation_signal: 'constant',
-          pulse_delay: 1000,
         }
-
+        
         this.trigger_phrase = ''
-
+        
         this.new_assign = {
           keyword: '',
           type: 'bool',
-          set: 'true',
+          set1: 'true',
+          set2: 'false',
+          activation: 'default',
+          pulse_duration: 1000,
         }
         
         if (this.mode === 'edit') {
@@ -294,34 +352,69 @@ export default {
     deleteTrigger(i: number) {
       this.new_param.keywords.splice(i, 1)
     },
-    validateAssignValue() {
+    validateAssignValue1() {
       const assign = this.new_assign
 
       switch (assign.type) {
         case 'int':
-          if (assign.set === "" || isNaN(Number(assign.set))) // Invalid input.
-            assign.set = "0"
+          if (assign.set1 === "" || isNaN(Number(assign.set1))) // Invalid input.
+            assign.set1 = "0"
           else { // Valid input.
             // Display.
-            assign.set = String(parseInt(assign.set))
+            assign.set1 = String(parseInt(assign.set1))
           }
 
           break
         case 'float':
-          if (assign.set === "" || isNaN(Number(assign.set))) // Invalid input.
-            assign.set = "0"
+          if (assign.set1 === "" || isNaN(Number(assign.set1))) // Invalid input.
+            assign.set1 = "0"
           else { // Valid input.
             // Display.
-            assign.set = assign.set.replace(/^0+(?=\d)/, '') // Remove leading zeros in front of the number.
+            assign.set1 = assign.set1.replace(/^0+(?=\d)/, '') // Remove leading zeros in front of the number.
           }
 
           break
         case 'bool':
-          if (assign.set !== "true" && assign.set !== "false") // Invalid input.
-            assign.set = "true"
+          if (assign.set1 !== "true" && assign.set1 !== "false") // Invalid input.
+            assign.set1 = "true"
 
           break
       }
+    },
+    validateAssignValue2() {
+      const assign = this.new_assign
+
+      switch (assign.type) {
+        case 'int':
+          if (assign.set2 === "" || isNaN(Number(assign.set2))) // Invalid input.
+            assign.set2 = "0"
+          else { // Valid input.
+            // Display.
+            assign.set2 = String(parseInt(assign.set2))
+          }
+
+          break
+        case 'float':
+          if (assign.set2 === "" || isNaN(Number(assign.set2))) // Invalid input.
+            assign.set2 = "0"
+          else { // Valid input.
+            // Display.
+            assign.set2 = assign.set2.replace(/^0+(?=\d)/, '') // Remove leading zeros in front of the number.
+          }
+
+          break
+        case 'bool':
+          if (assign.set2 !== "true" && assign.set2 !== "false") // Invalid input.
+            assign.set2 = "true"
+
+          break
+      }
+    },
+    validateAssignValueAll() {
+      this.validateAssignValue1()
+      
+      if (this.new_assign.activation === 'pulse')
+        this.validateAssignValue2()
     },
     addAssign() {
       const assign = this.new_assign
@@ -332,11 +425,11 @@ export default {
 
       // Display.
       if (assign.type === "float") {
-        if (!assign.set.includes('.')) { // 123 → 123.0
-          assign.set = assign.set + ".0"
+        if (!assign.set1.includes('.')) { // 123 → 123.0
+          assign.set1 = assign.set1 + ".0"
         }
-        else if (assign.set.endsWith('.')) { // 123. → 123.0
-          assign.set = assign.set + "0"
+        else if (assign.set1.endsWith('.')) { // 123. → 123.0
+          assign.set1 = assign.set1 + "0"
         }
       }
 
@@ -347,11 +440,22 @@ export default {
       this.new_assign = {
         keyword: '',
         type: assign.type,
-        set: assign.set,
+        set1: assign.set1,
+        set2: 'false',
+        activation: 'default',
+        pulse_duration: 1000,
       }
     },
     deleteAssign(i: number) {
       this.new_param.assigns.splice(i, 1)
+    },
+    displayAssignSubtitle(assign_object: any) {
+      let subtitle = `set ${assign_object.type} to ${assign_object.set1}`
+
+      if (assign_object.activation === 'pulse')
+        subtitle = subtitle + `, wait ${assign_object.pulse_duration}ms, set ${assign_object.type} to ${assign_object.set2}`
+
+      return subtitle
     },
   },
 }
