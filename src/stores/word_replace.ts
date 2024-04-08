@@ -7,7 +7,7 @@ interface word_replacements {
 export const useWordReplaceStore = defineStore('wordreplace', {
   state: () => ({
     enabled: true,
-    match_whole_word: false,
+    match_whole_word: true,
     match_case: false,
     word_replacements: {} as word_replacements,
     word_replacements_lowercase: {} as word_replacements,
