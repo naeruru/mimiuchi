@@ -231,6 +231,10 @@ export default {
               pulse_wait: 'Wait'
             },
           },
+          delete_dialog: {
+            title: 'Delete parameter',
+            text: 'Are you sure that you want to delete this parameter?',
+          },
         },
         empty: 'Use the + button to add a new custom parameter trigger!',
       },

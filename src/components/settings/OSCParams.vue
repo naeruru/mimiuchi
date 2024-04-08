@@ -100,7 +100,7 @@
               size="small"
               color="error"
               append-icon="mdi-delete"
-              @click.stop="deleteParam(i)"
+              @click.stop="openDeleteParamDialog(i)"
             >
               {{ $t('settings.osc.params.param.button.delete') }}
             </v-btn>
@@ -274,7 +274,7 @@
             <v-btn @click="profile_delete_dialog = false">
               {{ $t('settings.osc.params.button.cancel') }}
             </v-btn>
-            <v-btn color="primary" @click="confirmDeleteProfileDialog()">
+            <v-btn color="primary" @click="confirmDeleteProfileDialog">
               {{ $t('settings.osc.params.button.delete') }}
             </v-btn>
           </v-card-actions>
@@ -289,6 +289,26 @@
         :mode="param_dialog_mode"
         :editing-index="param_editing_index"
       />
+    </v-row>
+
+    <!-- Param Trigger Delete Dialog -->
+    <v-row justify="center">
+      <v-dialog v-model="param_delete_dialog" width="50vw">
+        <v-card>
+          <v-card-title>{{ $t('settings.osc.params.param.delete_dialog.title') }}</v-card-title>
+          <v-card-text>{{ `${param_delete_target_display}` }}</v-card-text>
+          <v-card-text>{{ $t('settings.osc.params.param.delete_dialog.text') }}</v-card-text>
+          <v-card-actions>
+            <v-spacer />
+            <v-btn @click="param_delete_dialog = false">
+              {{ $t('settings.osc.params.button.cancel') }}
+            </v-btn>
+            <v-btn color="primary" @click="confirmDeleteParamDialog">
+              {{ $t('settings.osc.params.button.delete') }}
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
     </v-row>
   </v-card>
 </template>
@@ -364,7 +384,12 @@ export default {
     
     param_dialog: false,
     param_dialog_mode: '', // "add", "edit"
+    
     param_editing_index: NaN,
+
+    param_delete_dialog: false,
+    param_delete_target: NaN,
+    param_delete_target_display: '',
   }),
   computed: {
     sortedProfiles() {
@@ -460,8 +485,20 @@ export default {
       this.param_editing_index = i
       this.param_dialog = true
     },
-    deleteParam(i: number) {
-      this.oscStore.osc_profiles[this.oscStore.current_profile].splice(i, 1)
+    openDeleteParamDialog(i: number) {
+      const current_profile_params = this.oscStore.osc_profiles[this.oscStore.current_profile]
+
+      this.param_delete_target = i
+      this.param_delete_target_display = current_profile_params[i].route
+
+      this.param_delete_dialog = true
+    },
+    confirmDeleteParamDialog() {
+      const current_profile_params = this.oscStore.osc_profiles[this.oscStore.current_profile]
+
+      current_profile_params.splice(this.param_delete_target, 1)
+
+      this.param_delete_dialog = false
     },
   },
 }

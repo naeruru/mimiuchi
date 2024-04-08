@@ -215,7 +215,7 @@ export default {
             add: 'パラメータトリガーを追加',
             edit: 'パラメータトリガーを編集',
           },
-          address: "パラメーターアドレス",
+          address: "パラメータアドレス",
           empty: '無し (；ω；)',
           trigger_phrases: 'トリガーフレーズ：',
           trigger_phrases_add: 'トリガーフレーズを追加',
@@ -230,6 +230,10 @@ export default {
                 pulse: 'パルス',
                 pulse_wait: '待機時間'
             },
+          },
+          delete_dialog: {
+            title: 'パラメータを削除',
+            text: 'このパラメータを削除してもよろしいですか？',
           },
         },
         empty: 'カスタムパラメータトリガーを追加するには＋ボタンを使用してください！',
