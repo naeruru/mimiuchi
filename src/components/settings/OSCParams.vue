@@ -224,7 +224,7 @@
     <!-- Profile Edit Dialog -->
     <v-row justify="center">
       <v-dialog v-model="profile_edit_dialog" width="50vw">
-        <v-card v-click-outside="confirmEditProfileDialog">
+        <v-card v-click-outside="closeEditProfileDialog">
           <v-card-title>{{ $t('settings.osc.params.profile.dialog.title.edit') }}</v-card-title>
           <v-card-text>
             <v-row>
@@ -451,8 +451,6 @@ export default {
     },
     closeEditProfileDialog()
     {
-      this.new_profile_name = ''
-
       this.profile_edit_dialog = false
     },
     openDeleteProfileDialog(profile_name: string) {
