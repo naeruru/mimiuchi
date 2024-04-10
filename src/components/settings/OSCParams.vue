@@ -3,7 +3,7 @@
     <template v-slot:title>
       <span v-html="$t('settings.osc.params.title')"></span>
       <v-chip prepend-icon="mdi-alert-circle-outline" color="warning" class="ml-2" variant="elevated" size="small">
-        Subject to change
+        {{ $t('general.subject_to_change') }}
       </v-chip>
     </template>
     <template v-slot:subtitle>

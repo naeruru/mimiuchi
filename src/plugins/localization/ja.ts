@@ -18,6 +18,7 @@ export default {
     type_message: 'メッセージを送信',
     beta: 'ベータ',
     update: 'アップデート',
+    subject_to_change: '変更の可能性があります',
   },
   alerts: {
     no_speech: 'このブラウザはWeb Speech APIをサポートしていません（Speech-to-text）',
