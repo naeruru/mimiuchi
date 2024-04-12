@@ -124,7 +124,7 @@
 
         <!-- This row is displayed if the assign activation is "pulse". -->
         <v-row v-if="new_assign.activation === 'pulse'">
-          <v-col :cols="12" :lg="3">
+          <v-col :cols="12" :lg="4">
             <v-text-field
               v-if="new_assign.type !== 'bool'"
               v-model="new_assign.set1"
@@ -142,15 +142,7 @@
             />
           </v-col>
 
-          <v-spacer />
-
-          <v-col>
-            <v-icon class="h-100 align-center">mdi-arrow-right-bold</v-icon>
-          </v-col>
-
-          <v-spacer />
-
-          <v-col :cols="12" :lg="3">
+          <v-col :cols="12" :lg="4">
             <v-text-field
               v-model="new_assign.pulse_duration"
               hide-details
@@ -158,18 +150,12 @@
               type="number"
               suffix="ms"
               @input="new_assign.pulse_duration = Math.round(new_assign.pulse_duration)"
+              prepend-icon="mdi-arrow-right-bold"
+              append-icon="mdi-arrow-right-bold"
             />
           </v-col>
 
-          <v-spacer />
-
-          <v-col>
-            <v-icon class="h-100 align-center">mdi-arrow-right-bold</v-icon>
-          </v-col>
-
-          <v-spacer />
-
-          <v-col :cols="12" :lg="3">
+          <v-col :cols="12" :lg="4">
             <v-text-field
               v-if="new_assign.type !== 'bool'"
               v-model="new_assign.set2"
