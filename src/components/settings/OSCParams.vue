@@ -24,7 +24,7 @@
             :menu-props="{ closeOnContentClick: true }"
           >
             <template v-slot:item="{ item }">
-              <v-list-item @click="oscStore.current_profile = item.title">
+              <v-list-item @click="setProfile(item.title)">
                 <div class="d-flex align-center">
                   <v-list-item-title class="flex-grow-1">
                     {{ item.title }}
@@ -68,10 +68,13 @@
       <!-- Parameter Triggers -->
       <v-expansion-panels
         v-if="Object.keys(oscStore.osc_profiles[oscStore.current_profile]).length > 0"
-        v-for="(param, i) in oscStore.osc_profiles[oscStore.current_profile]"
-        class="mb-4"
+        v-model="param_panels"
+        multiple
       >
-        <v-expansion-panel>
+        <v-expansion-panel
+          v-for="(param, i) in oscStore.osc_profiles[oscStore.current_profile]"
+          class="mb-4"
+        >
           <v-expansion-panel-title ripple class="param d-flex align-center">
             <v-text-field
               v-model="param.route"
@@ -314,6 +317,14 @@
 </template>
 
 <style>
+.v-expansion-panel:not(:first-child)::after {
+  border: none !important;
+}
+
+.v-expansion-panel {
+  margin-top: 0 !important;
+}
+
 .v-expansion-panel-title__overlay {
   background-color: initial !important;
 }
@@ -370,7 +381,7 @@ export default {
       empty: (value: string) => !!value.trim() || 'Cannot be empty',
       already_taken: (value: string, collection: object) => !(value in collection) || 'Already in use',
     },
-    
+   
     new_profile_name: '',
     new_profile_name_valid: false,
     
@@ -382,6 +393,8 @@ export default {
     profile_delete_dialog: false,
     profile_delete_target: '',
     
+    param_panels: [],
+
     param_dialog: false,
     param_dialog_mode: '', // "add", "edit"
     
@@ -465,6 +478,11 @@ export default {
       delete this.oscStore.osc_profiles[this.profile_delete_target]
 
       this.profile_delete_dialog = false
+    },
+    setProfile(selected_profile: string) {
+      this.oscStore.current_profile = selected_profile
+
+      this.param_panels = [] // Collapse all parameter trigger expansion panels.
     },
     displayAssignSubtitle(assign_object: any) {
       let subtitle = `set ${assign_object.type} to ${assign_object.set1}`
