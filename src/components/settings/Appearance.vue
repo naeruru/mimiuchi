@@ -198,7 +198,8 @@ export default {
         window.open(link, '_blank')
     },
     set_theme(selected_theme: string) {
-      this.theme.global.name.value = selected_theme
+      this.theme.global.name.value = selected_theme // Immediately set the current theme to the selected theme.
+      this.appearanceStore.current_theme = selected_theme // Store the setting.
     }
   },
 }

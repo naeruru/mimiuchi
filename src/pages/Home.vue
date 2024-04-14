@@ -21,6 +21,7 @@
 <script lang="ts">
 // import {ipcRenderer} from "electron"
 import { useDisplay } from 'vuetify'
+import { useTheme } from 'vuetify'
 
 import is_electron from '@/helpers/is_electron'
 
@@ -40,6 +41,7 @@ export default {
   },
   setup() {
     const { height } = useDisplay()
+    const theme = useTheme()
 
     const settingsStore = useSettingsStore()
     const appearanceStore = useAppearanceStore()
@@ -66,6 +68,7 @@ export default {
       font_name,
       font_subtype,
       height,
+      theme,
     }
   },
   data() {
@@ -103,6 +106,7 @@ export default {
     outer_size: () => is_electron() ? '90px' : '55px',
   },
   mounted() {
+    this.theme.global.name.value = this.appearanceStore.current_theme // Set the theme from the user's settings.
     this.overlay_main = this.settingsStore.welcome
     this.onResize()
   },
