@@ -15,8 +15,15 @@
             variant="flat"
             :color=theme_id.colors.primary
             @click="set_theme(key)"
-            class="mr-2"
-          />
+            class="mr-2 mb-2 border-md"
+            v-bind:class = "(key === appearanceStore.current_theme) ? 'theme_selected' : 'theme_unselected'"
+          >
+            <v-tooltip
+              activator="parent"
+              location="top"
+              :text="to_title_case(key.replace('_', ' '))"
+            />
+          </v-btn>
         </v-col>
         <v-divider />
       </v-row>
@@ -161,6 +168,22 @@
   </v-card>
 </template>
 
+<style>
+.v-tooltip > .v-overlay__content {
+  background: #222 !important;
+  color: #ddd !important;
+  transition-property: opacity !important;
+}
+
+.theme_selected {
+  border-color: rgba(255,255,255,1) !important;
+}
+
+.theme_unselected {
+  border-color: rgba(255,255,255,0.25) !important;
+}
+</style>
+
 <script lang="ts">
 import { useAppearanceStore } from '@/stores/appearance'
 import { get_fonts } from '@/helpers/get_fonts'
@@ -196,6 +219,11 @@ export default {
     open_external(link: string | null) {
       if (link)
         window.open(link, '_blank')
+    },
+    to_title_case(str: string): string {
+      return str.replace(/\w\S*/g, function(str2) {
+        return str2.charAt(0).toUpperCase() + str2.substring(1).toLowerCase()
+      })
     },
     set_theme(selected_theme: string) {
       this.theme.global.name.value = selected_theme // Immediately set the current theme to the selected theme.
