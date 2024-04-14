@@ -106,7 +106,11 @@ export default {
     outer_size: () => is_electron() ? '90px' : '55px',
   },
   mounted() {
-    this.theme.global.name.value = this.appearanceStore.current_theme // Set the theme from the user's settings.
+    if (this.appearanceStore.current_theme in this.theme.themes.value)
+      this.theme.global.name.value = this.appearanceStore.current_theme // Set the theme from the user's settings.
+    else
+      this.theme.global.name.value = "midnight_purple"
+
     this.overlay_main = this.settingsStore.welcome
     this.onResize()
   },
