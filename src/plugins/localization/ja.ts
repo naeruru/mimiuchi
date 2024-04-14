@@ -78,6 +78,7 @@ export default {
     appearance: {
       title: 'テーマ',
       description: 'アプリのテーマを変更',
+      theme: 'テーマ',
       text: {
         title: '文字設定',
         font_family: 'フォント',

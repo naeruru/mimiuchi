@@ -5,7 +5,7 @@
       <v-row>
         <v-col :cols="12">
           <p class="text-h6" label color="secondary">
-            {{ `Theme` }}
+            {{ $t('settings.appearance.theme') }}
           </p>
         </v-col>
         <v-col :cols="12" :md="8">
