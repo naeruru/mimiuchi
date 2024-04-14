@@ -5,6 +5,24 @@
       <v-row>
         <v-col :cols="12">
           <p class="text-h6" label color="secondary">
+            {{ `Theme` }}
+          </p>
+        </v-col>
+        <v-col :cols="12" :md="8">
+          <v-btn
+            v-for="(theme_id, key) in theme.themes.value"
+            icon
+            variant="flat"
+            :color=theme_id.colors.primary
+            @click="set_theme(key)"
+            class="mr-2"
+          />
+        </v-col>
+        <v-divider />
+      </v-row>
+      <v-row>
+        <v-col :cols="12">
+          <p class="text-h6" label color="secondary">
             {{ $t('settings.appearance.text.title') }}
           </p>
         </v-col>
@@ -146,14 +164,17 @@
 <script lang="ts">
 import { useAppearanceStore } from '@/stores/appearance'
 import { get_fonts } from '@/helpers/get_fonts'
+import { useTheme } from 'vuetify'
 
 export default {
   name: 'SettingsGeneral',
   setup() {
     const appearanceStore = useAppearanceStore()
+    const theme = useTheme()
 
     return {
       appearanceStore,
+      theme,
     }
   },
   data() {
@@ -176,6 +197,9 @@ export default {
       if (link)
         window.open(link, '_blank')
     },
+    set_theme(selected_theme: string) {
+      this.theme.global.name.value = selected_theme
+    }
   },
 }
 </script>
