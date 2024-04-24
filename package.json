@@ -1,6 +1,6 @@
 {
   "name": "mimiuchi",
-  "version": "0.3.3",
+  "version": "0.3.4",
   "private": true,
   "description": "customizable, osc enabled text interface for relaying text to different types of applications",
   "author": "naeris <support@risu.dev>",
