@@ -191,7 +191,7 @@ export default {
           cancel: 'CANCEL',
           confirm: 'CONFIRM',
           add: 'ADD',
-          delete: 'DELETE'
+          delete: 'DELETE',
         },
         profile: {
           label: 'Select a profile',
@@ -210,26 +210,26 @@ export default {
         param: {
           button: {
             edit: 'EDIT',
-            delete: 'DELETE'
+            delete: 'DELETE',
           },
           dialog_title: {
             add: 'Add parameter trigger',
             edit: 'Edit parameter trigger',
           },
-          address: "Parameter address",
+          address: 'Parameter address',
           empty: 'none :c',
           trigger_phrases: 'Trigger phrases:',
           trigger_phrases_add: 'Add trigger word/phrase',
           assign: {
             phrases: 'Assign phrases:',
-            phrases_type: "Value type",
+            phrases_type: 'Value type',
             phrases_value: 'Value ', // This leading space is for displaying "Value 1" and "Value 2".
             phrases_add: 'Add assign word/phrase (e.g., on)',
             behavior: 'Behavior',
             behavior_options: {
               default: 'Default',
               pulse: 'Pulse',
-              pulse_wait: 'Wait'
+              pulse_wait: 'Wait',
             },
           },
           delete_dialog: {

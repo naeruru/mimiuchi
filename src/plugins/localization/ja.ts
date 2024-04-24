@@ -210,13 +210,13 @@ export default {
         param: {
           button: {
             edit: '編集',
-            delete: '削除'
+            delete: '削除',
           },
           dialog_title: {
             add: 'パラメータトリガーを追加',
             edit: 'パラメータトリガーを編集',
           },
-          address: "パラメータアドレス",
+          address: 'パラメータアドレス',
           empty: '無し (；ω；)',
           trigger_phrases: 'トリガーフレーズ：',
           trigger_phrases_add: 'トリガーフレーズを追加',
@@ -227,9 +227,9 @@ export default {
             phrases_add: '代入フレーズを追加',
             behavior: '挙動',
             behavior_options: {
-                default: 'デフォルト',
-                pulse: 'パルス',
-                pulse_wait: '待機時間'
+              default: 'デフォルト',
+              pulse: 'パルス',
+              pulse_wait: '待機時間',
             },
           },
           delete_dialog: {

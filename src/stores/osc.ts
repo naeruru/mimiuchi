@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 
 interface Profile {
-  [name: string]: Param[];
+  [name: string]: Param[]
 }
 interface Param {
   ip: string
@@ -39,10 +39,10 @@ export const useOSCStore = defineStore('osc', {
     show_keyboard: false,
 
     osc_profiles: {
-      'Default': []
+      Default: [],
     } as Profile,
 
-    current_profile: 'Default'
+    current_profile: 'Default',
   }),
   getters: {
 

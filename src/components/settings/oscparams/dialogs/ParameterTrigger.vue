@@ -26,13 +26,13 @@
       <v-card-text class="mt-2">
         <v-row>
           <v-col>
-            <strong v-html="$t('settings.osc.params.param.trigger_phrases')"></strong>
+            <strong v-html="$t('settings.osc.params.param.trigger_phrases')" />
             <v-chip v-if="!new_param.keywords.length" variant="text">
               {{ $t('settings.osc.params.param.empty') }}
             </v-chip>
             <v-chip
-              v-else v-model="keyword.enabled"
-              v-for="(keyword, i) in new_param.keywords"
+              v-for="(keyword, i) in new_param.keywords" v-else
+              v-model="keyword.enabled"
               class="mx-1 mb-2"
               label
               color="secondary"
@@ -61,7 +61,7 @@
       <v-card-text class="mt-2">
         <v-row>
           <v-col :cols="12">
-            <strong v-html="$t('settings.osc.params.param.assign.phrases')"></strong>
+            <strong v-html="$t('settings.osc.params.param.assign.phrases')" />
             <v-chip v-if="!new_param.assigns.length" variant="text">
               {{ $t('settings.osc.params.param.empty') }}
             </v-chip>
@@ -71,8 +71,8 @@
                 :value="assign"
                 :title="assign.keyword"
                 :subtitle="displayAssignSubtitle(assign)"
-                @click="deleteAssign(i)"
                 class="assignment-editable"
+                @click="deleteAssign(i)"
               />
             </v-list>
           </v-col>
@@ -82,7 +82,7 @@
               :items="value_types"
               hide-details
               :label="$t('settings.osc.params.param.assign.phrases_type')"
-              @update:modelValue="validateAssignValueAll"
+              @update:model-value="validateAssignValueAll"
             />
           </v-col>
           <v-col :cols="12" :lg="6">
@@ -90,13 +90,13 @@
               v-model="new_assign.activation"
               :items="[
                 { name: $t('settings.osc.params.param.assign.behavior_options.default'), value: 'default' },
-                { name: $t('settings.osc.params.param.assign.behavior_options.pulse'), value: 'pulse' }
+                { name: $t('settings.osc.params.param.assign.behavior_options.pulse'), value: 'pulse' },
               ]"
               item-title="name"
               item-value="value"
               hide-details
               :label="$t('settings.osc.params.param.assign.behavior')"
-              @update:modelValue="validateAssignValueAll"
+              @update:model-value="validateAssignValueAll"
             />
           </v-col>
         </v-row>
@@ -129,7 +129,7 @@
               v-if="new_assign.type !== 'bool'"
               v-model="new_assign.set1"
               hide-details
-              :label="$t('settings.osc.params.param.assign.phrases_value') + '1'"
+              :label="`${$t('settings.osc.params.param.assign.phrases_value')}1`"
               type="number"
               @input="validateAssignValue1"
             />
@@ -138,7 +138,7 @@
               v-model="new_assign.set1"
               :items="['true', 'false']"
               hide-details
-              :label="$t('settings.osc.params.param.assign.phrases_value') + '1'"
+              :label="`${$t('settings.osc.params.param.assign.phrases_value')}1`"
             />
           </v-col>
 
@@ -149,9 +149,9 @@
               :label="$t('settings.osc.params.param.assign.behavior_options.pulse_wait')"
               type="number"
               suffix="ms"
-              @input="new_assign.pulse_duration = Math.round(new_assign.pulse_duration)"
               prepend-icon="mdi-arrow-right-bold"
               append-icon="mdi-arrow-right-bold"
+              @input="new_assign.pulse_duration = Math.round(new_assign.pulse_duration)"
             />
           </v-col>
 
@@ -160,7 +160,7 @@
               v-if="new_assign.type !== 'bool'"
               v-model="new_assign.set2"
               hide-details
-              :label="$t('settings.osc.params.param.assign.phrases_value') + '2'"
+              :label="`${$t('settings.osc.params.param.assign.phrases_value')}2`"
               type="number"
               @input="validateAssignValue2"
             />
@@ -169,7 +169,7 @@
               v-model="new_assign.set2"
               :items="['true', 'false']"
               hide-details
-              :label="$t('settings.osc.params.param.assign.phrases_value') + '2'"
+              :label="`${$t('settings.osc.params.param.assign.phrases_value')}2`"
             />
           </v-col>
         </v-row>
@@ -269,6 +269,16 @@ export default {
       assigns: [] as Assign[], // [{keyword: string, type: string, set: string}?]
     },
   }),
+  computed: {
+    dialog: {
+      get() {
+        return this.modelValue
+      },
+      set(modelValue: boolean) {
+        this.$emit('update:modelValue', modelValue)
+      },
+    },
+  },
   watch: {
     dialog(enabled) {
       if (enabled) {
@@ -280,9 +290,9 @@ export default {
           keywords: [],
           assigns: [],
         }
-        
+
         this.trigger_phrase = ''
-        
+
         this.new_assign = {
           keyword: '',
           type: 'bool',
@@ -291,27 +301,16 @@ export default {
           activation: 'default',
           pulse_duration: 1000,
         }
-        
+
         if (this.mode === 'edit') {
           const existingParam = this.oscStore.osc_profiles[this.oscStore.current_profile][this.editingIndex as number]
           this.new_param = JSON.parse(JSON.stringify(existingParam)) // Deep copy.
         }
       }
-    }
-  },
-  computed: {
-    dialog: {
-      get() {
-        return this.modelValue
-      },
-      set(modelValue: boolean) {
-        this.$emit('update:modelValue', modelValue)
-      },
     },
   },
   methods: {
-    cancelParamDialog()
-    {
+    cancelParamDialog() {
       this.$emit('update:modelValue', false) // Close the dialog.
     },
     confirmAddParam() {
@@ -319,7 +318,7 @@ export default {
 
       this.$emit('update:modelValue', false)
     },
-    confirmEditParam() {    
+    confirmEditParam() {
       this.oscStore.osc_profiles[this.oscStore.current_profile][this.editingIndex as number] = JSON.parse(JSON.stringify(this.new_param)) // Deep copy.
 
       this.$emit('update:modelValue', false)
@@ -343,17 +342,17 @@ export default {
 
       switch (assign.type) {
         case 'int':
-          if (assign.set1 === "" || isNaN(Number(assign.set1))) // Invalid input.
-            assign.set1 = "0"
+          if (assign.set1 === '' || isNaN(Number(assign.set1))) // Invalid input.
+          { assign.set1 = '0' }
           else { // Valid input.
             // Display.
-            assign.set1 = String(parseInt(assign.set1))
+            assign.set1 = String(Number.parseInt(assign.set1))
           }
 
           break
         case 'float':
-          if (assign.set1 === "" || isNaN(Number(assign.set1))) // Invalid input.
-            assign.set1 = "0"
+          if (assign.set1 === '' || isNaN(Number(assign.set1))) // Invalid input.
+          { assign.set1 = '0' }
           else { // Valid input.
             // Display.
             assign.set1 = assign.set1.replace(/^0+(?=\d)/, '') // Remove leading zeros in front of the number.
@@ -361,8 +360,8 @@ export default {
 
           break
         case 'bool':
-          if (assign.set1 !== "true" && assign.set1 !== "false") // Invalid input.
-            assign.set1 = "true"
+          if (assign.set1 !== 'true' && assign.set1 !== 'false') // Invalid input.
+            assign.set1 = 'true'
 
           break
       }
@@ -372,17 +371,17 @@ export default {
 
       switch (assign.type) {
         case 'int':
-          if (assign.set2 === "" || isNaN(Number(assign.set2))) // Invalid input.
-            assign.set2 = "0"
+          if (assign.set2 === '' || isNaN(Number(assign.set2))) // Invalid input.
+          { assign.set2 = '0' }
           else { // Valid input.
             // Display.
-            assign.set2 = String(parseInt(assign.set2))
+            assign.set2 = String(Number.parseInt(assign.set2))
           }
 
           break
         case 'float':
-          if (assign.set2 === "" || isNaN(Number(assign.set2))) // Invalid input.
-            assign.set2 = "0"
+          if (assign.set2 === '' || isNaN(Number(assign.set2))) // Invalid input.
+          { assign.set2 = '0' }
           else { // Valid input.
             // Display.
             assign.set2 = assign.set2.replace(/^0+(?=\d)/, '') // Remove leading zeros in front of the number.
@@ -390,15 +389,15 @@ export default {
 
           break
         case 'bool':
-          if (assign.set2 !== "true" && assign.set2 !== "false") // Invalid input.
-            assign.set2 = "true"
+          if (assign.set2 !== 'true' && assign.set2 !== 'false') // Invalid input.
+            assign.set2 = 'true'
 
           break
       }
     },
     validateAssignValueAll() {
       this.validateAssignValue1()
-      
+
       if (this.new_assign.activation === 'pulse')
         this.validateAssignValue2()
     },
@@ -410,12 +409,12 @@ export default {
         return
 
       // Display.
-      if (assign.type === "float") {
+      if (assign.type === 'float') {
         if (!assign.set1.includes('.')) { // 123 → 123.0
-          assign.set1 = assign.set1 + ".0"
+          assign.set1 = `${assign.set1}.0`
         }
         else if (assign.set1.endsWith('.')) { // 123. → 123.0
-          assign.set1 = assign.set1 + "0"
+          assign.set1 = `${assign.set1}0`
         }
       }
 
@@ -439,7 +438,7 @@ export default {
       let subtitle = `set ${assign_object.type} to ${assign_object.set1}`
 
       if (assign_object.activation === 'pulse')
-        subtitle = subtitle + `, wait ${assign_object.pulse_duration}ms, set ${assign_object.type} to ${assign_object.set2}`
+        subtitle = `${subtitle}, wait ${assign_object.pulse_duration}ms, set ${assign_object.type} to ${assign_object.set2}`
 
       return subtitle
     },
