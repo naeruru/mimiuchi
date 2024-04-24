@@ -18,6 +18,7 @@ export default {
     type_message: 'Type a message',
     beta: 'BETA',
     update: 'Update',
+    subject_to_change: 'Subject to change',
   },
   alerts: {
     no_speech: 'Your browser does not support Web Speech API (Speech-to-text).',
@@ -172,8 +173,8 @@ export default {
       general: {
         title: 'General',
         description: 'Settings for customizing OSC connection',
-        osc_ip: 'Default OSC IP',
-        osc_port: 'Default OSC Port',
+        osc_ip: 'OSC IP',
+        osc_port: 'OSC Port',
         enabled: 'Send all text with OSC (when broadcasting)',
         typing_indicator: 'Enable typing indicator when typing',
         speech_indicator: 'Enable typing indicator for speech-to-text',
@@ -186,7 +187,59 @@ export default {
         },
       },
       params: {
-        title: 'Custom Params',
+        title: 'Parameter Triggers',
+        description: 'Add parameter triggers',
+        button: {
+          cancel: 'CANCEL',
+          confirm: 'CONFIRM',
+          add: 'ADD',
+          delete: 'DELETE',
+        },
+        profile: {
+          label: 'Select a profile',
+          dialog: {
+            title: {
+              add: 'Add new profile',
+              edit: 'Rename profile',
+            },
+            field_label: 'Profile name',
+          },
+          delete_dialog: {
+            title: 'Delete profile',
+            text: 'Are you sure that you want to delete this profile?',
+          },
+        },
+        param: {
+          button: {
+            edit: 'EDIT',
+            delete: 'DELETE',
+          },
+          dialog_title: {
+            add: 'Add parameter trigger',
+            edit: 'Edit parameter trigger',
+          },
+          address: 'Parameter address',
+          empty: 'none :c',
+          trigger_phrases: 'Trigger phrases:',
+          trigger_phrases_add: 'Add trigger word/phrase',
+          assign: {
+            phrases: 'Assign phrases:',
+            phrases_type: 'Value type',
+            phrases_value: 'Value ', // This leading space is for displaying "Value 1" and "Value 2".
+            phrases_add: 'Add assign word/phrase (e.g., on)',
+            behavior: 'Behavior',
+            behavior_options: {
+              default: 'Default',
+              pulse: 'Pulse',
+              pulse_wait: 'Wait',
+            },
+          },
+          delete_dialog: {
+            title: 'Delete parameter',
+            text: 'Are you sure that you want to delete this parameter?',
+          },
+        },
+        empty: 'Use the + button to add a new custom parameter trigger!',
       },
     },
   },

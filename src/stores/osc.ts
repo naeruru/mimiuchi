@@ -1,5 +1,8 @@
 import { defineStore } from 'pinia'
 
+interface Profile {
+  [name: string]: Param[]
+}
 interface Param {
   ip: string
   port: string
@@ -14,7 +17,10 @@ interface Keyword {
 interface Assign {
   keyword: string
   type: string
-  set: boolean | number | string
+  set1: string
+  set2: string
+  activation: string
+  pulse_duration: number
 }
 
 export const useOSCStore = defineStore('osc', {
@@ -32,7 +38,11 @@ export const useOSCStore = defineStore('osc', {
     sfx: true, // vrchat sfx indicator
     show_keyboard: false,
 
-    osc_params: [] as Param[],
+    osc_profiles: {
+      Default: [],
+    } as Profile,
+
+    current_profile: 'Default',
   }),
   getters: {
 

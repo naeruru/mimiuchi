@@ -209,11 +209,14 @@ export default {
         // use https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/search
         // to see which assign is the closest to the keyword found
         // unless switch to nlp first.....
-        if (this.oscStore.osc_params.length) {
-          this.oscStore.osc_params.forEach((custom_param) => {
-            let matchesKey = null
+        if (this.oscStore.osc_profiles[this.oscStore.current_profile].length) {
+          this.oscStore.osc_profiles[this.oscStore.current_profile].forEach((custom_param) => {
+            let matchesKey: RegExpExecArray | null = null
 
             custom_param.keywords.forEach((keyword) => {
+              if (matchesKey)
+                return
+
               const key_check = `(^|\\s)(${keyword.text})($|[^a-zA-Z\\d])`
               const reKey = new RegExp(key_check, 'ig')
               matchesKey = reKey.exec(input)
@@ -225,8 +228,54 @@ export default {
                 const reAssign = new RegExp(assign_check, 'ig')
                 const matchesAssign = reAssign.exec(input)
                 if (matchesAssign) {
-                  this.show_snackbar('secondary', `<code>${custom_param.route} = ${assign.set}</code>`)
-                  window.ipcRenderer.send('send-param-event', { ip: custom_param.ip, port: custom_param.port, route: custom_param.route, value: assign.set })
+                  this.show_snackbar('secondary', `<code>${custom_param.route} = ${assign.set1}</code>`)
+
+                  let newValue: number | boolean | null = null
+
+                  switch (assign.type) {
+                    case 'int':
+                    case 'float':
+                      newValue = Number(assign.set1)
+
+                      break
+                    case 'bool':
+                      if (assign.set1 === 'true')
+                        newValue = true
+                      else if (assign.set1 === 'false')
+                        newValue = false
+                      else
+                        newValue = Boolean(assign.set1)
+
+                      break
+                  }
+
+                  window.ipcRenderer.send('send-param-event', { ip: custom_param.ip, port: custom_param.port, route: custom_param.route, value: newValue })
+
+                  if (assign.activation === 'pulse') {
+                    // The value should reset after some time.
+                    setTimeout(() => {
+                      this.show_snackbar('secondary', `<code>${custom_param.route} = ${assign.set2}</code>`)
+
+                      switch (assign.type) {
+                        case 'int':
+                        case 'float':
+                          newValue = Number(assign.set2)
+
+                          break
+                        case 'bool':
+                          if (assign.set2 === 'true')
+                            newValue = true
+                          else if (assign.set2 === 'false')
+                            newValue = false
+                          else
+                            newValue = Boolean(assign.set2)
+
+                          break
+                      }
+
+                      window.ipcRenderer.send('send-param-event', { ip: custom_param.ip, port: custom_param.port, route: custom_param.route, value: newValue })
+                    }, assign.pulse_duration)
+                  }
                 }
               })
             }
