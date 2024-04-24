@@ -5,6 +5,31 @@
       <v-row>
         <v-col :cols="12">
           <p class="text-h6" label color="secondary">
+            {{ $t('settings.appearance.theme') }}
+          </p>
+        </v-col>
+        <v-col :cols="12" :md="8">
+          <v-btn
+            v-for="(theme_id, key) in theme.themes.value"
+            icon
+            variant="flat"
+            :color="theme_id.colors.primary"
+            class="mr-2 mb-2 border-md"
+            :class="(key === appearanceStore.current_theme) ? 'theme_selected' : 'theme_unselected'"
+            @click="set_theme(key)"
+          >
+            <v-tooltip
+              activator="parent"
+              location="top"
+              :text="to_title_case(key.replace('_', ' '))"
+            />
+          </v-btn>
+        </v-col>
+        <v-divider />
+      </v-row>
+      <v-row>
+        <v-col :cols="12">
+          <p class="text-h6" label color="secondary">
             {{ $t('settings.appearance.text.title') }}
           </p>
         </v-col>
@@ -144,6 +169,7 @@
 </template>
 
 <script lang="ts">
+import { useTheme } from 'vuetify'
 import { useAppearanceStore } from '@/stores/appearance'
 import { get_fonts } from '@/helpers/get_fonts'
 
@@ -151,9 +177,11 @@ export default {
   name: 'SettingsGeneral',
   setup() {
     const appearanceStore = useAppearanceStore()
+    const theme = useTheme()
 
     return {
       appearanceStore,
+      theme,
     }
   },
   data() {
@@ -176,6 +204,31 @@ export default {
       if (link)
         window.open(link, '_blank')
     },
+    to_title_case(str: string): string {
+      return str.replace(/\w\S*/g, (str2) => {
+        return str2.charAt(0).toUpperCase() + str2.substring(1).toLowerCase()
+      })
+    },
+    set_theme(selected_theme: string) {
+      this.theme.global.name.value = selected_theme // Immediately set the current theme to the selected theme.
+      this.appearanceStore.current_theme = selected_theme // Store the setting.
+    },
   },
 }
 </script>
+
+<style>
+.v-tooltip > .v-overlay__content {
+  background: #222 !important;
+  color: #ddd !important;
+  transition-property: opacity !important;
+}
+
+.theme_selected {
+  border-color: rgba(255,255,255,1) !important;
+}
+
+.theme_unselected {
+  border-color: rgba(255,255,255,0.25) !important;
+}
+</style>

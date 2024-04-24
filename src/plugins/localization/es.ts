@@ -77,6 +77,7 @@ export default {
     appearance: {
       title: 'Apariencia',
       description: 'Cambiar la apariencia de la aplicación',
+      theme: 'Tema',
       text: {
         title: 'Ajusts de Texto',
         font_family: 'Fuente',

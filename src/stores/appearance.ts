@@ -2,6 +2,7 @@ import { defineStore } from 'pinia'
 
 export const useAppearanceStore = defineStore('appearance', {
   state: () => ({
+    current_theme: 'midnight_purple',
     text: {
       color: '#FFFFFF',
       interim_color: '#BC96FF', // ⑅•ᴗ•⑅)◜..°♡
