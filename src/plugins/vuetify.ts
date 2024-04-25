@@ -19,14 +19,14 @@ export default createVuetify({
   theme: {
     defaultTheme: 'midnight_purple',
     themes: {
-      midnight_purple,
       cotton_candy,
+      midnight_purple,
       red_light,
       red_dark,
-      gold_dark,
       gold_light,
-      forest_dark,
+      gold_dark,
       forest_light,
+      forest_dark,
     },
   },
 })
