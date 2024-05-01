@@ -155,11 +155,10 @@
 
 <script setup lang="ts">
 import { onMounted, onUnmounted, ref, watch } from 'vue'
+import { storeToRefs } from 'pinia'
 import ConnectionDialog from '@/components/settings/connections/dialogs/ConnectionDialog.vue'
 import is_electron from '@/helpers/is_electron'
 import { useConnectionsStore } from '@/stores/connections'
-import {storeToRefs} from "pinia";
-import {useAppearanceStore} from "@/stores/appearance";
 
 declare const window: any
 
