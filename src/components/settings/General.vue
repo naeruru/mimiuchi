@@ -52,7 +52,7 @@
                 <v-card-text>
                   {{ $t('settings.general.reset.dialog.description') }}
                 </v-card-text>
-                <v-form validate-on="input" @submit.prevent="reset_submit">
+                <v-form validate-on="input" @submit.prevent="">
                   <v-card-actions>
                     <!-- <v-col>
                                                 <v-checkbox v-model="settings" label="General" hide-details></v-checkbox>
@@ -73,89 +73,73 @@
   </v-card>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
+import { ref } from 'vue'
+import { useI18n } from 'vue-i18n'
+
 import { useAppearanceStore } from '@/stores/appearance'
 import { useWordReplaceStore } from '@/stores/word_replace'
 import { useSettingsStore } from '@/stores/settings'
 import { useSpeechStore } from '@/stores/speech'
-import { useConnectionStore } from '@/stores/connections'
-import { useLogStore } from '@/stores/logs'
+import { useConnectionsStore } from '@/stores/connections'
+import { useLogsStore } from '@/stores/logs'
 import { useTranslationStore } from '@/stores/translation'
 import { useOSCStore } from '@/stores/osc'
 
-export default {
-  name: 'SettingsGeneral',
-  setup() {
-    const appearanceStore = useAppearanceStore()
-    const wordReplaceStore = useWordReplaceStore()
-    const settingsStore = useSettingsStore()
-    const speechStore = useSpeechStore()
-    const connectionStore = useConnectionStore()
-    const logStore = useLogStore()
-    const translationStore = useTranslationStore()
-    const oscStore = useOSCStore()
+const { t } = useI18n()
 
-    return {
-      appearanceStore,
-      wordReplaceStore,
-      settingsStore,
-      speechStore,
-      connectionStore,
-      logStore,
-      translationStore,
-      oscStore,
-    }
+const languages = ref([
+  {
+    title: 'English (United States)',
+    value: 'en',
   },
-  data: () => ({
-    languages: [
-      {
-        title: 'English (United States)',
-        value: 'en',
-      },
-      {
-        title: 'Spanish (España)',
-        value: 'es',
-      },
-      {
-        title: '日本語（日本）',
-        value: 'ja',
-      },
-    ],
-
-    snackbar: false,
-    snackbar_text: '',
-
-    reset_dialog: false,
-    appearance: true,
-    settings: true,
-    word_replace: true,
-    speech: true,
-    connection: true,
-  }),
-  methods: {
-    reset_submit() {
-
-    },
-    reset_settings() {
-      if (this.appearance)
-        this.appearanceStore.$reset()
-      if (this.word_replace)
-        this.wordReplaceStore.$reset()
-      if (this.settings)
-        this.settingsStore.$reset()
-      if (this.speech)
-        this.speechStore.$reset()
-      if (this.connection)
-        this.connectionStore.$reset()
-      if (this.translationStore)
-        this.translationStore.$reset()
-      if (this.oscStore)
-        this.oscStore.$reset()
-      this.reset_dialog = false
-      this.snackbar_text = this.$t('settings.general.reset.snackbar.title')
-      this.snackbar = true
-      // this.$i18n.locale = this.settingsStore.language
-    },
+  {
+    title: 'Spanish (España)',
+    value: 'es',
   },
+  {
+    title: '日本語（日本）',
+    value: 'ja',
+  },
+])
+const snackbar = ref(false)
+const snackbar_text = ref('')
+const reset_dialog = ref(false)
+const appearance = ref(true)
+const settings = ref(true)
+const word_replace = ref(true)
+const speech = ref(true)
+const connection = ref(true)
+const translation = ref(true)
+const ocs = ref(true)
+
+const appearanceStore = useAppearanceStore()
+const wordReplaceStore = useWordReplaceStore()
+const settingsStore = useSettingsStore()
+const speechStore = useSpeechStore()
+const connectionStore = useConnectionsStore()
+const logStore = useLogsStore()
+const translationStore = useTranslationStore()
+const oscStore = useOSCStore()
+
+function reset_settings() {
+  if (appearance.value)
+    appearanceStore.$reset()
+  if (word_replace.value)
+    wordReplaceStore.$reset()
+  if (settings.value)
+    settingsStore.$reset()
+  if (speech.value)
+    speechStore.$reset()
+  if (connection.value)
+    connectionStore.$reset()
+  if (translation.value)
+    translationStore.$reset()
+  if (ocs.value)
+    oscStore.$reset()
+  reset_dialog.value = false
+  snackbar_text.value = t('settings.general.reset.snackbar.title')
+  snackbar.value = true
+  // this.$i18n.locale = this.settingsStore.language
 }
 </script>

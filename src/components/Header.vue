@@ -12,7 +12,10 @@
       <v-btn icon :color="$route.name === 'home' ? 'secondary' : 'white'" @click="$router.push({ path: '/' })">
         <v-icon>mdi-home</v-icon>
       </v-btn>
-      <v-btn icon :color="$route.fullPath.startsWith('/settings') ? 'secondary' : 'white'" @click="$router.push({ path: '/settings/general' })">
+      <v-btn
+        icon :color="$route.fullPath.startsWith('/settings') ? 'secondary' : 'white'"
+        @click="$router.push({ path: '/settings/general' })"
+      >
         <v-icon>mdi-cog</v-icon>
       </v-btn>
       <v-btn icon color="white" @click="open_external('https://github.com/naeruru/mimiuchi')">
@@ -22,26 +25,14 @@
   </v-app-bar>
 </template>
 
-<script lang='ts'>
+<script setup lang='ts'>
 import { useSettingsStore } from '@/stores/settings'
 
-export default {
-  name: 'Header',
-  setup() {
-    const settingsStore = useSettingsStore()
-    return {
-      settingsStore,
-    }
-  },
-  data() {
-    return {
-      APP_NAME: __APP_NAME__,
-    }
-  },
-  methods: {
-    open_external(link: string) {
-      window.open(link, '_blank')
-    },
-  },
+const settingsStore = useSettingsStore()
+
+const APP_NAME = __APP_NAME__
+
+function open_external(link: string) {
+  window.open(link, '_blank')
 }
 </script>

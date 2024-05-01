@@ -1,12 +1,15 @@
-declare interface Window {
-  // extend the window
-}
+/// <reference types="vite/client" />
 
 declare module '*.vue' {
   import type { DefineComponent } from 'vue'
 
-  const component: DefineComponent<object, object, any>
+  const component: DefineComponent<{}, {}, any>
   export default component
+}
+
+interface Window {
+  // expose in the `electron/preload/index.ts`
+  ipcRenderer: import('electron').IpcRenderer
 }
 
 interface list_item {

@@ -62,7 +62,8 @@
                 <template #append>
                   <v-btn
                     class="mr-4"
-                    icon variant="text" @click.stop="open_dialog({ title: 'Websocket', icon: 'mdi-transit-connection-horizontal', type: 'ws' })"
+                    icon variant="text"
+                    @click.stop="open_dialog({ title: 'Websocket', icon: 'mdi-transit-connection-horizontal', type: 'ws' })"
                   >
                     <v-icon>mdi-cog</v-icon>
                   </v-btn>
@@ -152,10 +153,13 @@
   </v-card>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
+import { onMounted, onUnmounted, ref, watch } from 'vue'
 import ConnectionDialog from '@/components/settings/connections/dialogs/ConnectionDialog.vue'
 import is_electron from '@/helpers/is_electron'
-import { useConnectionStore } from '@/stores/connections'
+import { useConnectionsStore } from '@/stores/connections'
+import {storeToRefs} from "pinia";
+import {useAppearanceStore} from "@/stores/appearance";
 
 declare const window: any
 
@@ -165,74 +169,69 @@ declare interface ConnectionType {
   icon?: string
 }
 
-export default {
-  name: 'SettingsGeneral',
-  components: { ConnectionDialog },
-  setup() {
-    const connectionStore = useConnectionStore()
+const connectionStore = useConnectionsStore()
 
-    return {
-      connectionStore,
-      is_electron,
-    }
-  },
-  data: () => ({
-    dialog: false,
-    connection_type: {} as ConnectionType,
-    connection_options: [
-      {
-        title: 'Webhook',
-        type: 'wh',
-        icon: 'mdi-webhook',
-      },
-    ] as ConnectionType[],
-    snackbar: false,
-    snackbar_text: '',
-    reset_dialog: false,
-    appearance: true,
-    settings: true,
-    word_replace: true,
-    speech: true,
-  }),
-  watch: {
-    'connectionStore.ws.enabled': function (new_val) {
-      this.ws_toggled(new_val)
-    },
-  },
-  unmounted() {
-    if (this.is_electron())
-      window.ipcRenderer.removeListener('websocket-error')
-  },
-  mounted() {
-    if (this.is_electron()) {
-      // window.ipcRenderer.receive('websocket-started', (event: any, data: any) => {
-      //     // console.log("MEOW")
-      // })
-      window.ipcRenderer.receive('websocket-error', (event: any, data: any) => {
-        this.connectionStore.ws.enabled = false
-        console.log('error')
-      })
-    }
-  },
-  methods: {
-    open_dialog(connection: ConnectionType) {
-      this.connection_type = connection
-      this.dialog = true
-    },
-    ws_toggled(value: boolean) {
-      if (this.is_electron()) {
-        if (value)
-          window.ipcRenderer.send('start-ws', this.connectionStore.ws.port)
-        else
-          window.ipcRenderer.send('close-ws')
-      }
+const dialog = ref(false)
+const connection_type = ref<ConnectionType>({})
+// const connection_options = ref<ConnectionType[]>([
+//   {
+//     title: 'Webhook',
+//     type: 'wh',
+//     icon: 'mdi-webhook',
+//   },
+// ])
+// const snackbar = ref(false)
+// const snackbar_text = ref('')
+// const reset_dialog = ref(false)
+// const appearance = ref(true)
+// const settings = ref(true)
+// const word_replace = ref(true)
+// const speech = ref(true)
 
-      // value = !value
-    },
-    clear_wh() {
-      this.connectionStore.wh.enabled = false
-      this.connectionStore.wh.url = ''
-    },
+const { ws } = storeToRefs(connectionStore)
+watch(
+  () => ws.value.enabled,
+  (new_val: boolean) => {
+    ws_toggled(new_val)
   },
+  { deep: true },
+)
+
+onUnmounted(() => {
+  if (is_electron())
+    window.ipcRenderer.removeListener('websocket-error')
+})
+
+onMounted(() => {
+  if (is_electron()) {
+    // window.ipcRenderer.on('websocket-started', (event: any, data: any) => {
+    //     // console.log("MEOW")
+    // })
+    window.ipcRenderer.on('websocket-error', (event: any, data: any) => {
+      connectionStore.ws.enabled = false
+      console.log('error')
+    })
+  }
+})
+
+function open_dialog(connection: ConnectionType) {
+  connection_type.value = connection
+  dialog.value = true
+}
+
+function ws_toggled(value: boolean) {
+  if (is_electron()) {
+    if (value)
+      window.ipcRenderer.send('start-ws', connectionStore.ws.port)
+    else
+      window.ipcRenderer.send('close-ws')
+  }
+
+  // value = !value
+}
+
+function clear_wh() {
+  connectionStore.wh.enabled = false
+  connectionStore.wh.url = ''
 }
 </script>

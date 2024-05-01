@@ -11,6 +11,9 @@ const messages = {
 }
 
 const instance = createI18n({
+  legacy: false,
+  missingWarn: false,
+  fallbackWarn: false,
   fallbackLocale: 'en',
   messages,
 })

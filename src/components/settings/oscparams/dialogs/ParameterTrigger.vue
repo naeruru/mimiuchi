@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="dialog" width="50vw" persistent>
+  <v-dialog v-model="model" width="50vw" persistent>
     <v-card>
       <v-card-title v-if="mode === 'add'">
         {{ $t('settings.osc.params.param.dialog_title.add') }}
@@ -212,13 +212,15 @@
   </v-dialog>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
+import { ref, watch } from 'vue'
 import { useOSCStore } from '@/stores/osc'
 
 interface Keyword {
   enabled: boolean
   text: string
 }
+
 interface Assign {
   keyword: string
   type: string
@@ -228,220 +230,213 @@ interface Assign {
   pulse_duration: number
 }
 
-export default {
-  name: 'SettingsGeneral',
-  props: {
-    modelValue: Boolean,
-    mode: String,
-    editingIndex: Number,
-  },
-  emits: ['update:modelValue'],
-  setup() {
-    const oscStore = useOSCStore()
+const props = defineProps<{ mode: string, editingIndex: number }>()
+const model = defineModel()
+const oscStore = useOSCStore()
 
-    return {
-      oscStore,
+const trigger_phrase = ref('')
+
+const value_types = ref(['bool', 'int', 'float'])
+
+const new_assign = ref({
+  keyword: '',
+  type: 'bool',
+  set1: 'true',
+  set2: 'false',
+
+  // "default": set the parameter to a value.
+  // "pulse": set the parameter to a value, wait some time, then set the parameter to another value.
+  activation: 'default',
+  pulse_duration: 0,
+})
+
+const new_param = ref({
+  // name: '',
+  ip: '',
+  port: '',
+  route: '/avatar/parameters/',
+  keywords: [] as Keyword[], // [{enabled: boolean, text: string}?],
+  assigns: [] as Assign[], // [{keyword: string, type: string, set: string}?]
+})
+
+watch(model, (enabled) => {
+  if (enabled) {
+    // Reset the dialog's fields.
+    new_param.value = {
+      ip: oscStore.ip,
+      port: oscStore.port,
+      route: '/avatar/parameters/',
+      keywords: [],
+      assigns: [],
     }
-  },
-  data: () => ({
-    trigger_phrase: '',
 
-    value_types: ['bool', 'int', 'float'],
+    trigger_phrase.value = ''
 
-    new_assign: {
+    new_assign.value = {
       keyword: '',
       type: 'bool',
       set1: 'true',
       set2: 'false',
-
-      // "default": set the parameter to a value.
-      // "pulse": set the parameter to a value, wait some time, then set the parameter to another value.
       activation: 'default',
-      pulse_duration: 0,
-    },
+      pulse_duration: 1000,
+    }
 
-    new_param: {
-      // name: '',
-      ip: '',
-      port: '',
-      route: '/avatar/parameters/',
-      keywords: [] as Keyword[], // [{enabled: boolean, text: string}?],
-      assigns: [] as Assign[], // [{keyword: string, type: string, set: string}?]
-    },
-  }),
-  computed: {
-    dialog: {
-      get() {
-        return this.modelValue
-      },
-      set(modelValue: boolean) {
-        this.$emit('update:modelValue', modelValue)
-      },
-    },
-  },
-  watch: {
-    dialog(enabled) {
-      if (enabled) {
-        // Reset the dialog's fields.
-        this.new_param = {
-          ip: this.oscStore.ip,
-          port: this.oscStore.port,
-          route: '/avatar/parameters/',
-          keywords: [],
-          assigns: [],
-        }
+    if (props.mode === 'edit') {
+      const existingParam = oscStore.osc_profiles[oscStore.current_profile][props.editingIndex as number]
+      new_param.value = JSON.parse(JSON.stringify(existingParam)) // Deep copy.
+    }
+  }
+})
 
-        this.trigger_phrase = ''
+function cancelParamDialog() {
+  $emit('update:modelValue', false) // Close the dialog.
+}
 
-        this.new_assign = {
-          keyword: '',
-          type: 'bool',
-          set1: 'true',
-          set2: 'false',
-          activation: 'default',
-          pulse_duration: 1000,
-        }
+function confirmAddParam() {
+  oscStore.osc_profiles[oscStore.current_profile].push(new_param)
 
-        if (this.mode === 'edit') {
-          const existingParam = this.oscStore.osc_profiles[this.oscStore.current_profile][this.editingIndex as number]
-          this.new_param = JSON.parse(JSON.stringify(existingParam)) // Deep copy.
-        }
+  $emit('update:modelValue', false)
+}
+
+function confirmEditParam() {
+  oscStore.osc_profiles[oscStore.current_profile][props.editingIndex as number] = JSON.parse(JSON.stringify(new_param)) // Deep copy.
+
+  $emit('update:modelValue', false)
+}
+
+// function deleteParam(i: number) {
+//   oscStore.osc_profiles[oscStore.current_profile].splice(i, 1)
+// }
+
+function addTrigger() {
+  if (!trigger_phrase.value.trim()) // The trigger phrase field is empty.
+    return
+
+  new_param.value.keywords.push({ enabled: true, text: trigger_phrase.value })
+
+  trigger_phrase.value = ''
+}
+
+function deleteTrigger(i: number) {
+  new_param.value.keywords.splice(i, 1)
+}
+
+function validateAssignValue1() {
+  const assign = new_assign
+
+  switch (assign.value.type) {
+    case 'int':
+      if (assign.value.set1 === '' || Number.isNaN(Number(assign.value.set1))) // Invalid input.
+      {
+        assign.value.set1 = '0'
       }
-    },
-  },
-  methods: {
-    cancelParamDialog() {
-      this.$emit('update:modelValue', false) // Close the dialog.
-    },
-    confirmAddParam() {
-      this.oscStore.osc_profiles[this.oscStore.current_profile].push(this.new_param)
-
-      this.$emit('update:modelValue', false)
-    },
-    confirmEditParam() {
-      this.oscStore.osc_profiles[this.oscStore.current_profile][this.editingIndex as number] = JSON.parse(JSON.stringify(this.new_param)) // Deep copy.
-
-      this.$emit('update:modelValue', false)
-    },
-    deleteParam(i: number) {
-      this.oscStore.osc_profiles[this.oscStore.current_profile].splice(i, 1)
-    },
-    addTrigger() {
-      if (!this.trigger_phrase.trim()) // The trigger phrase field is empty.
-        return
-
-      this.new_param.keywords.push({ enabled: true, text: this.trigger_phrase })
-
-      this.trigger_phrase = ''
-    },
-    deleteTrigger(i: number) {
-      this.new_param.keywords.splice(i, 1)
-    },
-    validateAssignValue1() {
-      const assign = this.new_assign
-
-      switch (assign.type) {
-        case 'int':
-          if (assign.set1 === '' || isNaN(Number(assign.set1))) // Invalid input.
-          { assign.set1 = '0' }
-          else { // Valid input.
-            // Display.
-            assign.set1 = String(Number.parseInt(assign.set1))
-          }
-
-          break
-        case 'float':
-          if (assign.set1 === '' || isNaN(Number(assign.set1))) // Invalid input.
-          { assign.set1 = '0' }
-          else { // Valid input.
-            // Display.
-            assign.set1 = assign.set1.replace(/^0+(?=\d)/, '') // Remove leading zeros in front of the number.
-          }
-
-          break
-        case 'bool':
-          if (assign.set1 !== 'true' && assign.set1 !== 'false') // Invalid input.
-            assign.set1 = 'true'
-
-          break
-      }
-    },
-    validateAssignValue2() {
-      const assign = this.new_assign
-
-      switch (assign.type) {
-        case 'int':
-          if (assign.set2 === '' || isNaN(Number(assign.set2))) // Invalid input.
-          { assign.set2 = '0' }
-          else { // Valid input.
-            // Display.
-            assign.set2 = String(Number.parseInt(assign.set2))
-          }
-
-          break
-        case 'float':
-          if (assign.set2 === '' || isNaN(Number(assign.set2))) // Invalid input.
-          { assign.set2 = '0' }
-          else { // Valid input.
-            // Display.
-            assign.set2 = assign.set2.replace(/^0+(?=\d)/, '') // Remove leading zeros in front of the number.
-          }
-
-          break
-        case 'bool':
-          if (assign.set2 !== 'true' && assign.set2 !== 'false') // Invalid input.
-            assign.set2 = 'true'
-
-          break
-      }
-    },
-    validateAssignValueAll() {
-      this.validateAssignValue1()
-
-      if (this.new_assign.activation === 'pulse')
-        this.validateAssignValue2()
-    },
-    addAssign() {
-      const assign = this.new_assign
-
-      // Validation.
-      if (!assign.keyword.trim()) // The assign keyword field is empty.
-        return
-
-      // Display.
-      if (assign.type === 'float') {
-        if (!assign.set1.includes('.')) { // 123 → 123.0
-          assign.set1 = `${assign.set1}.0`
-        }
-        else if (assign.set1.endsWith('.')) { // 123. → 123.0
-          assign.set1 = `${assign.set1}0`
-        }
+      else { // Valid input.
+        // Display.
+        assign.value.set1 = String(Number.parseInt(assign.value.set1))
       }
 
-      // Store.
-      this.new_param.assigns.push(assign)
-
-      // Partially reset the assign fields.
-      this.new_assign = {
-        keyword: '',
-        type: assign.type,
-        set1: assign.set1,
-        set2: 'false',
-        activation: 'default',
-        pulse_duration: 1000,
+      break
+    case 'float':
+      if (assign.value.set1 === '' || Number.isNaN(Number(assign.value.set1))) // Invalid input.
+      {
+        assign.value.set1 = '0'
       }
-    },
-    deleteAssign(i: number) {
-      this.new_param.assigns.splice(i, 1)
-    },
-    displayAssignSubtitle(assign_object: any) {
-      let subtitle = `set ${assign_object.type} to ${assign_object.set1}`
+      else { // Valid input.
+        // Display.
+        assign.value.set1 = assign.value.set1.replace(/^0+(?=\d)/, '') // Remove leading zeros in front of the number.
+      }
 
-      if (assign_object.activation === 'pulse')
-        subtitle = `${subtitle}, wait ${assign_object.pulse_duration}ms, set ${assign_object.type} to ${assign_object.set2}`
+      break
+    case 'bool':
+      if (assign.value.set1 !== 'true' && assign.value.set1 !== 'false') // Invalid input.
+        assign.value.set1 = 'true'
 
-      return subtitle
-    },
-  },
+      break
+  }
+}
+
+function validateAssignValue2() {
+  const assign = new_assign
+
+  switch (assign.value.type) {
+    case 'int':
+      if (assign.value.set2 === '' || Number.isNaN(Number(assign.value.set2))) // Invalid input.
+      {
+        assign.value.set2 = '0'
+      }
+      else { // Valid input.
+        // Display.
+        assign.value.set2 = String(Number.parseInt(assign.value.set2))
+      }
+
+      break
+    case 'float':
+      if (assign.value.set2 === '' || Number.isNaN(Number(assign.value.set2))) // Invalid input.
+      {
+        assign.value.set2 = '0'
+      }
+      else { // Valid input.
+        // Display.
+        assign.value.set2 = assign.value.set2.replace(/^0+(?=\d)/, '') // Remove leading zeros in front of the number.
+      }
+
+      break
+    case 'bool':
+      if (assign.value.set2 !== 'true' && assign.value.set2 !== 'false') // Invalid input.
+        assign.value.set2 = 'true'
+
+      break
+  }
+}
+
+function validateAssignValueAll() {
+  validateAssignValue1()
+
+  if (new_assign.value.activation === 'pulse')
+    validateAssignValue2()
+}
+
+function addAssign() {
+  const assign = new_assign
+
+  // Validation.
+  if (!assign.value.keyword.trim()) // The assign keyword field is empty.
+    return
+
+  // Display.
+  if (assign.value.type === 'float') {
+    if (!assign.value.set1.includes('.')) { // 123 → 123.0
+      assign.value.set1 = `${assign.value.set1}.0`
+    }
+    else if (assign.value.set1.endsWith('.')) { // 123. → 123.0
+      assign.value.set1 = `${assign.value.set1}0`
+    }
+  }
+
+  // Store.
+  new_param.value.assigns.push(assign)
+
+  // Partially reset the assign fields.
+  new_assign.value = {
+    keyword: '',
+    type: assign.value.type,
+    set1: assign.value.set1,
+    set2: 'false',
+    activation: 'default',
+    pulse_duration: 1000,
+  }
+}
+
+function deleteAssign(i: number) {
+  new_param.value.assigns.splice(i, 1)
+}
+
+function displayAssignSubtitle(assign_object: any) {
+  let subtitle = `set ${assign_object.type} to ${assign_object.set1}`
+
+  if (assign_object.activation === 'pulse')
+    subtitle = `${subtitle}, wait ${assign_object.pulse_duration}ms, set ${assign_object.type} to ${assign_object.set2}`
+
+  return subtitle
 }
 </script>

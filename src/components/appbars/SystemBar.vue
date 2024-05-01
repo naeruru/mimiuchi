@@ -27,40 +27,35 @@
   </v-system-bar>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
+import { ref } from 'vue'
+
 import is_electron from '@/helpers/is_electron'
 
 declare const window: any
 
-export default {
-  name: 'App',
-  data() {
-    return {
-      APP_NAME: __APP_NAME__,
-      maximized: false,
-    }
-  },
-  mounted() {
-    if (is_electron()) {
-      window.ipcRenderer.receive('maximized_state', (event: any, data: any) => {
-        this.maximized = event
-      })
-    }
-  },
-  methods: {
-    close_app() {
-      if (is_electron())
-        window.ipcRenderer.send('close_app')
-    },
-    toggle_maximize() {
-      if (is_electron())
-        window.ipcRenderer.send('toggle_maximize')
-    },
-    minimize() {
-      if (is_electron())
-        window.ipcRenderer.send('minimize')
-    },
-  },
+const APP_NAME = __APP_NAME__
+const maximized = ref(false)
+
+// onMounted(() => {
+//   if (is_electron()) {
+//     window.ipcRenderer.on('maximized_state', (event: any, data: any) => {
+//       maximized.value = event
+//     })
+//   }
+// })
+
+function close_app() {
+  if (is_electron())
+    window.ipcRenderer.send('close_app')
+}
+function toggle_maximize() {
+  if (is_electron())
+    window.ipcRenderer.send('toggle_maximize')
+}
+function minimize() {
+  if (is_electron())
+    window.ipcRenderer.send('minimize')
 }
 </script>
 

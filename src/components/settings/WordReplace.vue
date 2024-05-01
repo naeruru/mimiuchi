@@ -70,62 +70,43 @@
   </v-card>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
+import { onMounted, onUnmounted, ref } from 'vue'
 import { useWordReplaceStore } from '@/stores/word_replace'
 
-export default {
-  name: 'WordReplace',
-  setup() {
-    const wordReplaceStore = useWordReplaceStore()
+const wordReplaceStore = useWordReplaceStore()
 
-    return {
-      wordReplaceStore,
-    }
-  },
-  data: () => ({
-    replacements: [] as { replacing: string, replacement: string }[],
-  }),
-  unmounted() {
-    this.wordReplaceStore.word_replacements = {}
+const replacements = ref<{ replacing: string, replacement: string }[]>([])
 
-    this.replacements
-      .sort((a, b) => a.replacing.localeCompare(b.replacing)) // Sort keys by locale (e.g., alphabetical sort). This is cosmetic.
-      .sort((a, b) => b.replacing.length - a.replacing.length) // Sort keys by string length: longer strings to shorter strings.
-      .forEach((entry) => {
-        this.wordReplaceStore.word_replacements[entry.replacing] = entry.replacement
-      })
-
-    this.wordReplaceStore.word_replacements_lowercase = {}
-
-    Object.keys(this.wordReplaceStore.word_replacements).forEach((key) => {
-      const keyLowerCase = key.toLowerCase()
-
-      // First-come, first-served.
-      // For example, the replacement keys "Hello" and "hello" are both transformed to lowercase as "hello".
-      // When ordered by locale, their order is ["hello", "Hello"]. The replacement entry for "hello" will be used in case-insensitive replacements.
-      if (!this.wordReplaceStore.word_replacements_lowercase[keyLowerCase])
-        this.wordReplaceStore.word_replacements_lowercase[keyLowerCase] = this.wordReplaceStore.word_replacements[key]
-    })
-  },
-  mounted() {
-    this.replacements = Object.entries(this.wordReplaceStore.word_replacements).map(([replacing, replacement]) => ({
-      replacing,
-      replacement,
-    }))
-  },
-  methods: {
-    add_entry() {
-      this.replacements.push({
-        replacing: '',
-        replacement: '',
-      })
-    },
-    remove_entry(i: number) {
-      this.replacements.splice(i, 1)
-    },
-    exists(value: string) {
-      return !value || this.replacements.filter((e: any) => value === e.replacing).length < 2 || `${value} already exists`
-    },
-  },
+function add_entry() {
+  // this.wordReplaceStore.word_replacements[""] = ""
+  replacements.value.push({
+    replacing: '',
+    replacement: '',
+  })
 }
+
+function remove_entry(i: number) {
+  replacements.value.splice(i, 1)
+  // delete this.wordReplaceStore.word_replacements[this.replacement_list[i].replacing]
+}
+
+function exists(value: string) {
+  return !value || replacements.value.filter((e: any) => value === e.replacing).length < 2 || `${value} already exists`
+}
+
+onMounted(() => {
+  replacements.value = Object.entries(wordReplaceStore.word_replacements).map(([replacing, replacement]) => ({
+    replacing,
+    replacement,
+  }))
+  // console.log(this.replacements)
+})
+
+onUnmounted(() => {
+  wordReplaceStore.word_replacements = {}
+  replacements.value.forEach((entry) => {
+    wordReplaceStore.word_replacements[entry.replacing.toLowerCase()] = entry.replacement
+  })
+})
 </script>

@@ -1,6 +1,33 @@
-// added to differentiate electron and website version
 import { contextBridge, ipcRenderer } from 'electron'
 
+// --------- Expose some API to the Renderer process ---------
+contextBridge.exposeInMainWorld('ipcRenderer', {
+  on(...args: Parameters<typeof ipcRenderer.on>) {
+    const [channel, listener] = args
+    return ipcRenderer.on(channel, (event, ...args) => listener(event, ...args))
+  },
+  off(...args: Parameters<typeof ipcRenderer.off>) {
+    const [channel, ...omit] = args
+    return ipcRenderer.off(channel, ...omit)
+  },
+  send(...args: Parameters<typeof ipcRenderer.send>) {
+    const [channel, ...omit] = args
+    return ipcRenderer.send(channel, ...omit)
+  },
+  invoke(...args: Parameters<typeof ipcRenderer.invoke>) {
+    const [channel, ...omit] = args
+    return ipcRenderer.invoke(channel, ...omit)
+  },
+  removeListener(...args: Parameters<typeof ipcRenderer.invoke>) {
+    const [channel, ...omit] = args
+    return ipcRenderer.removeAllListeners(channel)
+  },
+
+  // You can expose other APTs you need here.
+  // ...
+})
+
+// --------- Preload scripts loading ---------
 function domReady(condition: DocumentReadyState[] = ['complete', 'interactive']) {
   return new Promise((resolve) => {
     if (condition.includes(document.readyState)) {
@@ -8,8 +35,9 @@ function domReady(condition: DocumentReadyState[] = ['complete', 'interactive'])
     }
     else {
       document.addEventListener('readystatechange', () => {
-        if (condition.includes(document.readyState))
+        if (condition.includes(document.readyState)) {
           resolve(true)
+        }
       })
     }
   })
@@ -17,12 +45,14 @@ function domReady(condition: DocumentReadyState[] = ['complete', 'interactive'])
 
 const safeDOM = {
   append(parent: HTMLElement, child: HTMLElement) {
-    if (!Array.from(parent.children).find(e => e === child))
+    if (!Array.from(parent.children).find(e => e === child)) {
       return parent.appendChild(child)
+    }
   },
   remove(parent: HTMLElement, child: HTMLElement) {
-    if (Array.from(parent.children).find(e => e === child))
+    if (Array.from(parent.children).find(e => e === child)) {
       return parent.removeChild(child)
+    }
   },
 }
 
@@ -92,45 +122,3 @@ window.onmessage = (ev) => {
 }
 
 setTimeout(removeLoading, 4999)
-
-const validChannels = [
-  'close_app',
-  'toggle_maximize',
-  'minimize',
-  'maximized_state',
-
-  'typing-text-event',
-  'send-text-event',
-  'send-param-event',
-  'receive-text-event',
-
-  'websocket-connect',
-  'websocket-started',
-  'websocket-error',
-
-  'start-ws',
-  'close-ws',
-
-  'update-check',
-]
-
-// Expose ipcRenderer to the client
-contextBridge.exposeInMainWorld('ipcRenderer', {
-  send: (channel, data) => {
-    // let validChannels = ['typing-text-event', 'send-text-event', 'send-param-event', 'receive-text-event', 'websocket-connect']
-    if (validChannels.includes(channel))
-      ipcRenderer.send(channel, data)
-  },
-  receive: (channel, func) => {
-    // let validChannels = ['typing-text-event', 'send-text-event', 'send-param-event', 'receive-text-event', 'websocket-connect']
-    if (validChannels.includes(channel)) {
-      // Deliberately strip event as it includes `sender`
-      ipcRenderer.on(channel, (event, ...args) => func(...args))
-    }
-  },
-  removeListener: (channel) => {
-    // let validChannels = ['typing-text-event', 'send-text-event', 'send-param-event', 'receive-text-event', 'websocket-connect']
-    if (validChannels.includes(channel))
-      ipcRenderer.removeAllListeners(channel)
-  },
-})

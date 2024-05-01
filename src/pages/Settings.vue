@@ -45,14 +45,20 @@
     <template #append>
       <v-divider />
       <v-col class="d-flex justify-right mt-1 px-2">
-        <v-btn v-if="update_available" size="small" variant="flat" prepend-icon="mdi-download" @click="open_external('https://github.com/naeruru/mimiuchi/releases/latest')">
+        <v-btn
+          v-if="update_available" size="small" variant="flat" prepend-icon="mdi-download"
+          @click="open_external('https://github.com/naeruru/mimiuchi/releases/latest')"
+        >
           <template #prepend>
             <v-icon color="success" size="large" />
           </template>
           {{ $t('general.update') }}
         </v-btn>
         <v-spacer />
-        <v-btn size="small" variant="flat" prepend-icon="mdi-tag" @click="open_external(`https://github.com/naeruru/mimiuchi/releases/tag/v${APP_VERSION}`)">
+        <v-btn
+          size="small" variant="flat" prepend-icon="mdi-tag"
+          @click="open_external(`https://github.com/naeruru/mimiuchi/releases/tag/v${APP_VERSION}`)"
+        >
           v{{ APP_VERSION }}
         </v-btn>
       </v-col>
@@ -70,130 +76,127 @@
   </div>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
+import { computed, onMounted, onUnmounted, ref } from 'vue'
+
 import { useDisplay } from 'vuetify'
+import { useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import is_electron from '@/helpers/is_electron'
 import { useSettingsStore } from '@/stores/settings'
 
 declare const window: any
 
-export default {
-  name: 'Settings',
-  setup() {
-    const settingsStore = useSettingsStore()
-    const { smAndDown } = useDisplay()
+const settingsStore = useSettingsStore()
+const { smAndDown } = useDisplay()
 
-    settingsStore.drawer = !smAndDown.value
+const { t } = useI18n()
 
-    return {
-      settingsStore,
-      smAndDown,
-    }
-  },
-  data() {
-    return {
-      APP_VERSION: __APP_VERSION__,
-      update_available: false,
-      window_size: {
-        x: 0,
-        y: 0,
-      },
-    }
-  },
-  computed: {
-    outer_size: () => is_electron() ? '140px' : '105px',
-    settings_general() {
-      return [
-        {
-          title: this.$t('settings.general.title'),
-          value: 'general',
-          icon: 'mdi-home',
-        },
-        {
-          title: this.$t('settings.appearance.title'),
-          value: 'appearance',
-          icon: 'mdi-palette',
-        },
-        {
-          title: this.$t('settings.stt.title'),
-          value: 'stt',
-          icon: 'mdi-microphone-outline',
-        },
-        {
-          title: this.$t('settings.tts.title'),
-          value: 'tts',
-          icon: 'mdi-account-voice',
-        },
-        {
-          title: this.$t('settings.word_replace.title'),
-          value: 'wordreplace',
-          icon: 'mdi-swap-horizontal',
-        },
-        {
-          title: this.$t('settings.translation.title'),
-          value: 'translation',
-          icon: 'mdi-translate',
-        },
-      ]
-    },
-    connections() {
-      return [
-        {
-          title: this.$t('settings.connections.title'),
-          value: 'connections',
-          icon: 'mdi-broadcast',
-        },
-      ]
-    },
-    settings_osc() {
-      const settings_osc = [
-        {
-          title: this.$t('settings.osc.general.title'),
-          value: 'osc',
-          icon: 'mdi-transit-connection-variant',
-        },
-        {
-          title: this.$t('settings.osc.params.title'),
-          value: 'oscparams',
-          icon: 'mdi-format-list-bulleted-square',
-        },
-      ]
-      if (is_electron())
-        return settings_osc
-      else return settings_osc.slice(0, 1)
-    },
-  },
-  mounted() {
-    if (is_electron()) {
-      window.ipcRenderer.removeListener('update-check')
-      window.ipcRenderer.send('update-check')
-      window.ipcRenderer.receive('update-check', (event: any, data: any) => {
-        if (event != `v${this.APP_VERSION}`)
-          this.update_available = true
-      })
-    }
+settingsStore.drawer = !smAndDown.value
+const APP_VERSION = ref(__APP_VERSION__)
+const update_available = ref(false)
 
-    window.addEventListener('keydown', this.handleKeyDown)
-  },
-  unmounted() {
-    window.removeEventListener('keydown', this.handleKeyDown)
-  },
-  methods: {
-    open_external(link: string) {
-      window.open(link, '_blank')
+// const window_size = ref({
+//   x: 0,
+//   y: 0,
+// })
+
+const outer_size = computed(() => is_electron() ? '140px' : '105px')
+const settings_general = computed(() => {
+  return [
+    {
+      title: t('settings.general.title'),
+      value: 'general',
+      icon: 'mdi-home',
     },
-    handleKeyDown(event: KeyboardEvent) {
-      if (event.key === 'Escape')
-        this.$router.push({ path: '/' })
+    {
+      title: t('settings.appearance.title'),
+      value: 'appearance',
+      icon: 'mdi-palette',
     },
-  },
+    {
+      title: t('settings.stt.title'),
+      value: 'stt',
+      icon: 'mdi-microphone-outline',
+    },
+    {
+      title: t('settings.tts.title'),
+      value: 'tts',
+      icon: 'mdi-account-voice',
+    },
+    {
+      title: t('settings.word_replace.title'),
+      value: 'wordreplace',
+      icon: 'mdi-swap-horizontal',
+    },
+    {
+      title: t('settings.translation.title'),
+      value: 'translation',
+      icon: 'mdi-translate',
+    },
+  ]
+})
+
+const connections = computed(() => {
+  return [
+    {
+      title: t('settings.connections.title'),
+      value: 'connections',
+      icon: 'mdi-broadcast',
+    },
+  ]
+})
+
+const settings_osc = computed(() => {
+  const settings_osc = [
+    {
+      title: t('settings.osc.general.title'),
+      value: 'osc',
+      icon: 'mdi-transit-connection-variant',
+    },
+    {
+      title: t('settings.osc.params.title'),
+      value: 'oscparams',
+      icon: 'mdi-format-list-bulleted-square',
+    },
+  ]
+  if (is_electron())
+    return settings_osc
+  else return settings_osc.slice(0, 1)
+})
+
+onMounted(() => {
+  if (is_electron()) {
+    window.ipcRenderer.removeListener('update-check')
+    window.ipcRenderer.send('update-check')
+    window.ipcRenderer.on('update-check', (event: any, data: any) => {
+      if (event !== `v${APP_VERSION.value}`)
+        update_available.value = true
+    })
+  }
+
+  window.addEventListener('keydown', handleKeyDown)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('keydown', handleKeyDown)
+})
+
+function open_external(link: string) {
+  window.open(link, '_blank')
+}
+const router = useRouter()
+
+function handleKeyDown(event: KeyboardEvent) {
+  if (event.key === 'Escape')
+    router.push({ path: '/' })
 }
 </script>
 
 <style>
 .settings {
-    overflow-y: auto;
-    max-height: calc(100svh - v-bind(outer_size));
+  overflow-y: auto;
+  max-height: calc(100svh - v-bind(outer_size));
 }
 
 .slide-up-enter-active {

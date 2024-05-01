@@ -2,10 +2,13 @@
   <v-overlay
     v-model="overlay_state"
     transition="slide-x-transition"
-    :contained="overlay_page === 0 ? false : true"
+    :contained="overlay_page !== 0"
     :class="overlay_page === 0 ? 'align-center justify-center' : 'align-end justify-end'"
   >
-    <v-card v-if="overlay_page == 0" :title="$t('welcome.intro.title', { name: APP_NAME })" class="pa-2" max-width="500">
+    <v-card
+      v-if="overlay_page === 0" :title="$t('welcome.intro.title', { name: APP_NAME })" class="pa-2"
+      max-width="500"
+    >
       <template #prepend>
         <v-avatar
           color="transparent"
@@ -23,7 +26,7 @@
       </v-card-actions>
     </v-card>
     <v-scroll-x-transition>
-      <v-card v-if="overlay_page == 1" :title="$t('welcome.controls.title')" class="mb-2 mr-8">
+      <v-card v-if="overlay_page === 1" :title="$t('welcome.controls.title')" class="mb-2 mr-8">
         <v-divider class="mb-2" />
         <v-card-text class="text-subtitle-1 py-">
           <v-icon class="me-1" color="success">
@@ -59,43 +62,25 @@
   </v-overlay>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
+import { computed, ref, watch } from 'vue'
 import { useSettingsStore } from '@/stores/settings'
 
-export default {
-  name: 'WelcomeOverlay',
-  props: {
-    overlay: Boolean,
-    page: Number,
-  },
-  setup() {
-    const APP_NAME = __APP_NAME__
-    const settingsStore = useSettingsStore()
+const props = defineProps<{ overlay: boolean, page: number }>()
+const APP_NAME = __APP_NAME__
+const settingsStore = useSettingsStore()
 
-    return {
-      APP_NAME,
-      settingsStore,
-    }
-  },
-  data() {
-    return {
-      overlay_state: this.overlay,
-      overlay_page: this.page,
-    }
-  },
-  watch: {
-    overlay(new_val) {
-      this.overlay_state = new_val
-    },
-    overlay_state(new_val) {
-      if (new_val == false && this.overlay_page === 0) {
-        this.overlay_state = true
-        this.overlay_page++
-      }
-      else if (this.overlay_page === 1) {
-        this.settingsStore.welcome = false
-      }
-    },
-  },
-}
+const overlay_page = ref(props.page)
+
+const overlay_state = computed(() => props.overlay)
+
+watch(overlay_state, (new_val) => {
+  if (!new_val && overlay_page.value === 0) {
+    // overlay_state.value = true
+    overlay_page.value++
+  }
+  else if (overlay_page.value === 1) {
+    settingsStore.welcome = false
+  }
+})
 </script>

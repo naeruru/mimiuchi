@@ -1,15 +1,15 @@
 <template>
   <v-row>
-    <v-col v-if="modelValue">
+    <v-col v-if="model">
       <v-text-field
         v-if="!is_electron()"
-        v-model="modelValue.url"
+        v-model="model.url"
         label="URL"
         prefix="ws://"
       />
       <v-text-field
         v-if="is_electron()"
-        v-model="modelValue.port"
+        v-model="model.port"
         :label="$t('settings.connections.ws.port')"
         type="number"
         :rules="port_rules"
@@ -18,48 +18,26 @@
   </v-row>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
+import { onMounted, ref } from 'vue'
 import is_electron from '@/helpers/is_electron'
 import type { Connection } from '@/stores/connections'
-import { useConnectionStore } from '@/stores/connections'
+import { useConnectionsStore } from '@/stores/connections'
 
-export default {
-  name: 'WebSocketOptions',
-  props: {
-    modelValue: Object,
-    type: String,
-  },
-  emits: ['update:modelValue'],
-  setup() {
-    const connectionStore = useConnectionStore()
+const model = defineModel()
 
-    return {
-      connectionStore,
-      is_electron,
-    }
+const connectionStore = useConnectionsStore()
+
+const ws = ref<Connection>()
+const port_rules = ref([
+  (value: number) => {
+    if (value >= 1 && value <= 65535)
+      return true
+    return 'Must be a valid port number'
   },
-  data: () => ({
-    ws: {} as Connection,
-    port_rules: [
-      (value: number) => {
-        if (value >= 1 && value <= 65535)
-          return true
-        return 'Must be a valid port number'
-      },
-    ],
-  }),
-  computed: {
-    value: {
-      get() {
-        return this.modelValue
-      },
-      set(modelValue: boolean) {
-        this.$emit('update:modelValue', modelValue)
-      },
-    },
-  },
-  mounted() {
-    this.ws = JSON.parse(JSON.stringify(this.connectionStore.ws))
-  },
-}
+])
+
+onMounted(() => {
+  ws.value = JSON.parse(JSON.stringify(connectionStore.ws))
+})
 </script>

@@ -1,23 +1,21 @@
 import { defineStore } from 'pinia'
+import { ref } from 'vue'
 
-export const useSettingsStore = defineStore('settings', {
-  state: () => ({
+export const useSettingsStore = defineStore('settings', () => {
+  const welcome = ref(true)
 
-    welcome: true,
+  const language = ref(navigator.language.split('-')[0])
 
-    language: navigator.language.split('-')[0],
+  const drawer = ref(true)
 
-    drawer: true,
-
-    stt_Settings: {
-      language: 'en-US',
-      confidence: 0.9,
-    },
-  }),
-  getters: {
-
-  },
-  actions: {
-
-  },
+  const stt_Settings = ref({
+    language: 'en-US',
+    confidence: 0.9,
+  })
+  return {
+    welcome,
+    language,
+    drawer,
+    stt_Settings,
+  }
 })

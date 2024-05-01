@@ -1,11 +1,16 @@
 <template>
-  <v-card id="log-list" v-resize="onResize" class="fill-height pa-4 overflow-auto log-list" :color="appearanceStore.ui.color" :height="height - 55" tile>
+  <v-card
+    id="log-list" v-resize="onResize" class="fill-height pa-4 overflow-auto log-list"
+    :color="appearanceStore.ui.color" :height="height - 55" tile
+  >
     <div>
       <a
         v-for="log in logs"
         :class="{ 'fade-out': log.hide, 'final-text': log.isFinal || log.isTranslationFinal, 'interim-text': !log.isFinal || (!log.isTranslationFinal && log.translate) }"
       >
-        <a v-if="log.hide !== 2">{{ (translationStore.enabled && (log.translation || !translationStore.show_original)) ? log.translation : log.transcript }}&nbsp;&nbsp;</a>
+        <a v-if="log.hide !== 2">{{
+          (translationStore.enabled && (log.translation || !translationStore.show_original)) ? log.translation : log.transcript
+        }}&nbsp;&nbsp;</a>
         <v-expand-transition v-show="log.pause">
           <div>
             <v-col class="pa-0" />
@@ -18,107 +23,62 @@
   </v-card>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 // import {ipcRenderer} from "electron"
-import { useDisplay } from 'vuetify'
-import { useTheme } from 'vuetify'
+import { useDisplay, useTheme } from 'vuetify'
 
+import { computed, onMounted, ref } from 'vue'
 import is_electron from '@/helpers/is_electron'
 
 import WelcomeOverlay from '@/components/overlays/WelcomeOverlay.vue'
 
 import { useSettingsStore } from '@/stores/settings'
 import { useAppearanceStore } from '@/stores/appearance'
-import { useLogStore } from '@/stores/logs'
+import { useLogsStore } from '@/stores/logs'
 import { useTranslationStore } from '@/stores/translation'
 
 declare const window: any
 
-export default {
-  name: 'Home',
-  components: {
-    WelcomeOverlay,
-  },
-  setup() {
-    const { height } = useDisplay()
-    const theme = useTheme()
+const { height } = useDisplay()
+const theme = useTheme()
 
-    const settingsStore = useSettingsStore()
-    const appearanceStore = useAppearanceStore()
-    const logStore = useLogStore()
-    const translationStore = useTranslationStore()
+const settingsStore = useSettingsStore()
+const appearanceStore = useAppearanceStore()
+const logStore = useLogsStore()
+const translationStore = useTranslationStore()
 
-    const font_size = `${appearanceStore.text.font_size}px`
-    const fade_time = `${appearanceStore.text.fade_time}s`
-    const text_color = appearanceStore.text.color
-    const interim_color = appearanceStore.text.interim_color
+const font_size = `${appearanceStore.text.font_size}px`
+const fade_time = `${appearanceStore.text.fade_time}s`
+const text_color = appearanceStore.text.color
+const interim_color = appearanceStore.text.interim_color
 
-    const font_name = appearanceStore.text.font.name
-    const font_subtype = appearanceStore.text.font.sub_type
+const font_name = appearanceStore.text.font.name
+const font_subtype = appearanceStore.text.font.sub_type
 
-    return {
-      settingsStore,
-      appearanceStore,
-      logs: logStore.logs,
-      translationStore,
-      font_size,
-      fade_time,
-      text_color,
-      interim_color,
-      font_name,
-      font_subtype,
-      height,
-      theme,
-    }
-  },
-  data() {
-    return {
-      // oscClient: client,
-      overlay_main: false,
-      overlay_page: 0,
+const logs = logStore.logs
 
-      ws: null as any,
+const overlay_main = ref(false)
+const overlay_page = ref(0)
 
-      listening: false,
-      listening_error: false,
-      talking: false,
+const windowSize = ref({
+  x: 0,
+  y: 0,
+})
 
-      loadingWebsocket: false,
-      broadcasting: false,
+const outer_size = computed(() => is_electron() ? '90px' : '55px')
 
-      input_text: '',
+onMounted(() => {
+  if (appearanceStore.current_theme in theme.themes.value)
+    theme.global.name.value = appearanceStore.current_theme // Set the theme from the user's settings.
+  else
+    theme.global.name.value = 'midnight_purple'
 
-      snackbar: false,
-      snackbar_color: 'error',
-      snackbar_icon: '',
-      snackbar_desc: '',
+  overlay_main.value = settingsStore.welcome
+  onResize()
+})
 
-      error_snackbar: false,
-      error_message: '',
-
-      windowSize: {
-        x: 0,
-        y: 0,
-      },
-    }
-  },
-  computed: {
-    outer_size: () => is_electron() ? '90px' : '55px',
-  },
-  mounted() {
-    if (this.appearanceStore.current_theme in this.theme.themes.value)
-      this.theme.global.name.value = this.appearanceStore.current_theme // Set the theme from the user's settings.
-    else
-      this.theme.global.name.value = 'midnight_purple'
-
-    this.overlay_main = this.settingsStore.welcome
-    this.onResize()
-  },
-  methods: {
-    onResize() {
-      this.windowSize = { x: window.innerWidth, y: window.innerHeight }
-    },
-  },
+function onResize() {
+  windowSize.value = { x: window.innerWidth, y: window.innerHeight }
 }
 </script>
 

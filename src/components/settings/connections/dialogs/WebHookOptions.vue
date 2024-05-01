@@ -1,8 +1,8 @@
 <template>
   <v-row>
-    <v-col v-if="modelValue">
+    <v-col v-if="model">
       <v-text-field
-        v-model="modelValue.url"
+        v-model="model.url"
         label="URL"
         :rules="url_rules"
       />
@@ -10,47 +10,23 @@
   </v-row>
 </template>
 
-<script lang="ts">
-import is_electron from '@/helpers/is_electron'
+<script setup lang="ts">
+import { onMounted, ref } from 'vue'
 import type { Connection } from '@/stores/connections'
-import { useConnectionStore } from '@/stores/connections'
+import { useConnectionsStore } from '@/stores/connections'
 
-export default {
-  name: 'WebHookOptions',
-  props: {
-    modelValue: Object,
-    type: String,
-  },
-  emits: ['update:modelValue'],
-  setup() {
-    const connectionStore = useConnectionStore()
+const model = defineModel()
+const connectionStore = useConnectionsStore()
 
-    return {
-      connectionStore,
-      is_electron,
-    }
+const wh = ref<Connection>()
+const url_rules = ref([
+  (value: string) => {
+    return true
+    return 'Must be a valid URL'
   },
-  data: () => ({
-    wh: {} as Connection,
-    url_rules: [
-      (value: string) => {
-        return true
-        return 'Must be a valid URL'
-      },
-    ],
-  }),
-  computed: {
-    value: {
-      get() {
-        return this.modelValue
-      },
-      set(modelValue: any) {
-        this.$emit('update:modelValue', modelValue)
-      },
-    },
-  },
-  mounted() {
-    this.wh = JSON.parse(JSON.stringify(this.connectionStore.wh))
-  },
-}
+])
+
+onMounted(() => {
+  wh.value = JSON.parse(JSON.stringify(connectionStore.wh))
+})
 </script>

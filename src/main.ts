@@ -1,18 +1,22 @@
+// import './demos/ipc'
+import { createPinia } from 'pinia'
 import { createApp } from 'vue'
 import App from '@/App.vue'
 import vuetify from '@/plugins/vuetify'
+
 import router from '@/plugins/router'
+
 import i18n from '@/plugins/i18n'
 
 // import { loadFonts } from './plugins/webfontloader'
+// loadFonts()
 
 import '@/assets/fonts/fonts.css'
 
-import { createPinia } from 'pinia'
-
 const pinia = createPinia()
 
-// loadFonts()
+// If you want use Node.js, the`nodeIntegration` needs to be enabled in the Main process.
+// import './demos/node'
 
 const app_name = 'mimiuchi'
 
