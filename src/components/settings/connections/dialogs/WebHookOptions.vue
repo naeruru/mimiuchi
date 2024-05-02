@@ -15,7 +15,7 @@ import { onMounted, ref } from 'vue'
 import type { Connection } from '@/stores/connections'
 import { useConnectionsStore } from '@/stores/connections'
 
-const model = defineModel()
+const model = defineModel<Connection>()
 const connectionsStore = useConnectionsStore()
 
 const wh = ref<Connection>()

@@ -290,7 +290,7 @@ async function onSubmit(log: Log | null = null) {
 
   if (!log) {
     log = {
-      transcript: input_text,
+      transcript: input_text.value,
       isFinal: true,
       isTranslationFinal: false,
       translate: false,

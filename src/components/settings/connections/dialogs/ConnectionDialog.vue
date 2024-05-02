@@ -54,10 +54,10 @@ import { computed, onMounted, ref } from 'vue'
 import WebSocketOptions from '@/components/settings/connections/dialogs/WebSocketOptions.vue'
 import WebHookOptions from '@/components/settings/connections/dialogs/WebHookOptions.vue'
 import is_electron from '@/helpers/is_electron'
-import type { Connection } from '@/stores/connections'
+import type { Connection, ConnectionType } from '@/stores/connections'
 import { useConnectionsStore } from '@/stores/connections'
 
-const props = defineProps<{ modelValue: boolean, connection: object }>()
+const props = defineProps<{ modelValue: boolean, connection: ConnectionType }>()
 
 const emit = defineEmits(['update:modelValue'])
 
@@ -72,8 +72,8 @@ declare const window: any
 const connectionsStore = useConnectionsStore()
 
 const form = ref(false)
-const ws = ref<Connection>()
-const wh = ref<Connection>()
+const ws = ref(<Connection>{})
+const wh = ref(<Connection>{})
 
 const value = computed({
   get() {
@@ -94,7 +94,7 @@ onMounted(() => {
 function update_connection(connection: any) {
   switch (connection.type) {
     case 'ws':
-      connectionsStore.ws = ws
+      connectionsStore.ws = ws.value
       if (is_electron()) {
         if (connectionsStore.ws.enabled) {
           window.ipcRenderer.send('close-ws')
@@ -103,7 +103,7 @@ function update_connection(connection: any) {
       }
       break
     case 'wh':
-      connectionsStore.wh = wh
+      connectionsStore.wh = wh.value
       connectionsStore.wh.enabled = true
       break
   }

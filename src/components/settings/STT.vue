@@ -168,8 +168,8 @@ const language_choice = ref('')
 const search_lang = ref('')
 
 const active_device = ref('')
-const media_devices = ref([])
-const stream = ref(null)
+const media_devices = ref(<any>[])
+const stream = ref(<any>null)
 const sensitivity = ref(0)
 const loading_media = ref(false)
 
@@ -206,9 +206,9 @@ async function test_sensitivity() {
 
   loading_media.value = true
   stream.value = await navigator.mediaDevices.getUserMedia({ audio: true, video: false })
-  stream.value.getTracks().forEach((track: any) => this.active_device = track.label)
+  stream.value.getTracks().forEach((track: any) => active_device.value = track.label)
   const audioContext = new AudioContext()
-  const mediaStreamAudioSourceNode = audioContext.createMediaStreamSource(this.stream)
+  const mediaStreamAudioSourceNode = audioContext.createMediaStreamSource(stream.value)
   const analyserNode = audioContext.createAnalyser()
   mediaStreamAudioSourceNode.connect(analyserNode)
 

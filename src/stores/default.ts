@@ -7,13 +7,13 @@ import { i18n } from '@/plugins/i18n'
 import is_electron from '@/helpers/is_electron'
 
 export const useDefaultStore = defineStore('default', () => {
-  const worker = ref<WebSocket | null>(null)
+  const worker = ref<Worker | null>(null)
   const ws1 = ref<WebSocket | null>(null)
   const loading_websocket = ref(false)
   const broadcasting = ref(false)
   const connections = ref(0)
   const typing_limited = ref(false)
-  const speech = ref<WebSpeech>({})
+  const speech = ref(<WebSpeech>{})
   const snackbar = ref({
     enabled: false,
     type: 'error',

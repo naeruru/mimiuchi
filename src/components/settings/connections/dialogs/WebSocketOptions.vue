@@ -24,7 +24,7 @@ import is_electron from '@/helpers/is_electron'
 import type { Connection } from '@/stores/connections'
 import { useConnectionsStore } from '@/stores/connections'
 
-const model = defineModel()
+const model = defineModel<Connection>()
 
 const connectionsStore = useConnectionsStore()
 

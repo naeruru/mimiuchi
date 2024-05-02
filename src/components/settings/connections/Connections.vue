@@ -158,20 +158,15 @@ import { onMounted, onUnmounted, ref, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 import ConnectionDialog from '@/components/settings/connections/dialogs/ConnectionDialog.vue'
 import is_electron from '@/helpers/is_electron'
+import type { ConnectionType } from '@/stores/connections'
 import { useConnectionsStore } from '@/stores/connections'
 
 declare const window: any
 
-declare interface ConnectionType {
-  title?: string
-  type?: string
-  icon?: string
-}
-
 const connectionsStore = useConnectionsStore()
 
 const dialog = ref(false)
-const connection_type = ref<ConnectionType>({})
+const connection_type = ref(<ConnectionType>{})
 // const connection_options = ref<ConnectionType[]>([
 //   {
 //     title: 'Webhook',

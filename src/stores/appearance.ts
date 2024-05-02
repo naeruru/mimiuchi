@@ -10,7 +10,7 @@ export const useAppearanceStore = defineStore('appearance', () => {
     font: {
       type: 'google', // system, server, google
       name: 'Roboto',
-      info: null,
+      info: undefined,
       sub_type: { style: 'regular', weight: '400' },
       sub_types: [
         { style: 'regular', weight: '100' },

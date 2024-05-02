@@ -232,7 +232,8 @@ interface Assign {
 
 const props = defineProps<{ mode: string, editingIndex: number }>()
 const emit = defineEmits(['update:modelValue'])
-const model = defineModel()
+const model = defineModel<boolean>()
+
 const oscStore = useOSCStore()
 
 const trigger_phrase = ref('')
@@ -294,7 +295,7 @@ function cancelParamDialog() {
 }
 
 function confirmAddParam() {
-  oscStore.osc_profiles[oscStore.current_profile].push(new_param)
+  oscStore.osc_profiles[oscStore.current_profile].push(new_param.value)
 
   emit('update:modelValue', false)
 }
@@ -411,7 +412,7 @@ function addAssign() {
   }
 
   // Store.
-  new_param.value.assigns.push(assign)
+  new_param.value.assigns.push(assign.value)
 
   // Partially reset the assign fields.
   new_assign.value = {

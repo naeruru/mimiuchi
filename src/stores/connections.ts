@@ -13,6 +13,12 @@ export interface Connection {
   port: number | null
 }
 
+export interface ConnectionType {
+  title?: string
+  type?: string
+  icon?: string
+}
+
 export const useConnectionsStore = defineStore('connections', () => {
   const ws = ref<Connection>({
     enabled: true,
