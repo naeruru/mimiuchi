@@ -37,7 +37,7 @@
           >
             <template #loader>
               <v-progress-linear
-                :active="logStore.loading_result === true || translationStore.download >= 0"
+                :active="logsStore.loading_result === true || translationStore.download >= 0"
                 :color="translationStore.download !== -1 ? 'warning' : 'secondary'"
                 :indeterminate="translationStore.download === -1"
                 :model-value="translationStore.download"
@@ -118,7 +118,7 @@ declare const window: any
 const last_route = ref<any>(null)
 const { smAndDown } = useDisplay()
 const speechStore = useSpeechStore()
-const logStore = useLogsStore()
+const logsStore = useLogsStore()
 const translationStore = useTranslationStore()
 const oscStore = useOSCStore()
 const defaultStore = useDefaultStore()
@@ -299,7 +299,7 @@ async function onSubmit(log: Log | null = null) {
   }
   if (log && log.isFinal)
     paramTrigger(log.transcript)
-  speechStore.on_submit(log, Math.max(logStore.logs.length - 1, 0))
+  speechStore.on_submit(log, Math.max(logsStore.logs.length - 1, 0))
 
   // clear chatbox
   input_text.value = ''

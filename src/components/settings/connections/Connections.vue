@@ -67,7 +67,7 @@
                   >
                     <v-icon>mdi-cog</v-icon>
                   </v-btn>
-                  <v-switch v-model="connectionStore.ws.enabled" color="primary" inset hide-details />
+                  <v-switch v-model="connectionsStore.ws.enabled" color="primary" inset hide-details />
                 </template>
               </v-list-item>
             </v-card>
@@ -78,7 +78,7 @@
                                 <p class="text-body-2">Enable</p>
                             </template>
                             <template v-slot:append>
-                                <v-switch v-model="connectionStore.ws.enabled" color="primary" inset hide-details></v-switch>
+                                <v-switch v-model="connectionsStore.ws.enabled" color="primary" inset hide-details></v-switch>
                             </template>
                             </v-list-item>
                         </v-list> -->
@@ -92,7 +92,7 @@
               <v-list-item title="Webhook">
                 <template #prepend>
                   <v-icon
-                    :icon="connectionStore.wh.icon"
+                    :icon="connectionsStore.wh.icon"
                     size="30"
                     color="secondary"
                     class="mr-4"
@@ -105,7 +105,7 @@
                 <v-spacer />
                 <template #append>
                   <v-btn
-                    v-if="connectionStore.wh.enabled"
+                    v-if="connectionsStore.wh.enabled"
                     class="mr-4"
                     icon
                     variant="text"
@@ -114,7 +114,7 @@
                     <v-icon>mdi-cog</v-icon>
                   </v-btn>
                   <v-btn
-                    v-if="!connectionStore.wh.enabled"
+                    v-if="!connectionsStore.wh.enabled"
                     icon
                     color="success"
                     variant="text"
@@ -123,7 +123,7 @@
                     <v-icon>mdi-plus-circle</v-icon>
                   </v-btn>
                   <v-btn
-                    v-if="connectionStore.wh.enabled"
+                    v-if="connectionsStore.wh.enabled"
                     icon
                     color="error"
                     variant="text"
@@ -141,7 +141,7 @@
                                 <p class="text-body-2">Enable</p>
                             </template>
                             <template v-slot:append>
-                                <v-switch v-model="connectionStore.ws.enabled" color="primary" inset hide-details></v-switch>
+                                <v-switch v-model="connectionsStore.ws.enabled" color="primary" inset hide-details></v-switch>
                             </template>
                             </v-list-item>
                         </v-list> -->
@@ -168,7 +168,7 @@ declare interface ConnectionType {
   icon?: string
 }
 
-const connectionStore = useConnectionsStore()
+const connectionsStore = useConnectionsStore()
 
 const dialog = ref(false)
 const connection_type = ref<ConnectionType>({})
@@ -187,7 +187,7 @@ const connection_type = ref<ConnectionType>({})
 // const word_replace = ref(true)
 // const speech = ref(true)
 
-const { ws } = storeToRefs(connectionStore)
+const { ws } = storeToRefs(connectionsStore)
 watch(
   () => ws.value.enabled,
   (new_val: boolean) => {
@@ -207,7 +207,7 @@ onMounted(() => {
     //     // console.log("MEOW")
     // })
     window.ipcRenderer.on('websocket-error', (event: any, data: any) => {
-      connectionStore.ws.enabled = false
+      connectionsStore.ws.enabled = false
       console.log('error')
     })
   }
@@ -221,7 +221,7 @@ function open_dialog(connection: ConnectionType) {
 function ws_toggled(value: boolean) {
   if (is_electron()) {
     if (value)
-      window.ipcRenderer.send('start-ws', connectionStore.ws.port)
+      window.ipcRenderer.send('start-ws', connectionsStore.ws.port)
     else
       window.ipcRenderer.send('close-ws')
   }
@@ -230,7 +230,7 @@ function ws_toggled(value: boolean) {
 }
 
 function clear_wh() {
-  connectionStore.wh.enabled = false
-  connectionStore.wh.url = ''
+  connectionsStore.wh.enabled = false
+  connectionsStore.wh.url = ''
 }
 </script>

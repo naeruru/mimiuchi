@@ -112,20 +112,20 @@ export const useSpeechStore = defineStore('speech', () => {
     if (!log.transcript.trim()) // If the submitted input is only whitespace, do nothing. This may occur if the user only submitted whitespace.
       return
 
-    const logStore = useLogsStore()
+    const logsStore = useLogsStore()
     const { text } = useAppearanceStore()
     const oscStore = useOSCStore()
     const translationStore = useTranslationStore()
-    const connectionStore = useConnectionsStore()
+    const connectionsStore = useConnectionsStore()
     const defaultStore = useDefaultStore()
     const { replace_words } = useWordReplaceStore()
 
-    logStore.loading_result = true
+    logsStore.loading_result = true
 
     // word replace
     log.transcript = replace_words(log.transcript)
     if (!log.transcript.trim()) { // If the processed input is only whitespace, do nothing. This may occur if the entire log transcript was replaced with whitespace.
-      logStore.loading_result = false
+      logsStore.loading_result = false
 
       return
     }
@@ -138,32 +138,32 @@ export const useSpeechStore = defineStore('speech', () => {
     if (is_electron() && oscStore.osc_text && oscStore.stt_typing && defaultStore.broadcasting)
       typing_event(true)
 
-    let i = logStore.logs.length - 1 // track current index
-    if (i >= 0 && !logStore.logs[i].isFinal || log.translation) {
-      logStore.logs[index] = log
+    let i = logsStore.logs.length - 1 // track current index
+    if (i >= 0 && !logsStore.logs[i].isFinal || log.translation) {
+      logsStore.logs[index] = log
       // push to log
     }
     else {
-      logStore.logs.push(log)
+      logsStore.logs.push(log)
       i++
     }
 
     // new line delay
-    if (logStore.wait_interval)
-      clearTimeout(logStore.wait_interval)
+    if (logsStore.wait_interval)
+      clearTimeout(logsStore.wait_interval)
     if (text.new_line_delay >= 0) {
-      logStore.wait_interval = setTimeout(() => {
-        logStore.logs[logStore.logs.length - 1].pause = true
+      logsStore.wait_interval = setTimeout(() => {
+        logsStore.logs[logsStore.logs.length - 1].pause = true
       }, text.new_line_delay * 1000)
     }
 
     // finalized text
     if (log.isFinal) {
-      logStore.loading_result = false
+      logsStore.loading_result = false
 
       // translate if not translating and enabled
       if (is_electron() && translationStore.enabled && !log.translate && !log.translation) {
-        logStore.logs[i].translate = true
+        logsStore.logs[i].translate = true
         defaultStore.worker.postMessage({
           text: log.transcript,
           src_lang: translationStore.source,
@@ -173,7 +173,7 @@ export const useSpeechStore = defineStore('speech', () => {
       }
 
       // timestamp
-      logStore.logs[i].time = new Date()
+      logsStore.logs[i].time = new Date()
       // text-to-speech
       if (tts.value.enabled && tts.value.voice)
         speak(log.transcript)
@@ -181,15 +181,15 @@ export const useSpeechStore = defineStore('speech', () => {
       // fadeout text
       if (text.enable_fade) {
         setTimeout(() => {
-          if (!logStore.logs[i].pause)
+          if (!logsStore.logs[i].pause)
             return
 
           let pauses = 0
           // fade out all text since last pause
           while (i >= 0 && pauses < 2) {
-            logStore.logs[i].hide = 1
-            setTimeout(i => logStore.logs[i].hide = 2, text.fade_time * 1000, i)
-            if (logStore.logs[i].pause)
+            logsStore.logs[i].hide = 1
+            setTimeout(i => logsStore.logs[i].hide = 2, text.fade_time * 1000, i)
+            if (logsStore.logs[i].pause)
               pauses += 1
             i -= 1
           }
@@ -197,8 +197,8 @@ export const useSpeechStore = defineStore('speech', () => {
       }
 
       // webhook
-      if (connectionStore.wh.enabled && defaultStore.broadcasting)
-        webhook.post(connectionStore.wh.url, { transcript: log.transcript })
+      if (connectionsStore.wh.enabled && defaultStore.broadcasting)
+        webhook.post(connectionsStore.wh.url, { transcript: log.transcript })
     }
 
     // send text via osc

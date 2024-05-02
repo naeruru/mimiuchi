@@ -29,7 +29,7 @@
           <v-card-text class="text-subtitle-1 font-weight-medium">
             {{ $t('settings.general.transcript') }}
           </v-card-text>
-          <v-btn color="primary" class="mt-2" @click="logStore.export()">
+          <v-btn color="primary" class="mt-2" @click="logsStore.export()">
             <v-icon>mdi-download</v-icon>
           </v-btn>
         </v-col>
@@ -117,8 +117,8 @@ const appearanceStore = useAppearanceStore()
 const wordReplaceStore = useWordReplaceStore()
 const settingsStore = useSettingsStore()
 const speechStore = useSpeechStore()
-const connectionStore = useConnectionsStore()
-const logStore = useLogsStore()
+const connectionsStore = useConnectionsStore()
+const logsStore = useLogsStore()
 const translationStore = useTranslationStore()
 const oscStore = useOSCStore()
 
@@ -132,7 +132,7 @@ function reset_settings() {
   if (speech.value)
     speechStore.$reset()
   if (connection.value)
-    connectionStore.$reset()
+    connectionsStore.$reset()
   if (translation.value)
     translationStore.$reset()
   if (ocs.value)

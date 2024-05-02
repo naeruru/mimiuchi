@@ -44,7 +44,7 @@ const theme = useTheme()
 
 const settingsStore = useSettingsStore()
 const appearanceStore = useAppearanceStore()
-const logStore = useLogsStore()
+const logsStore = useLogsStore()
 const translationStore = useTranslationStore()
 
 const font_size = `${appearanceStore.text.font_size}px`
@@ -55,7 +55,7 @@ const interim_color = appearanceStore.text.interim_color
 const font_name = appearanceStore.text.font.name
 const font_subtype = appearanceStore.text.font.sub_type
 
-const logs = logStore.logs
+const logs = logsStore.logs
 
 const overlay_main = ref(false)
 const overlay_page = ref(0)

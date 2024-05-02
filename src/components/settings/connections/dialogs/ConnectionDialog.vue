@@ -69,7 +69,7 @@ declare const window: any
 //   icon?: string
 // }
 
-const connectionStore = useConnectionsStore()
+const connectionsStore = useConnectionsStore()
 
 const form = ref(false)
 const ws = ref<Connection>()
@@ -80,31 +80,31 @@ const value = computed({
     return props.modelValue
   },
   set(modelValue: boolean) {
-    ws.value = JSON.parse(JSON.stringify(connectionStore.ws))
-    wh.value = JSON.parse(JSON.stringify(connectionStore.wh))
+    ws.value = JSON.parse(JSON.stringify(connectionsStore.ws))
+    wh.value = JSON.parse(JSON.stringify(connectionsStore.wh))
     emit('update:modelValue', modelValue)
   },
 })
 
 onMounted(() => {
-  ws.value = JSON.parse(JSON.stringify(connectionStore.ws))
-  wh.value = JSON.parse(JSON.stringify(connectionStore.wh))
+  ws.value = JSON.parse(JSON.stringify(connectionsStore.ws))
+  wh.value = JSON.parse(JSON.stringify(connectionsStore.wh))
 })
 
 function update_connection(connection: any) {
   switch (connection.type) {
     case 'ws':
-      connectionStore.ws = ws
+      connectionsStore.ws = ws
       if (is_electron()) {
-        if (connectionStore.ws.enabled) {
+        if (connectionsStore.ws.enabled) {
           window.ipcRenderer.send('close-ws')
-          window.ipcRenderer.send('start-ws', connectionStore.ws.port)
+          window.ipcRenderer.send('start-ws', connectionsStore.ws.port)
         }
       }
       break
     case 'wh':
-      connectionStore.wh = wh
-      connectionStore.wh.enabled = true
+      connectionsStore.wh = wh
+      connectionsStore.wh.enabled = true
       break
   }
   emit('update:modelValue', false)

@@ -34,7 +34,7 @@ const speechStore = useSpeechStore()
 const wordReplaceStore = useWordReplaceStore()
 const translationStore = useTranslationStore()
 const settingsStore = useSettingsStore()
-const connectionStore = useConnectionsStore()
+const connectionsStore = useConnectionsStore()
 const oscStore = useOSCStore()
 
 const router = useRouter()
@@ -57,7 +57,7 @@ wordReplaceStore.$subscribe((_, state) => {
 translationStore.$subscribe((_, state) => {
   localStorage.setItem('translation', JSON.stringify(state))
 })
-connectionStore.$subscribe((_, state) => {
+connectionsStore.$subscribe((_, state) => {
   localStorage.setItem('connections', JSON.stringify(state))
 })
 oscStore.$subscribe((_, state) => {
@@ -69,7 +69,7 @@ speechStore.$patch(JSON.parse(localStorage.getItem('speech') || '{}'))
 settingsStore.$patch(JSON.parse(localStorage.getItem('settings') || '{}'))
 wordReplaceStore.$patch(JSON.parse(localStorage.getItem('word_replace') || '{}'))
 translationStore.$patch(JSON.parse(localStorage.getItem('translation') || '{}'))
-connectionStore.$patch(JSON.parse(localStorage.getItem('connections') || '{}'))
+connectionsStore.$patch(JSON.parse(localStorage.getItem('connections') || '{}'))
 oscStore.$patch(JSON.parse(localStorage.getItem('osc') || '{}'))
 
 onUnmounted(() => {
@@ -77,8 +77,8 @@ onUnmounted(() => {
     window.ipcRenderer.send('close-ws')
 })
 onMounted(() => {
-  if (is_electron() && connectionStore.ws.enabled)
-    window.ipcRenderer.send('start-ws', connectionStore.ws.port)
+  if (is_electron() && connectionsStore.ws.enabled)
+    window.ipcRenderer.send('start-ws', connectionsStore.ws.port)
 
   locale.value = settingsStore.language
   settingsStore.$subscribe((language, state) => {
