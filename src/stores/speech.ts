@@ -139,7 +139,7 @@ export const useSpeechStore = defineStore('speech', () => {
       typing_event(true)
 
     let i = logsStore.logs.length - 1 // track current index
-    if (i >= 0 && !logsStore.logs[i].isFinal || log.translation) {
+    if ((i >= 0 && !logsStore.logs[i].isFinal) || log.translation) {
       logsStore.logs[index] = log
       // push to log
     }

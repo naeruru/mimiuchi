@@ -189,19 +189,19 @@ let wss: WebSocketServer = null
 ipcMain.on('start-ws', (event, args) => {
   wss = new WebSocketServer({ port: args })
   initialize_ws(win, wss, args)
-    .then((ws: WebSocket) => {
+    .then(() => {
       win.webContents.send('websocket-started', true)
     })
-    .catch((error: any) => {
+    .catch(() => {
       win.webContents.send('websocket-error', true)
     })
 })
 
-ipcMain.on('close-ws', (event, args) => {
+ipcMain.on('close-ws', () => {
   wss.close()
 })
 
-ipcMain.on('update-check', async (event) => {
+ipcMain.on('update-check', async () => {
   const latest = await check_update()
   win.webContents.send('update-check', latest)
 })

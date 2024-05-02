@@ -6,7 +6,7 @@
     <v-list density="compact" nav>
       <v-list-subheader>{{ $t('settings.title') }}</v-list-subheader>
       <v-list-item
-        v-for="(setting, i) in settings_general"
+        v-for="(setting) in settings_general"
         :prepend-icon="setting.icon"
         :title="setting.title"
         :value="setting.value"
@@ -18,7 +18,7 @@
       <v-divider />
       <v-list-subheader>{{ $t('settings.connections.title') }}</v-list-subheader>
       <v-list-item
-        v-for="(setting, i) in connections"
+        v-for="(setting) in connections"
         :prepend-icon="setting.icon"
         :title="setting.title"
         :value="setting.value"
@@ -30,7 +30,7 @@
       <v-divider />
       <v-list-subheader>{{ $t('settings.osc.title') }}</v-list-subheader>
       <v-list-item
-        v-for="(setting, i) in settings_osc"
+        v-for="(setting) in settings_osc"
         :prepend-icon="setting.icon"
         :title="setting.title"
         :value="setting.value"
@@ -169,7 +169,7 @@ onMounted(() => {
   if (is_electron()) {
     window.ipcRenderer.removeListener('update-check')
     window.ipcRenderer.send('update-check')
-    window.ipcRenderer.on('update-check', (event: any, data: any) => {
+    window.ipcRenderer.on('update-check', (event: any) => {
       if (event !== `v${APP_VERSION.value}`)
         update_available.value = true
     })

@@ -326,8 +326,7 @@ function validateAssignValue1() {
 
   switch (assign.value.type) {
     case 'int':
-      if (assign.value.set1 === '' || Number.isNaN(Number(assign.value.set1))) // Invalid input.
-      {
+      if (assign.value.set1 === '' || Number.isNaN(Number(assign.value.set1))) { // Invalid input.
         assign.value.set1 = '0'
       }
       else { // Valid input.
@@ -337,8 +336,7 @@ function validateAssignValue1() {
 
       break
     case 'float':
-      if (assign.value.set1 === '' || Number.isNaN(Number(assign.value.set1))) // Invalid input.
-      {
+      if (assign.value.set1 === '' || Number.isNaN(Number(assign.value.set1))) { // Invalid input.
         assign.value.set1 = '0'
       }
       else { // Valid input.
@@ -360,8 +358,7 @@ function validateAssignValue2() {
 
   switch (assign.value.type) {
     case 'int':
-      if (assign.value.set2 === '' || Number.isNaN(Number(assign.value.set2))) // Invalid input.
-      {
+      if (assign.value.set2 === '' || Number.isNaN(Number(assign.value.set2))) { // Invalid input.
         assign.value.set2 = '0'
       }
       else { // Valid input.
@@ -371,8 +368,7 @@ function validateAssignValue2() {
 
       break
     case 'float':
-      if (assign.value.set2 === '' || Number.isNaN(Number(assign.value.set2))) // Invalid input.
-      {
+      if (assign.value.set2 === '' || Number.isNaN(Number(assign.value.set2))) { // Invalid input.
         assign.value.set2 = '0'
       }
       else { // Valid input.

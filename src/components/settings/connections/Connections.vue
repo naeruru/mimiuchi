@@ -55,9 +55,9 @@
                   />
                 </template>
                 <!-- <v-col>
-                                    <p class="text-subtitle-1 font-weight-bold pb-0">{{ $t('settings.connections.websocket_name') }}</p>
-                                    <p class="text-subtitle-2　font-weight-light text-medium-emphasis">websocket</p>
-                                </v-col> -->
+                  <p class="text-subtitle-1 font-weight-bold pb-0">{{ $t('settings.connections.websocket_name') }}</p>
+                  <p class="text-subtitle-2 font-weight-light text-medium-emphasis">websocket</p>
+                </v-col> -->
                 <v-spacer />
                 <template #append>
                   <v-btn
@@ -99,9 +99,9 @@
                   />
                 </template>
                 <!-- <v-col>
-                                    <p class="text-subtitle-1 font-weight-bold pb-0">{{ $t('settings.connections.websocket_name') }}</p>
-                                    <p class="text-subtitle-2　font-weight-light text-medium-emphasis">websocket</p>
-                                </v-col> -->
+                  <p class="text-subtitle-1 font-weight-bold pb-0">{{ $t('settings.connections.websocket_name') }}</p>
+                  <p class="text-subtitle-2 font-weight-light text-medium-emphasis">websocket</p>
+                </v-col> -->
                 <v-spacer />
                 <template #append>
                   <v-btn
@@ -206,7 +206,7 @@ onMounted(() => {
     // window.ipcRenderer.on('websocket-started', (event: any, data: any) => {
     //     // console.log("MEOW")
     // })
-    window.ipcRenderer.on('websocket-error', (event: any, data: any) => {
+    window.ipcRenderer.on('websocket-error', () => {
       connectionsStore.ws.enabled = false
       console.log('error')
     })

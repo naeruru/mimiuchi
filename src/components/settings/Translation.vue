@@ -36,7 +36,7 @@
             variant="outlined"
             hide-details
           >
-            <template #item="{ props, item }">
+            <template #item="{ props }">
               <v-list-item v-bind="props">
                 <template #append>
                   <v-icon icon="mdi-laptop" />

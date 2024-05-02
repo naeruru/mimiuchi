@@ -135,7 +135,7 @@ const last_setting = computed(() => {
   return (last_route.value && last_route.value.startsWith('/settings')) ? last_route.value : '/settings/general'
 })
 
-watch(input_text, (newValue) => {
+watch(input_text, () => {
   if (oscStore.osc_text && oscStore.text_typing && defaultStore.broadcasting)
     typing_event(true)
 })
@@ -323,10 +323,10 @@ function reloadEvents() {
   if (is_electron()) {
     window.ipcRenderer.removeListener('websocket-connect')
     window.ipcRenderer.removeListener('receive-text-event')
-    window.ipcRenderer.on('websocket-connect', (event: any, data: any) => {
+    window.ipcRenderer.on('websocket-connect', (event: any) => {
       defaultStore.broadcasting = event
     })
-    window.ipcRenderer.on('receive-text-event', (event: any, data: any) => {
+    window.ipcRenderer.on('receive-text-event', (event: any) => {
       event = JSON.parse(event)
       onSubmit(event)
     })

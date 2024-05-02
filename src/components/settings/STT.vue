@@ -97,7 +97,7 @@
               hide-details
             />
             <v-card
-              v-for="(language, i) in filtered_lang" class="language-card pa-2 mb-2"
+              v-for="(language) in filtered_lang" class="language-card pa-2 mb-2"
               :color="language.value === speechStore.stt.language ? 'primary' : 'default'"
               @click="speechStore.stt.language = language.value"
             >
