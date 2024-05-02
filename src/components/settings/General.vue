@@ -29,7 +29,7 @@
           <v-card-text class="text-subtitle-1 font-weight-medium">
             {{ $t('settings.general.transcript') }}
           </v-card-text>
-          <v-btn color="primary" class="mt-2" @click="logsStore.export()">
+          <v-btn color="primary" class="mt-2" @click="logsStore.exportLogs()">
             <v-icon>mdi-download</v-icon>
           </v-btn>
         </v-col>
