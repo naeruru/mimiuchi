@@ -215,8 +215,8 @@ function to_title_case(str: string): string {
 }
 
 function set_theme(selected_theme: string) {
-  theme.global.name.value = selected_theme // Immediately set the current theme to the selected theme.
-  current_theme.value = selected_theme // Store the setting.
+  theme.global.name.value = selected_theme // Immediately set the current theme to the selected theme
+  current_theme.value = selected_theme // Store the setting
 }
 </script>
 
