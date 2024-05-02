@@ -200,7 +200,6 @@ watch(
   (v) => {
     v.sub_type = { style: 'regular', weight: '400' }
   },
-  { deep: true },
 )
 
 function open_external(link: string | null) {
