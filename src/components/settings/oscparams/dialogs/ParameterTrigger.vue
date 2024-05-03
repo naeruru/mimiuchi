@@ -231,6 +231,7 @@ interface Assign {
 }
 
 const props = defineProps<{ mode: string, editingIndex: number }>()
+const emit = defineEmits(['update:modelValue'])
 const model = defineModel()
 const oscStore = useOSCStore()
 
@@ -289,19 +290,19 @@ watch(model, (enabled) => {
 })
 
 function cancelParamDialog() {
-  $emit('update:modelValue', false) // Close the dialog.
+  emit('update:modelValue', false) // Close the dialog.
 }
 
 function confirmAddParam() {
   oscStore.osc_profiles[oscStore.current_profile].push(new_param)
 
-  $emit('update:modelValue', false)
+  emit('update:modelValue', false)
 }
 
 function confirmEditParam() {
   oscStore.osc_profiles[oscStore.current_profile][props.editingIndex as number] = JSON.parse(JSON.stringify(new_param)) // Deep copy.
 
-  $emit('update:modelValue', false)
+  emit('update:modelValue', false)
 }
 
 // function deleteParam(i: number) {
