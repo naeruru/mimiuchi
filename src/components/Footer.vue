@@ -161,7 +161,9 @@ onUnmounted(() => {
     window.ipcRenderer.removeListener('websocket-connect')
     window.ipcRenderer.removeListener('receive-text-event')
   }
-  defaultStore.worker.removeEventListener('message', translationStore.onMessageReceived)
+
+  if (defaultStore.worker)
+    defaultStore.worker.removeEventListener('message', translationStore.onMessageReceived)
 })
 
 onUpdated(() => {
