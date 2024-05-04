@@ -19,11 +19,6 @@ export const useWordReplaceStore = defineStore('wordreplace', () => {
     return input.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
   }
 
-  // Add case insensitivity
-  function case_insensitive_regex(input: string) {
-    return input.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
-  }
-
   // Replace words.
   // Longer keys have higher priority (e.g., "Hello world" → "apple", "Hello" → "banana".
   // The transcript "Hello world" will become "apple"). Keys are sorted by the Word Replace component.
