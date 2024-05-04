@@ -14,34 +14,33 @@
     <v-card-text>
       <v-row>
         <!-- <v-col :cols="12">
-                    <v-card subtitle="Add new connection" variant="outlined">
-                        <v-card-text>
-                            <v-row class="justify-center pb-4" :cols="12">
-                                <v-card
-                                    v-for="(connection) in connection_options"
-                                    class="ma-2 text-white"
-                                    variant="tonal"
-                                    @click="open_dialog(connection)"
-                                >
-                                    <v-card-item>
-                                        <template v-slot:title>
-                                            <p class="text-subtitle-1">
-                                                <v-icon
-                                                    :icon="connection.icon"
-                                                    size="18"
-                                                    color="secondary"
-                                                    class="me-1 pb-1"
-                                                ></v-icon>
-                                                {{ connection.title }}
-                                            </p>
-                                        </template>
-                                    </v-card-item>
-                                </v-card>
-                            </v-row>
-                        </v-card-text>
-                    </v-card>
-                </v-col> -->
-
+          <v-card subtitle="Add new connection" variant="outlined">
+            <v-card-text>
+              <v-row class="justify-center pb-4" :cols="12">
+                <v-card
+                  v-for="(connection) in connection_options"
+                  class="ma-2 text-white"
+                  variant="tonal"
+                  @click="open_dialog(connection)"
+                >
+                  <v-card-item>
+                    <template v-slot:title>
+                      <p class="text-subtitle-1">
+                        <v-icon
+                          :icon="connection.icon"
+                          size="18"
+                          color="secondary"
+                          class="me-1 pb-1"
+                        ></v-icon>
+                        {{ connection.title }}
+                      </p>
+                    </template>
+                  </v-card-item>
+                </v-card>
+              </v-row>
+            </v-card-text>
+          </v-card>
+        </v-col> -->
         <v-col :cols="12">
           <v-card flat>
             <v-card class="py-2" flat>
