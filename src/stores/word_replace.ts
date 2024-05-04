@@ -8,7 +8,7 @@ interface word_replacements {
 export const useWordReplaceStore = defineStore('wordreplace', () => {
   const enabled = ref(true)
   const match_whole_word = ref(true)
-  const match_case = ref (false)
+  const match_case = ref(false)
 
   const word_replacements = ref<word_replacements>({})
 
@@ -34,7 +34,7 @@ export const useWordReplaceStore = defineStore('wordreplace', () => {
     let joined_keys: string[] = []
     let input_interpretation: string
 
-    // Interpret depending on the "Match case" option.
+    // Interpret depending on the "Match case" option
     if (!match_case.value) {
       input_interpretation = input.toLowerCase()
       joined_keys = Object.keys(word_replacements_lowercase.value)
@@ -46,10 +46,10 @@ export const useWordReplaceStore = defineStore('wordreplace', () => {
 
     const regex_keys = joined_keys.map(key => escapeRegExp(key)).join('|')
 
-    // Build pattern depending on options.
+    // Build pattern depending on options
     let pattern
 
-    // Option: Word/phrase match. Word boundaries prevent unexpected replacements
+    // Option: Word/phrase match. Word boundaries prevent unexpected replacements.
     // (e.g, "script" → "HELLO" would undesirably cause "description" → "deHELLOion").
     if (!match_whole_word.value)
       pattern = regex_keys

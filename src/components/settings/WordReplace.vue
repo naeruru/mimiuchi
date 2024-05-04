@@ -105,8 +105,25 @@ onMounted(() => {
 
 onUnmounted(() => {
   wordReplaceStore.word_replacements = {}
-  replacements.value.forEach((entry) => {
-    wordReplaceStore.word_replacements[entry.replacing.toLowerCase()] = entry.replacement
+
+  replacements
+    .value
+    .sort((a, b) => a.replacing.localeCompare(b.replacing)) // Sort keys by locale (e.g., alphabetical sort)
+    .sort((a, b) => b.replacing.length - a.replacing.length) // Sort keys by string length: longer strings to shorter strings
+    .forEach((entry) => {
+      wordReplaceStore.word_replacements[entry.replacing] = entry.replacement
+    })
+
+  wordReplaceStore.word_replacements_lowercase = {}
+
+  Object.keys(wordReplaceStore.word_replacements).forEach((key) => {
+    const keyLowerCase = key.toLowerCase()
+
+    // First-come, first-serve.
+    // For example, the replacement keys "Hello" and "hello" are both transformed to lowercase as "hello".
+    // When ordered by locale, their order is ["hello", "Hello"]. The replacement entry for "hello" will be used in case-insensitive replacements.
+    if (!wordReplaceStore.word_replacements_lowercase[keyLowerCase])
+      wordReplaceStore.word_replacements_lowercase[keyLowerCase] = wordReplaceStore.word_replacements[key]
   })
 })
 </script>
