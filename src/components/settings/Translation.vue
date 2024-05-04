@@ -96,9 +96,9 @@
         <v-alert variant="outlined" type="warning" prominent>
           <v-alert-title>
             <i18n-t keypath="settings.translation.unsupported.text" tag="label" for="link" scope="global">
-              <a class="text-primary pointer" @click="openURL('https://github.com/naeruru/mimiuchi/releases')">{{
-                $t('settings.translation.unsupported.link')
-              }}</a>
+              <a class="text-primary pointer" @click="openURL('https://github.com/naeruru/mimiuchi/releases')">
+                {{ $t('settings.translation.unsupported.link') }}
+              </a>
             </i18n-t>
           </v-alert-title>
         </v-alert>

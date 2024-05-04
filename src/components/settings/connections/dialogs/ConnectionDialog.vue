@@ -21,11 +21,15 @@
               <label
                 v-if="connection?.type === 'ws'"
                 class="text-subtitle-1"
-              >{{ $t('settings.connections.ws.description') }}</label>
+              >
+                {{ $t('settings.connections.ws.description') }}
+              </label>
               <label
                 v-if="connection?.type === 'wh'"
                 class="text-subtitle-1"
-              >{{ $t('settings.connections.wh.description') }}</label>
+              >
+                {{ $t('settings.connections.wh.description') }}
+              </label>
             </v-col>
             <v-col :cols="12" class="pt-2">
               <!-- {{ $t('settings.connections.ws.description') }} -->

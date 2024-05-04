@@ -131,7 +131,9 @@
               <a
                 class="text-primary pointer"
                 @click="openURL('https://mimiuchi.com/')"
-              >{{ $t('settings.stt.unsupported.link') }}</a>
+              >
+                {{ $t('settings.stt.unsupported.link') }}
+              </a>
             </i18n-t>
           </v-alert-title>
         </v-alert>
