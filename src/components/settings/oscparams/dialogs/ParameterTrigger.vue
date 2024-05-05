@@ -285,7 +285,7 @@ watch(model, (enabled) => {
 
     if (props.mode === 'edit') {
       const existingParam = oscStore.osc_profiles[oscStore.current_profile][props.editingIndex as number]
-      new_param.value = JSON.parse(JSON.stringify(existingParam)) // Deep copy.
+      new_param.value = JSON.parse(JSON.stringify(existingParam)) // Deep copy
     }
   }
 })
@@ -301,7 +301,7 @@ function confirmAddParam() {
 }
 
 function confirmEditParam() {
-  oscStore.osc_profiles[oscStore.current_profile][props.editingIndex as number] = JSON.parse(JSON.stringify(new_param.value)) // Deep copy.
+  oscStore.osc_profiles[oscStore.current_profile][props.editingIndex as number] = JSON.parse(JSON.stringify(new_param.value)) // Deep copy
 
   emit('update:modelValue', false)
 }
@@ -311,7 +311,7 @@ function confirmEditParam() {
 // }
 
 function addTrigger() {
-  if (!trigger_phrase.value.trim()) // The trigger phrase field is empty.
+  if (!trigger_phrase.value.trim()) // The trigger phrase field is empty
     return
 
   new_param.value.keywords.push({ enabled: true, text: trigger_phrase.value })
@@ -328,7 +328,7 @@ function validateAssignValue1() {
 
   switch (assign.value.type) {
     case 'int':
-      if (assign.value.set1 === '' || Number.isNaN(Number(assign.value.set1))) { // Invalid input.
+      if (assign.value.set1 === '' || Number.isNaN(Number(assign.value.set1))) { // Invalid input
         assign.value.set1 = '0'
       }
       else { // Valid input.
@@ -338,17 +338,17 @@ function validateAssignValue1() {
 
       break
     case 'float':
-      if (assign.value.set1 === '' || Number.isNaN(Number(assign.value.set1))) { // Invalid input.
+      if (assign.value.set1 === '' || Number.isNaN(Number(assign.value.set1))) { // Invalid input
         assign.value.set1 = '0'
       }
       else { // Valid input.
         // Display.
-        assign.value.set1 = assign.value.set1.replace(/^0+(?=\d)/, '') // Remove leading zeros in front of the number.
+        assign.value.set1 = assign.value.set1.replace(/^0+(?=\d)/, '') // Remove leading zeros in front of the number
       }
 
       break
     case 'bool':
-      if (assign.value.set1 !== 'true' && assign.value.set1 !== 'false') // Invalid input.
+      if (assign.value.set1 !== 'true' && assign.value.set1 !== 'false') // Invalid input
         assign.value.set1 = 'true'
 
       break
@@ -360,7 +360,7 @@ function validateAssignValue2() {
 
   switch (assign.value.type) {
     case 'int':
-      if (assign.value.set2 === '' || Number.isNaN(Number(assign.value.set2))) { // Invalid input.
+      if (assign.value.set2 === '' || Number.isNaN(Number(assign.value.set2))) { // Invalid input
         assign.value.set2 = '0'
       }
       else { // Valid input.
@@ -370,17 +370,17 @@ function validateAssignValue2() {
 
       break
     case 'float':
-      if (assign.value.set2 === '' || Number.isNaN(Number(assign.value.set2))) { // Invalid input.
+      if (assign.value.set2 === '' || Number.isNaN(Number(assign.value.set2))) { // Invalid input
         assign.value.set2 = '0'
       }
       else { // Valid input.
         // Display.
-        assign.value.set2 = assign.value.set2.replace(/^0+(?=\d)/, '') // Remove leading zeros in front of the number.
+        assign.value.set2 = assign.value.set2.replace(/^0+(?=\d)/, '') // Remove leading zeros in front of the number
       }
 
       break
     case 'bool':
-      if (assign.value.set2 !== 'true' && assign.value.set2 !== 'false') // Invalid input.
+      if (assign.value.set2 !== 'true' && assign.value.set2 !== 'false') // Invalid input
         assign.value.set2 = 'true'
 
       break
@@ -398,7 +398,7 @@ function addAssign() {
   const assign = new_assign
 
   // Validation.
-  if (!assign.value.keyword.trim()) // The assign keyword field is empty.
+  if (!assign.value.keyword.trim()) // The assign keyword field is empty
     return
 
   // Display.
