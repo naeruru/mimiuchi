@@ -301,7 +301,7 @@ function confirmAddParam() {
 }
 
 function confirmEditParam() {
-  oscStore.osc_profiles[oscStore.current_profile][props.editingIndex as number] = JSON.parse(JSON.stringify(new_param)) // Deep copy.
+  oscStore.osc_profiles[oscStore.current_profile][props.editingIndex as number] = JSON.parse(JSON.stringify(new_param.value)) // Deep copy.
 
   emit('update:modelValue', false)
 }
