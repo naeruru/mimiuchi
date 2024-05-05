@@ -14,6 +14,7 @@ export const useTranslationStore = defineStore('translation', () => {
 
   function onMessageReceived(e: any) {
     const logsStore = useLogsStore()
+    console.log(e.data.status)
     switch (e.data.status) {
       case 'progress':
         if (e.data.file === 'onnx/encoder_model_quantized.onnx')
