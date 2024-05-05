@@ -52,14 +52,14 @@
                 <v-card-text>
                   {{ $t('settings.general.reset.dialog.description') }}
                 </v-card-text>
-                <v-form validate-on="input" @submit.prevent="">
+                <!-- <v-form validate-on="input">
                   <v-card-actions>
-                    <!-- <v-col>
-                                                <v-checkbox v-model="settings" label="General" hide-details></v-checkbox>
-                                                <v-checkbox v-model="word_replace" label="Word Replace" hide-details></v-checkbox>
-                                            </v-col> -->
+                    <v-col>
+                      <v-checkbox v-model="settings" label="General" hide-details></v-checkbox>
+                      <v-checkbox v-model="word_replace" label="Word Replace" hide-details></v-checkbox>
+                    </v-col>
                   </v-card-actions>
-                </v-form>
+                </v-form> -->
                 <v-btn class="mt-2" color="error" @click="reset_settings()">
                   {{ $t('settings.general.reset.dialog.button') }}
                 </v-btn>
@@ -102,16 +102,19 @@ const languages = ref([
     value: 'ja',
   },
 ])
+
 const snackbar = ref(false)
 const snackbar_text = ref('')
+
 const reset_dialog = ref(false)
+
 const appearance = ref(true)
 const settings = ref(true)
 const word_replace = ref(true)
 const speech = ref(true)
 const connection = ref(true)
 const translation = ref(true)
-const ocs = ref(true)
+const osc = ref(true)
 
 const appearanceStore = useAppearanceStore()
 const wordReplaceStore = useWordReplaceStore()
@@ -135,7 +138,7 @@ function reset_settings() {
     connectionsStore.$reset()
   if (translation.value)
     translationStore.$reset()
-  if (ocs.value)
+  if (osc.value)
     oscStore.$reset()
   reset_dialog.value = false
   snackbar_text.value = t('settings.general.reset.snackbar.title')
