@@ -349,8 +349,8 @@ function reloadEvents() {
   if (is_electron()) {
     window.ipcRenderer.removeListener('websocket-connect')
     window.ipcRenderer.removeListener('receive-text-event')
-    window.ipcRenderer.on('websocket-connect', (event: any) => {
-      defaultStore.broadcasting = event
+    window.ipcRenderer.on('websocket-connect', (event: any, data: any) => {
+      defaultStore.broadcasting = data
     })
     window.ipcRenderer.on('receive-text-event', (event: any, data: any) => {
       const parsedData = JSON.parse(data)
