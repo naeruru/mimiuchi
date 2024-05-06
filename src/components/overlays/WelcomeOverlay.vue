@@ -74,6 +74,10 @@ const overlay_page = ref(props.page)
 
 const overlay_state = ref(props.overlay)
 
+watch(() => props.overlay, (new_val) => {
+  overlay_state.value = new_val
+})
+
 watch(overlay_state, (new_val) => {
   if (!new_val && overlay_page.value === 0) {
     // overlay_state.value = true
