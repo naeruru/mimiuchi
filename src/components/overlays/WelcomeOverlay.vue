@@ -63,7 +63,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue'
+import { ref, watch } from 'vue'
 import { useSettingsStore } from '@/stores/settings'
 
 const props = defineProps<{ overlay: boolean, page: number }>()
@@ -72,7 +72,7 @@ const settingsStore = useSettingsStore()
 
 const overlay_page = ref(props.page)
 
-const overlay_state = computed(() => props.overlay)
+const overlay_state = ref(props.overlay)
 
 watch(overlay_state, (new_val) => {
   if (!new_val && overlay_page.value === 0) {
