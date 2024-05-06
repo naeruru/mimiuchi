@@ -231,10 +231,10 @@ export const useSpeechStore = defineStore('speech', () => {
   function pin_language(selected_language: list_item) {
     const pins = pinned_languages
 
-    // Pin.
+    // Pin
     pins.value[selected_language.title] = selected_language
 
-    // Alphabetically sort.
+    // Alphabetically sort
     const sortedKeys = Object.keys(pins.value).sort()
     const sortedPins = {} as pinned_languages
 
@@ -248,7 +248,7 @@ export const useSpeechStore = defineStore('speech', () => {
   function unpin_language(selected_language: list_item) {
     const pins = pinned_languages
 
-    // Unpin.
+    // Unpin
     delete pins.value[selected_language.title]
   }
 
