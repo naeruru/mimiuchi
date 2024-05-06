@@ -352,9 +352,9 @@ function reloadEvents() {
     window.ipcRenderer.on('websocket-connect', (event: any) => {
       defaultStore.broadcasting = event
     })
-    window.ipcRenderer.on('receive-text-event', (event: any) => {
-      event = JSON.parse(event)
-      onSubmit(event)
+    window.ipcRenderer.on('receive-text-event', (event: any, data: any) => {
+      const parsedData = JSON.parse(data)
+      onSubmit(parsedData)
     })
   }
 }
