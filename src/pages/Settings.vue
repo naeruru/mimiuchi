@@ -169,8 +169,8 @@ onMounted(() => {
   if (is_electron()) {
     window.ipcRenderer.removeListener('update-check')
     window.ipcRenderer.send('update-check')
-    window.ipcRenderer.on('update-check', (event: any) => {
-      if (event !== `v${APP_VERSION.value}`)
+    window.ipcRenderer.on('update-check', (event: any, data: any) => {
+      if (data !== `v${APP_VERSION.value}`)
         update_available.value = true
     })
   }
