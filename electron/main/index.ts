@@ -72,6 +72,7 @@ const window_config: any = {
 }
 
 async function createWindow() {
+  Object.assign(window_config, store.get('win_bounds'))
   win = new BrowserWindow(window_config)
 
   if (VITE_DEV_SERVER_URL) { // #298
