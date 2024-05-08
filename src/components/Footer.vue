@@ -164,8 +164,6 @@ onUnmounted(() => {
 
   if (defaultStore.worker)
     defaultStore.worker.removeEventListener('message', translationStore.onMessageReceived)
-  
-  console.log("translation store listener removed")
 })
 
 onUpdated(() => {
@@ -174,37 +172,15 @@ onUpdated(() => {
 })
 
 onMounted(() => {
-  console.log('mounted')
   onResize()
   reloadEvents()
 
-  
-  console.log(defaultStore.worker)
   if (!defaultStore.worker) {
-    console.log("constructing new worker")
     defaultStore.worker = new Worker(new URL('../worker.ts', import.meta.url), {
       type: 'module',
     })
-    console.log(defaultStore.worker)
-    console.log('adding event listener for onMessageReceived')
-
-    defaultStore.worker.onerror = (error) => {
-      console.error('Worker error:', error);
-    }
-
-    defaultStore.worker.addEventListener('message', translationStore.onMessageReceived)
-    console.log(defaultStore.worker)
-    console.log("translation store listener added")
-
-    console.log('testing worker...')
-    defaultStore.worker.postMessage({
-      text: "this is a test",
-      src_lang: translationStore.source,
-      tgt_lang: translationStore.target,
-      index: 0,
-    })
-    // If nothing happens, there's probably something wrong
   }
+  defaultStore.worker.addEventListener('message', translationStore.onMessageReceived)
 
   speechStore.initialize_speech(speechStore.stt.language)
 })

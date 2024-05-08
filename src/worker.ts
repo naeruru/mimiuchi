@@ -15,12 +15,10 @@ class MyTranslationPipeline {
   }
 }
 
-globalThis.addEventListener('message', async (event) => {
+self.addEventListener('message', async (event) => {
   // call translator. downloads and caches model if first load
-  console.log('in the worker\'s addEventListener function')
   const translator = await MyTranslationPipeline.getInstance((x: any) => {
-    console.log('posting message in "translator"')
-    globalThis.postMessage(x)
+    self.postMessage(x)
   })
 
   const output = await translator(event.data.text, {
@@ -29,8 +27,7 @@ globalThis.addEventListener('message', async (event) => {
 
     // partial outputs
     callback_function: (x: any) => {
-      console.log('posting message in "output"')
-      globalThis.postMessage({
+      self.postMessage({
         status: 'update',
         output: translator.tokenizer.decode(x[0].output_token_ids, { skip_special_tokens: true }),
         index: event.data.index,
@@ -39,8 +36,7 @@ globalThis.addEventListener('message', async (event) => {
   })
 
   // send back to main thread
-  console.log('posting message for completion')
-  globalThis.postMessage({
+  self.postMessage({
     status: 'complete',
     output,
     index: event.data.index,
