@@ -76,6 +76,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { useRouter } from 'vue-router'
 
 import { useAppearanceStore } from '@/stores/appearance'
 import { useWordReplaceStore } from '@/stores/word_replace'
@@ -125,6 +126,8 @@ const logsStore = useLogsStore()
 const translationStore = useTranslationStore()
 const oscStore = useOSCStore()
 
+const router = useRouter()
+
 function reset_settings() {
   if (appearance.value)
     appearanceStore.$reset()
@@ -144,5 +147,7 @@ function reset_settings() {
   snackbar_text.value = t('settings.general.reset.snackbar.title')
   snackbar.value = true
   // this.$i18n.locale = this.settingsStore.language
+
+  router.push('/')
 }
 </script>
