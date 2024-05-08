@@ -179,8 +179,9 @@ onMounted(() => {
     defaultStore.worker = new Worker(new URL('../worker.ts', import.meta.url), {
       type: 'module',
     })
+    
+    defaultStore.worker.addEventListener('message', translationStore.onMessageReceived)
   }
-  defaultStore.worker.addEventListener('message', translationStore.onMessageReceived)
 
   speechStore.initialize_speech(speechStore.stt.language)
 })
