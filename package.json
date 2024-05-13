@@ -43,7 +43,6 @@
   },
   "devDependencies": {
     "@antfu/eslint-config": "^2.16.1",
-    "@types/lodash.clonedeep": "^4.5.9",
     "@types/webfontloader": "^1.6.38",
     "@vitejs/plugin-vue": "^5.0.4",
     "electron": "^30.0.1",
