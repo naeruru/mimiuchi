@@ -141,7 +141,7 @@
                   </v-col>
                   <v-col :cols="12">
                     <v-chip
-                      v-for="(keyword, i) in param.keywords"
+                      v-for="(keyword) in param.keywords"
                       v-model="keyword.enabled"
                       class="mx-1 mb-2"
                       label
@@ -155,7 +155,7 @@
                     <strong v-html="$t('settings.osc.params.param.assign.phrases')" />
                     <v-list density="compact">
                       <v-list-item
-                        v-for="(assign, i) in param.assigns"
+                        v-for="(assign) in param.assigns"
                         :value="assign"
                         :title="assign.keyword"
                         :subtitle="displayAssignSubtitle(assign)"

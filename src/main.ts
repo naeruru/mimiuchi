@@ -12,8 +12,10 @@ import i18n from '@/plugins/i18n'
 // loadFonts()
 
 import '@/assets/fonts/fonts.css'
+import storeReset from './plugins/storereset'
 
 const pinia = createPinia()
+pinia.use(storeReset)
 
 // If you want use Node.js, the`nodeIntegration` needs to be enabled in the Main process.
 // import './demos/node'

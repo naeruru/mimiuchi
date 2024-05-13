@@ -90,9 +90,9 @@
             <v-alert-title>
               <i18n-t keypath="settings.osc.general.unsupported.text" tag="label">
                 <template #link>
-                  <a class="text-primary pointer" @click="openURL('https://github.com/naeruru/mimiuchi/releases')">{{
-                    $t('settings.osc.general.unsupported.link')
-                  }}</a>
+                  <a class="text-primary pointer" @click="openURL('https://github.com/naeruru/mimiuchi/releases')">
+                    {{ $t('settings.osc.general.unsupported.link') }}
+                  </a>
                 </template>
                 <template #icon>
                   <v-icon color="success" size="small">

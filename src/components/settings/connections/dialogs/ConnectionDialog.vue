@@ -21,11 +21,15 @@
               <label
                 v-if="connection?.type === 'ws'"
                 class="text-subtitle-1"
-              >{{ $t('settings.connections.ws.description') }}</label>
+              >
+                {{ $t('settings.connections.ws.description') }}
+              </label>
               <label
                 v-if="connection?.type === 'wh'"
                 class="text-subtitle-1"
-              >{{ $t('settings.connections.wh.description') }}</label>
+              >
+                {{ $t('settings.connections.wh.description') }}
+              </label>
             </v-col>
             <v-col :cols="12" class="pt-2">
               <!-- {{ $t('settings.connections.ws.description') }} -->
@@ -54,10 +58,10 @@ import { computed, onMounted, ref } from 'vue'
 import WebSocketOptions from '@/components/settings/connections/dialogs/WebSocketOptions.vue'
 import WebHookOptions from '@/components/settings/connections/dialogs/WebHookOptions.vue'
 import is_electron from '@/helpers/is_electron'
-import type { Connection } from '@/stores/connections'
+import type { Connection, ConnectionType } from '@/stores/connections'
 import { useConnectionsStore } from '@/stores/connections'
 
-const props = defineProps<{ modelValue: boolean, connection: object }>()
+const props = defineProps<{ modelValue: boolean, connection: ConnectionType }>()
 
 const emit = defineEmits(['update:modelValue'])
 
@@ -69,42 +73,42 @@ declare const window: any
 //   icon?: string
 // }
 
-const connectionStore = useConnectionsStore()
+const connectionsStore = useConnectionsStore()
 
 const form = ref(false)
-const ws = ref<Connection>()
-const wh = ref<Connection>()
+const ws = ref(<Connection>{})
+const wh = ref(<Connection>{})
 
 const value = computed({
   get() {
     return props.modelValue
   },
   set(modelValue: boolean) {
-    ws.value = JSON.parse(JSON.stringify(connectionStore.ws))
-    wh.value = JSON.parse(JSON.stringify(connectionStore.wh))
+    ws.value = JSON.parse(JSON.stringify(connectionsStore.ws))
+    wh.value = JSON.parse(JSON.stringify(connectionsStore.wh))
     emit('update:modelValue', modelValue)
   },
 })
 
 onMounted(() => {
-  ws.value = JSON.parse(JSON.stringify(connectionStore.ws))
-  wh.value = JSON.parse(JSON.stringify(connectionStore.wh))
+  ws.value = JSON.parse(JSON.stringify(connectionsStore.ws))
+  wh.value = JSON.parse(JSON.stringify(connectionsStore.wh))
 })
 
 function update_connection(connection: any) {
   switch (connection.type) {
     case 'ws':
-      connectionStore.ws = ws
+      connectionsStore.ws = ws.value
       if (is_electron()) {
-        if (connectionStore.ws.enabled) {
+        if (connectionsStore.ws.enabled) {
           window.ipcRenderer.send('close-ws')
-          window.ipcRenderer.send('start-ws', connectionStore.ws.port)
+          window.ipcRenderer.send('start-ws', connectionsStore.ws.port)
         }
       }
       break
     case 'wh':
-      connectionStore.wh = wh
-      connectionStore.wh.enabled = true
+      connectionsStore.wh = wh.value
+      connectionsStore.wh.enabled = true
       break
   }
   emit('update:modelValue', false)

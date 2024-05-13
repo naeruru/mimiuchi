@@ -24,9 +24,9 @@ import is_electron from '@/helpers/is_electron'
 import type { Connection } from '@/stores/connections'
 import { useConnectionsStore } from '@/stores/connections'
 
-const model = defineModel()
+const model = defineModel<Connection>()
 
-const connectionStore = useConnectionsStore()
+const connectionsStore = useConnectionsStore()
 
 const ws = ref<Connection>()
 const port_rules = ref([
@@ -38,6 +38,6 @@ const port_rules = ref([
 ])
 
 onMounted(() => {
-  ws.value = JSON.parse(JSON.stringify(connectionStore.ws))
+  ws.value = JSON.parse(JSON.stringify(connectionsStore.ws))
 })
 </script>

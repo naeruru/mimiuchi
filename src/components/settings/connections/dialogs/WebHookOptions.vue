@@ -15,8 +15,8 @@ import { onMounted, ref } from 'vue'
 import type { Connection } from '@/stores/connections'
 import { useConnectionsStore } from '@/stores/connections'
 
-const model = defineModel()
-const connectionStore = useConnectionsStore()
+const model = defineModel<Connection>()
+const connectionsStore = useConnectionsStore()
 
 const wh = ref<Connection>()
 const url_rules = ref([
@@ -27,6 +27,6 @@ const url_rules = ref([
 ])
 
 onMounted(() => {
-  wh.value = JSON.parse(JSON.stringify(connectionStore.wh))
+  wh.value = JSON.parse(JSON.stringify(connectionsStore.wh))
 })
 </script>

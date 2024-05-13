@@ -37,7 +37,7 @@
           >
             <template #loader>
               <v-progress-linear
-                :active="logStore.loading_result === true || translationStore.download >= 0"
+                :active="logsStore.loading_result === true || translationStore.download >= 0"
                 :color="translationStore.download !== -1 ? 'warning' : 'secondary'"
                 :indeterminate="translationStore.download === -1"
                 :model-value="translationStore.download"
@@ -118,7 +118,7 @@ declare const window: any
 const last_route = ref<any>(null)
 const { smAndDown } = useDisplay()
 const speechStore = useSpeechStore()
-const logStore = useLogsStore()
+const logsStore = useLogsStore()
 const translationStore = useTranslationStore()
 const oscStore = useOSCStore()
 const defaultStore = useDefaultStore()
@@ -135,7 +135,7 @@ const last_setting = computed(() => {
   return (last_route.value && last_route.value.startsWith('/settings')) ? last_route.value : '/settings/general'
 })
 
-watch(input_text, (newValue) => {
+watch(input_text, () => {
   if (oscStore.osc_text && oscStore.text_typing && defaultStore.broadcasting)
     typing_event(true)
 })
@@ -161,7 +161,9 @@ onUnmounted(() => {
     window.ipcRenderer.removeListener('websocket-connect')
     window.ipcRenderer.removeListener('receive-text-event')
   }
-  defaultStore.worker.removeEventListener('message', translationStore.onMessageReceived)
+
+  if (defaultStore.worker)
+    defaultStore.worker.removeEventListener('message', translationStore.onMessageReceived)
 })
 
 onUpdated(() => {
@@ -177,8 +179,9 @@ onMounted(() => {
     defaultStore.worker = new Worker(new URL('../worker.ts', import.meta.url), {
       type: 'module',
     })
+    
+    defaultStore.worker.addEventListener('message', translationStore.onMessageReceived)
   }
-  defaultStore.worker.addEventListener('message', translationStore.onMessageReceived)
 
   speechStore.initialize_speech(speechStore.stt.language)
 })
@@ -290,7 +293,7 @@ async function onSubmit(log: Log | null = null) {
 
   if (!log) {
     log = {
-      transcript: input_text,
+      transcript: input_text.value,
       isFinal: true,
       isTranslationFinal: false,
       translate: false,
@@ -299,7 +302,7 @@ async function onSubmit(log: Log | null = null) {
   }
   if (log && log.isFinal)
     paramTrigger(log.transcript)
-  speechStore.on_submit(log, Math.max(logStore.logs.length - 1, 0))
+  speechStore.on_submit(log, Math.max(logsStore.logs.length - 1, 0))
 
   // clear chatbox
   input_text.value = ''
@@ -324,11 +327,11 @@ function reloadEvents() {
     window.ipcRenderer.removeListener('websocket-connect')
     window.ipcRenderer.removeListener('receive-text-event')
     window.ipcRenderer.on('websocket-connect', (event: any, data: any) => {
-      defaultStore.broadcasting = event
+      defaultStore.broadcasting = data
     })
     window.ipcRenderer.on('receive-text-event', (event: any, data: any) => {
-      event = JSON.parse(event)
-      onSubmit(event)
+      const parsedData = JSON.parse(data)
+      onSubmit(parsedData)
     })
   }
 }

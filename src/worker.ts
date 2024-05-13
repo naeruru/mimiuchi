@@ -1,5 +1,6 @@
 // see: https://github.com/xenova/transformers.js
 import { pipeline } from '@xenova/transformers'
+import type { PipelineType } from '@xenova/transformers'
 
 class MyTranslationPipeline {
   static task = 'translation'
@@ -8,7 +9,7 @@ class MyTranslationPipeline {
 
   static async getInstance(progress_callback: any = null) {
     if (this.instance === null)
-      this.instance = pipeline(this.task, this.model, { progress_callback })
+      this.instance = pipeline(<PipelineType>this.task, this.model, { progress_callback })
 
     return this.instance
   }

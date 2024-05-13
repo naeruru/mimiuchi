@@ -8,9 +8,9 @@
         v-for="log in logs"
         :class="{ 'fade-out': log.hide, 'final-text': log.isFinal || log.isTranslationFinal, 'interim-text': !log.isFinal || (!log.isTranslationFinal && log.translate) }"
       >
-        <a v-if="log.hide !== 2">{{
-          (translationStore.enabled && (log.translation || !translationStore.show_original)) ? log.translation : log.transcript
-        }}&nbsp;&nbsp;</a>
+        <a v-if="log.hide !== 2">
+          {{ (translationStore.enabled && (log.translation || !translationStore.show_original)) ? log.translation : log.transcript }}&nbsp;&nbsp;
+        </a>
         <v-expand-transition v-show="log.pause">
           <div>
             <v-col class="pa-0" />
@@ -44,7 +44,7 @@ const theme = useTheme()
 
 const settingsStore = useSettingsStore()
 const appearanceStore = useAppearanceStore()
-const logStore = useLogsStore()
+const logsStore = useLogsStore()
 const translationStore = useTranslationStore()
 
 const font_size = `${appearanceStore.text.font_size}px`
@@ -55,7 +55,7 @@ const interim_color = appearanceStore.text.interim_color
 const font_name = appearanceStore.text.font.name
 const font_subtype = appearanceStore.text.font.sub_type
 
-const logs = logStore.logs
+const logs = logsStore.logs
 
 const overlay_main = ref(false)
 const overlay_page = ref(0)

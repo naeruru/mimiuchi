@@ -13,7 +13,7 @@
       <v-row>
         <v-col :cols="12">
           <v-radio-group v-model="settingsStore.language" :label="$t('settings.general.language')">
-            <v-card v-for="(language, i) in languages" class="pa-2 mb-2" :color="language.value === settingsStore.language ? 'primary' : 'default'" @click="settingsStore.language = language.value">
+            <v-card v-for="(language) in languages" class="pa-2 mb-2" :color="language.value === settingsStore.language ? 'primary' : 'default'" @click="settingsStore.language = language.value">
               <v-radio :label="language.title" :value="language.value">
                 <template #label>
                   <div>{{ language.title }}</div>
@@ -29,7 +29,7 @@
           <v-card-text class="text-subtitle-1 font-weight-medium">
             {{ $t('settings.general.transcript') }}
           </v-card-text>
-          <v-btn color="primary" class="mt-2" @click="logStore.export()">
+          <v-btn color="primary" class="mt-2" @click="logsStore.exportLogs()">
             <v-icon>mdi-download</v-icon>
           </v-btn>
         </v-col>
@@ -52,14 +52,14 @@
                 <v-card-text>
                   {{ $t('settings.general.reset.dialog.description') }}
                 </v-card-text>
-                <v-form validate-on="input" @submit.prevent="">
+                <!-- <v-form validate-on="input">
                   <v-card-actions>
-                    <!-- <v-col>
-                                                <v-checkbox v-model="settings" label="General" hide-details></v-checkbox>
-                                                <v-checkbox v-model="word_replace" label="Word Replace" hide-details></v-checkbox>
-                                            </v-col> -->
+                    <v-col>
+                      <v-checkbox v-model="settings" label="General" hide-details></v-checkbox>
+                      <v-checkbox v-model="word_replace" label="Word Replace" hide-details></v-checkbox>
+                    </v-col>
                   </v-card-actions>
-                </v-form>
+                </v-form> -->
                 <v-btn class="mt-2" color="error" @click="reset_settings()">
                   {{ $t('settings.general.reset.dialog.button') }}
                 </v-btn>
@@ -76,6 +76,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { useRouter } from 'vue-router'
 
 import { useAppearanceStore } from '@/stores/appearance'
 import { useWordReplaceStore } from '@/stores/word_replace'
@@ -102,25 +103,30 @@ const languages = ref([
     value: 'ja',
   },
 ])
+
 const snackbar = ref(false)
 const snackbar_text = ref('')
+
 const reset_dialog = ref(false)
+
 const appearance = ref(true)
 const settings = ref(true)
 const word_replace = ref(true)
 const speech = ref(true)
 const connection = ref(true)
 const translation = ref(true)
-const ocs = ref(true)
+const osc = ref(true)
 
 const appearanceStore = useAppearanceStore()
 const wordReplaceStore = useWordReplaceStore()
 const settingsStore = useSettingsStore()
 const speechStore = useSpeechStore()
-const connectionStore = useConnectionsStore()
-const logStore = useLogsStore()
+const connectionsStore = useConnectionsStore()
+const logsStore = useLogsStore()
 const translationStore = useTranslationStore()
 const oscStore = useOSCStore()
+
+const router = useRouter()
 
 function reset_settings() {
   if (appearance.value)
@@ -132,14 +138,16 @@ function reset_settings() {
   if (speech.value)
     speechStore.$reset()
   if (connection.value)
-    connectionStore.$reset()
+    connectionsStore.$reset()
   if (translation.value)
     translationStore.$reset()
-  if (ocs.value)
+  if (osc.value)
     oscStore.$reset()
   reset_dialog.value = false
   snackbar_text.value = t('settings.general.reset.snackbar.title')
   snackbar.value = true
   // this.$i18n.locale = this.settingsStore.language
+
+  router.push('/')
 }
 </script>

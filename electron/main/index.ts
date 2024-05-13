@@ -56,32 +56,24 @@ const window_config: any = {
   title: 'Main window',
   width: 1000,
   height: 700,
-  icon: join(process.env.PUBLIC, 'favicon.ico'),
+  icon: path.join(process.env.VITE_PUBLIC, 'favicon.ico'),
   frame: false,
   webPreferences: {
     preload,
     // Warning: Enable nodeIntegration and disable contextIsolation is not secure in production
+    // nodeIntegration: true,
+
     // Consider using contextBridge.exposeInMainWorld
     // Read more on https://www.electronjs.org/docs/latest/tutorial/context-isolation
+    // contextIsolation: false,
     nodeIntegration: true,
-    contextIsolation: true, // was false
+    contextIsolation: true,
   },
 }
 
 async function createWindow() {
-  win = new BrowserWindow({
-    title: 'Main window',
-    icon: path.join(process.env.VITE_PUBLIC, 'favicon.ico'),
-    webPreferences: {
-      preload,
-      // Warning: Enable nodeIntegration and disable contextIsolation is not secure in production
-      // nodeIntegration: true,
-
-      // Consider using contextBridge.exposeInMainWorld
-      // Read more on https://www.electronjs.org/docs/latest/tutorial/context-isolation
-      // contextIsolation: false,
-    },
-  })
+  Object.assign(window_config, store.get('win_bounds'))
+  win = new BrowserWindow(window_config)
 
   if (VITE_DEV_SERVER_URL) { // #298
     win.loadURL(VITE_DEV_SERVER_URL)
@@ -198,19 +190,19 @@ let wss: WebSocketServer = null
 ipcMain.on('start-ws', (event, args) => {
   wss = new WebSocketServer({ port: args })
   initialize_ws(win, wss, args)
-    .then((ws: WebSocket) => {
+    .then(() => {
       win.webContents.send('websocket-started', true)
     })
-    .catch((error: any) => {
+    .catch(() => {
       win.webContents.send('websocket-error', true)
     })
 })
 
-ipcMain.on('close-ws', (event, args) => {
+ipcMain.on('close-ws', () => {
   wss.close()
 })
 
-ipcMain.on('update-check', async (event) => {
+ipcMain.on('update-check', async () => {
   const latest = await check_update()
   win.webContents.send('update-check', latest)
 })
