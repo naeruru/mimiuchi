@@ -37,7 +37,7 @@
           >
             <template #loader>
               <v-progress-linear
-                :active="logsStore.loading_result === true || translationStore.download >= 0"
+                :active="logsStore.loading_result || translationStore.download >= 0"
                 :color="translationStore.download !== -1 ? 'warning' : 'secondary'"
                 :indeterminate="translationStore.download === -1"
                 :model-value="translationStore.download"
@@ -52,44 +52,43 @@
 
           <div class="d-flex justify-right">
             <v-btn
-              v-if="!is_electron()" class="mr-4" :color="(defaultStore.speech.listening) ? 'success' : 'error'"
-              size="small" icon variant="outlined" @click="toggleListen"
-            >
-              <v-icon v-if="!defaultStore.speech.listening">
-                mdi-microphone-off
-              </v-icon>
-              <v-icon v-else>
-                mdi-microphone
-              </v-icon>
-            </v-btn>
+              v-if="!is_electron()" class="mr-4"
+              :color="(defaultStore.speech.listening) ? 'success' : 'error'"
+              size="small"
+              :icon="!defaultStore.speech.listening ? 'mdi-microphone-off' : 'mdi-microphone'"
+              variant="outlined"
+              @click="toggleListen"
+            />
             <v-badge
               :model-value="!!defaultStore.connections"
               :content="defaultStore.connections ? defaultStore.connections : undefined" color="success"
               class="mr-4"
             >
               <v-btn
-                :loading="defaultStore.loading_websocket" :disabled="defaultStore.loading_websocket"
-                :color="(defaultStore.broadcasting) ? 'success' : 'error'" size="small" icon variant="outlined"
+                :loading="defaultStore.loading_websocket"
+                :disabled="defaultStore.loading_websocket"
+                :color="(defaultStore.broadcasting) ? 'success' : 'error'" size="small"
+                :icon="!defaultStore.broadcasting ? 'mdi-broadcast-off' : 'mdi-broadcast'"
+                variant="outlined"
                 @click="toggleBroadcast"
-              >
-                <v-icon v-if="!defaultStore.broadcasting">
-                  mdi-broadcast-off
-                </v-icon>
-                <v-icon v-else>
-                  mdi-broadcast
-                </v-icon>
-              </v-btn>
+              />
             </v-badge>
             <v-divider class="mr-4" vertical />
             <v-btn
-              v-if="$route.name === 'home'" color="transparent" size="small" icon flat
+              v-if="$route.name === 'home'" color="transparent"
+              size="small"
+              icon="mdi-cog"
+              flat
               @click="$router.push({ path: last_setting })"
-            >
-              <v-icon>mdi-cog</v-icon>
-            </v-btn>
-            <v-btn v-else color="transparent" size="small" icon flat @click="$router.push({ path: '/' })">
-              <v-icon>mdi-home</v-icon>
-            </v-btn>
+            />
+            <v-btn
+              v-else
+              color="transparent"
+              size="small"
+              icon="mdi-home"
+              flat
+              @click="$router.push({ path: '/' })"
+            />
           </div>
         </div>
       </v-form>
