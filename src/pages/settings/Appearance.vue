@@ -220,7 +220,7 @@ function set_theme(selected_theme: string) {
 </script>
 
 <style scoped>
-:deep(.v-tooltip > .v-overlay__content) {
+.v-tooltip > :deep(.v-overlay__content) {
   background: #222 !important;
   color: #ddd !important;
   transition-property: opacity !important;
