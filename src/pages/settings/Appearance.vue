@@ -7,7 +7,7 @@
     <v-card-text>
       <v-row>
         <v-col :cols="12">
-          <p class="text-h6" label color="secondary">
+          <p class="text-h6">
             {{ $t('settings.appearance.theme') }}
           </p>
         </v-col>
@@ -32,7 +32,7 @@
       </v-row>
       <v-row>
         <v-col :cols="12">
-          <p class="text-h6" label color="secondary">
+          <p class="text-h6">
             {{ $t('settings.appearance.text.title') }}
           </p>
         </v-col>
@@ -219,8 +219,8 @@ function set_theme(selected_theme: string) {
 }
 </script>
 
-<style>
-.v-tooltip > .v-overlay__content {
+<style scoped>
+:deep(.v-tooltip > .v-overlay__content) {
   background: #222 !important;
   color: #ddd !important;
   transition-property: opacity !important;

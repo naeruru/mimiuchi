@@ -1,7 +1,7 @@
 <template>
   <v-card color="transparent" flat class="pb-16">
     <template #title>
-      <span v-html="$t('settings.osc.params.title')" />
+      <span>{{ $t('settings.osc.params.title') }}</span>
       <v-chip
         prepend-icon="mdi-alert-circle-outline"
         color="warning" class="ml-2"
@@ -12,7 +12,7 @@
       </v-chip>
     </template>
     <template #subtitle>
-      <span v-html="$t('settings.osc.params.description')" />
+      <span>{{ $t('settings.osc.params.description') }}</span>
     </template>
 
     <v-divider />
@@ -139,7 +139,7 @@
                   </v-col>
 
                   <v-col :cols="12">
-                    <strong v-html="$t('settings.osc.params.param.trigger_phrases')" />
+                    <strong>{{ $t('settings.osc.params.param.trigger_phrases') }}</strong>
                   </v-col>
                   <v-col :cols="12">
                     <v-chip
@@ -154,7 +154,7 @@
                     </v-chip>
                   </v-col>
                   <v-col :cols="12">
-                    <strong v-html="$t('settings.osc.params.param.assign.phrases')" />
+                    <strong>{{ $t('settings.osc.params.param.assign.phrases') }}</strong>
                     <v-list density="compact">
                       <v-list-item
                         v-for="(assign) in param.assigns"
@@ -171,7 +171,9 @@
           </v-expansion-panel-text>
         </v-expansion-panel>
       </v-expansion-panels>
-      <p v-else v-html="$t('settings.osc.params.empty')" />
+      <p v-else>
+        {{ $t('settings.osc.params.empty') }}
+      </p>
       <v-card class="mt-2" color="transparent" flat>
         <v-card-actions>
           <v-btn

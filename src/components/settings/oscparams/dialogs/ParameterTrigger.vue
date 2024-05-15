@@ -26,7 +26,7 @@
       <v-card-text class="mt-2">
         <v-row>
           <v-col>
-            <strong v-html="$t('settings.osc.params.param.trigger_phrases')" />
+            <strong>{{ $t('settings.osc.params.param.trigger_phrases') }}</strong>
             <v-chip v-if="!new_param.keywords.length" variant="text">
               {{ $t('settings.osc.params.param.empty') }}
             </v-chip>
@@ -62,7 +62,7 @@
       <v-card-text class="mt-2">
         <v-row>
           <v-col :cols="12">
-            <strong v-html="$t('settings.osc.params.param.assign.phrases')" />
+            <strong>{{ $t('settings.osc.params.param.assign.phrases') }}</strong>
             <v-chip v-if="!new_param.assigns.length" variant="text">
               {{ $t('settings.osc.params.param.empty') }}
             </v-chip>

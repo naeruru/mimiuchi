@@ -67,7 +67,7 @@ function minimize() {
 }
 </script>
 
-<style>
+<style scoped>
 .systembar {
   -webkit-app-region: drag;
 }
