@@ -15,6 +15,7 @@
           <v-radio-group v-model="settingsStore.language" :label="$t('settings.general.language')">
             <v-card
               v-for="(language) in languages"
+              :key="language.value"
               class="pa-2 mb-2" :color="language.value === settingsStore.language ? 'primary' : 'default'"
               @click="settingsStore.language = language.value"
             >

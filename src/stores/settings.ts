@@ -4,7 +4,7 @@ import { ref } from 'vue'
 export const useSettingsStore = defineStore('settings', () => {
   const welcome = ref(true)
 
-  const language = ref(navigator.language.split('-')[0])
+  const language = ref(['en', 'es', 'ja'].includes(navigator.language.split('-')[0]) ? navigator.language.split('-')[0] : 'en')
 
   const drawer = ref(true)
 
