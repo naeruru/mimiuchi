@@ -26,7 +26,8 @@
           class="systembar-button ms-2"
           height="35"
           size="x-small"
-          @click="close_app">
+          @click="close_app"
+        >
           <v-icon icon="mdi-close" />
         </v-btn>
       </template>

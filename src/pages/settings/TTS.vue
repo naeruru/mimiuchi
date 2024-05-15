@@ -76,8 +76,17 @@
           </v-slider>
         </v-col>
         <v-col :cols="12">
-          <v-radio-group v-model="speechStore.tts.voice" :label="$t('settings.tts.language')">
-            <v-text-field v-model="search_lang" class="mb-2" label="Search" variant="outlined" hide-details />
+          <v-radio-group
+            v-model="speechStore.tts.voice"
+            :label="$t('settings.tts.language')"
+          >
+            <v-text-field
+              v-model="search_lang"
+              class="mb-2"
+              label="Search"
+              variant="outlined"
+              hide-details
+            />
             <v-card
               v-for="(language) in filtered_lang"
               :key="language.name"

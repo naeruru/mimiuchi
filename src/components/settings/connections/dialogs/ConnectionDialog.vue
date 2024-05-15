@@ -32,7 +32,6 @@
               </label>
             </v-col>
             <v-col :cols="12" class="pt-2">
-              <!-- {{ $t('settings.connections.ws.description') }} -->
               <v-divider />
             </v-col>
           </v-row>
@@ -66,12 +65,6 @@ const props = defineProps<{ modelValue: boolean, connection: ConnectionType }>()
 const emit = defineEmits(['update:modelValue'])
 
 declare const window: any
-
-// declare interface ConnectionType {
-//   title?: string
-//   type?: string
-//   icon?: string
-// }
 
 const connectionsStore = useConnectionsStore()
 

@@ -179,7 +179,7 @@ onMounted(() => {
     defaultStore.worker = new Worker(new URL('../worker.ts', import.meta.url), {
       type: 'module',
     })
-    
+
     defaultStore.worker.addEventListener('message', translationStore.onMessageReceived)
   }
 

@@ -13,8 +13,15 @@
       <v-row>
         <v-col :cols="12">
           <v-radio-group v-model="settingsStore.language" :label="$t('settings.general.language')">
-            <v-card v-for="(language) in languages" class="pa-2 mb-2" :color="language.value === settingsStore.language ? 'primary' : 'default'" @click="settingsStore.language = language.value">
-              <v-radio :label="language.title" :value="language.value">
+            <v-card
+              v-for="(language) in languages"
+              class="pa-2 mb-2" :color="language.value === settingsStore.language ? 'primary' : 'default'"
+              @click="settingsStore.language = language.value"
+            >
+              <v-radio
+                :label="language.title"
+                :value="language.value"
+              >
                 <template #label>
                   <div>{{ language.title }}</div>
                 </template>
@@ -52,14 +59,6 @@
                 <v-card-text>
                   {{ $t('settings.general.reset.dialog.description') }}
                 </v-card-text>
-                <!-- <v-form validate-on="input">
-                  <v-card-actions>
-                    <v-col>
-                      <v-checkbox v-model="settings" label="General" hide-details></v-checkbox>
-                      <v-checkbox v-model="word_replace" label="Word Replace" hide-details></v-checkbox>
-                    </v-col>
-                  </v-card-actions>
-                </v-form> -->
                 <v-btn class="mt-2" color="error" @click="reset_settings()">
                   {{ $t('settings.general.reset.dialog.button') }}
                 </v-btn>

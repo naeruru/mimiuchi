@@ -13,34 +13,6 @@
     <v-divider />
     <v-card-text>
       <v-row>
-        <!-- <v-col :cols="12">
-          <v-card subtitle="Add new connection" variant="outlined">
-            <v-card-text>
-              <v-row class="justify-center pb-4" :cols="12">
-                <v-card
-                  v-for="(connection) in connection_options"
-                  class="ma-2 text-white"
-                  variant="tonal"
-                  @click="open_dialog(connection)"
-                >
-                  <v-card-item>
-                    <template v-slot:title>
-                      <p class="text-subtitle-1">
-                        <v-icon
-                          :icon="connection.icon"
-                          size="18"
-                          color="secondary"
-                          class="me-1 pb-1"
-                        ></v-icon>
-                        {{ connection.title }}
-                      </p>
-                    </template>
-                  </v-card-item>
-                </v-card>
-              </v-row>
-            </v-card-text>
-          </v-card>
-        </v-col> -->
         <v-col :cols="12">
           <v-card flat>
             <v-card class="py-2" flat>
@@ -53,10 +25,6 @@
                     class="mr-4"
                   />
                 </template>
-                <!-- <v-col>
-                  <p class="text-subtitle-1 font-weight-bold pb-0">{{ $t('settings.connections.websocket_name') }}</p>
-                  <p class="text-subtitle-2 font-weight-light text-medium-emphasis">websocket</p>
-                </v-col> -->
                 <v-spacer />
                 <template #append>
                   <v-btn
@@ -70,21 +38,8 @@
                 </template>
               </v-list-item>
             </v-card>
-            <!-- <v-divider></v-divider> -->
-            <!-- <v-list class="pa-0">
-                            <v-list-item :ripple="false" @click="toggle_ws()">
-                                <template v-slot:prepend>
-                                <p class="text-body-2">Enable</p>
-                            </template>
-                            <template v-slot:append>
-                                <v-switch v-model="connectionsStore.ws.enabled" color="primary" inset hide-details></v-switch>
-                            </template>
-                            </v-list-item>
-                        </v-list> -->
           </v-card>
-          <!-- <v-card>meow</v-card> -->
         </v-col>
-
         <v-col :cols="12">
           <v-card flat>
             <v-card class="py-2" flat>
@@ -97,10 +52,6 @@
                     class="mr-4"
                   />
                 </template>
-                <!-- <v-col>
-                  <p class="text-subtitle-1 font-weight-bold pb-0">{{ $t('settings.connections.websocket_name') }}</p>
-                  <p class="text-subtitle-2 font-weight-light text-medium-emphasis">websocket</p>
-                </v-col> -->
                 <v-spacer />
                 <template #append>
                   <v-btn
@@ -133,19 +84,7 @@
                 </template>
               </v-list-item>
             </v-card>
-            <!-- <v-divider></v-divider> -->
-            <!-- <v-list class="pa-0">
-                            <v-list-item :ripple="false" @click="toggle_ws()">
-                                <template v-slot:prepend>
-                                <p class="text-body-2">Enable</p>
-                            </template>
-                            <template v-slot:append>
-                                <v-switch v-model="connectionsStore.ws.enabled" color="primary" inset hide-details></v-switch>
-                            </template>
-                            </v-list-item>
-                        </v-list> -->
           </v-card>
-          <!-- <v-card>meow</v-card> -->
         </v-col>
       </v-row>
     </v-card-text>
@@ -166,6 +105,7 @@ const connectionsStore = useConnectionsStore()
 
 const dialog = ref(false)
 const connection_type = ref(<ConnectionType>{})
+
 // const connection_options = ref<ConnectionType[]>([
 //   {
 //     title: 'Webhook',

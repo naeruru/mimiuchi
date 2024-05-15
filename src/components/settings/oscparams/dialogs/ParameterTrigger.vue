@@ -31,13 +31,14 @@
               {{ $t('settings.osc.params.param.empty') }}
             </v-chip>
             <v-chip
-              v-for="(keyword, i) in new_param.keywords" v-else
+              v-for="(keyword, i) in new_param.keywords"
+              v-else
               v-model="keyword.enabled"
               class="mx-1 mb-2"
-              label
-              color="secondary"
-              size="small"
               closable
+              color="secondary"
+              label
+              size="small"
               @click:close="deleteTrigger(i)"
             >
               {{ keyword.text }}

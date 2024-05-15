@@ -2,7 +2,12 @@
   <v-card color="transparent" flat class="pb-16">
     <template #title>
       <span v-html="$t('settings.osc.params.title')" />
-      <v-chip prepend-icon="mdi-alert-circle-outline" color="warning" class="ml-2" variant="elevated" size="small">
+      <v-chip
+        prepend-icon="mdi-alert-circle-outline"
+        color="warning" class="ml-2"
+        variant="elevated"
+        size="small"
+      >
         {{ $t('general.subject_to_change') }}
       </v-chip>
     </template>
@@ -112,9 +117,6 @@
             <v-card flat>
               <v-card-text>
                 <v-row>
-                  <!-- <v-col :cols="12">
-                    <v-text-field v-model="param.name" label="Name" hide-details></v-text-field>
-                  </v-col> -->
                   <v-col :cols="12" :md="6">
                     <v-text-field
                       v-model="param.ip"
