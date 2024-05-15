@@ -19,7 +19,14 @@
 
     <v-hover>
       <template #default="{ isHovering, props }">
-        <v-btn v-bind="props" :color="isHovering ? 'red' : undefined" :variant="isHovering ? `flat` : `text`" class="systembar-button ms-2" height="35" size="x-small" @click="close_app">
+        <v-btn
+          v-bind="props"
+          :color="isHovering ? 'red' : undefined"
+          :variant="isHovering ? `flat` : `text`"
+          class="systembar-button ms-2"
+          height="35"
+          size="x-small"
+          @click="close_app">
           <v-icon icon="mdi-close" />
         </v-btn>
       </template>

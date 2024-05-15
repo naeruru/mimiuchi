@@ -1,12 +1,10 @@
 <template>
-  <!-- <v-navigation-drawer :width="Math.ceil((window_size.x * .2) / 10) * 10" v-model="settingsStore.drawer" :permanent="!smAndDown" floating v-resize="on_resize">
-            {{ window_size }} {{ Math.ceil((window_size.x * .2) / 2) * 2 }}
-        </v-navigation-drawer> -->
   <v-navigation-drawer v-model="settingsStore.drawer" :permanent="!smAndDown">
     <v-list density="compact" nav>
       <v-list-subheader>{{ $t('settings.title') }}</v-list-subheader>
       <v-list-item
         v-for="(setting) in settings_general"
+        :key="setting.value"
         :prepend-icon="setting.icon"
         :title="setting.title"
         :value="setting.value"
@@ -19,6 +17,7 @@
       <v-list-subheader>{{ $t('settings.connections.title') }}</v-list-subheader>
       <v-list-item
         v-for="(setting) in connections"
+        :key="setting.value"
         :prepend-icon="setting.icon"
         :title="setting.title"
         :value="setting.value"
@@ -31,6 +30,7 @@
       <v-list-subheader>{{ $t('settings.osc.title') }}</v-list-subheader>
       <v-list-item
         v-for="(setting) in settings_osc"
+        :key="setting.value"
         :prepend-icon="setting.icon"
         :title="setting.title"
         :value="setting.value"
@@ -41,7 +41,6 @@
       <v-divider />
     </v-list>
 
-    <!-- <v-list :items="settings_list" density="compact" nav></v-list> -->
     <template #append>
       <v-divider />
       <v-col class="d-flex justify-right mt-1 px-2">
@@ -67,7 +66,7 @@
 
   <div id="settings" class="d-flex fill-height justify-center settings">
     <v-col class="pa-0" cols="12" md="10" lg="8" xl="6">
-      <router-view v-slot="{ Component }" name="panel">
+      <router-view v-slot="{ Component }">
         <transition name="slide-up">
           <component :is="Component" />
         </transition>
@@ -95,11 +94,6 @@ const { t } = useI18n()
 settingsStore.drawer = !smAndDown.value
 const APP_VERSION = ref(__APP_VERSION__)
 const update_available = ref(false)
-
-// const window_size = ref({
-//   x: 0,
-//   y: 0,
-// })
 
 const outer_size = computed(() => is_electron() ? '140px' : '105px')
 const settings_general = computed(() => {

@@ -47,10 +47,19 @@
       <div v-if="replacements.length" class="mt-6">
         <v-row v-for="(replacement, i) in replacements">
           <v-col :cols="12" :sm="6" class="pt-1 pb-0">
-            <v-text-field v-model="replacement.replacing" :label="$t('settings.word_replace.replacing')" :rules="[exists]" append-icon="mdi-arrow-right-bold" />
+            <v-text-field
+              v-model="replacement.replacing"
+              :label="$t('settings.word_replace.replacing')"
+              :rules="[exists]"
+              append-icon="mdi-arrow-right-bold"
+            />
           </v-col>
           <v-col :cols="10" :sm="6" class="pt-1 pb-0">
-            <v-text-field v-model="replacement.replacement" :label="$t('settings.word_replace.replacement')" hide-details>
+            <v-text-field
+              v-model="replacement.replacement"
+              :label="$t('settings.word_replace.replacement')"
+              hide-details
+            >
               <template #append>
                 <v-btn size="x-small" color="red" icon="mdi-minus" @click="remove_entry(i)" />
               </template>

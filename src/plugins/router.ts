@@ -30,92 +30,55 @@ const routes = [
     path: '/settings/',
     name: 'settings',
     components: {
-      default: Settings,
-      panel: SettingsGeneral,
       Header,
+      default: Settings,
       Footer,
     },
     children: [
       {
         path: 'general',
         name: 'general',
-        components: {
-          default: Settings,
-          panel: SettingsGeneral,
-          Header,
-        },
+        component: SettingsGeneral,
       },
       {
         path: 'appearance',
         name: 'appearance',
-        components: {
-          default: Settings,
-          panel: Appearance,
-          Header,
-        },
+        component: Appearance,
       },
       {
         path: 'stt',
         name: 'stt',
-        components: {
-          default: Settings,
-          panel: STT,
-          Header,
-        },
+        component: STT,
       },
       {
         path: 'tts',
         name: 'tts',
-        components: {
-          default: Settings,
-          panel: TTS,
-          Header,
-        },
+        component: TTS,
       },
       {
         path: 'wordreplace',
         name: 'wordreplace',
-        components: {
-          default: Settings,
-          panel: WordReplace,
-          Header,
-        },
+        component: WordReplace,
       },
       {
         path: 'translation',
         name: 'translation',
-        components: {
-          default: Settings,
-          panel: Translation,
-          Header,
-        },
+        component: Translation,
       },
       {
         path: 'connections',
         name: 'connections',
-        components: {
-          default: Settings,
-          panel: Connections,
-          Header,
-        },
+        component: Connections,
       },
       {
         path: 'osc',
         name: 'osc',
-        components: {
-          default: Settings,
-          panel: OSC,
-          Header,
-        },
+        component: OSC,
       },
       {
         path: 'oscparams',
         name: 'oscparams',
-        components: {
-          default: Settings,
-          panel: OSCParams,
-          Header,
-        },
+        component: OSCParams,
       },
     ],
   },

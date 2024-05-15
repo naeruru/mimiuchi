@@ -78,7 +78,13 @@
         <v-col :cols="12">
           <v-radio-group v-model="speechStore.tts.voice" :label="$t('settings.tts.language')">
             <v-text-field v-model="search_lang" class="mb-2" label="Search" variant="outlined" hide-details />
-            <v-card v-for="(language) in filtered_lang" class="pa-2 mb-2" :color="language.name === speechStore.tts.voice ? 'primary' : 'default'" @click="speechStore.tts.voice = language.name">
+            <v-card
+              v-for="(language) in filtered_lang"
+              :key="language.name"
+              class="pa-2 mb-2"
+              :color="language.name === speechStore.tts.voice ? 'primary' : 'default'"
+              @click="speechStore.tts.voice = language.name"
+            >
               <v-row class="pa-3">
                 <v-radio :label="language.name" :value="language.name">
                   <template #label>
