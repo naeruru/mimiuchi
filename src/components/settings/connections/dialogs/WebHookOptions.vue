@@ -4,7 +4,7 @@
       <v-text-field
         v-model="model.url"
         label="URL"
-        :rules="url_rules"
+        :rules="[rules.required]"
       />
     </v-col>
   </v-row>
@@ -19,12 +19,11 @@ const model = defineModel<Connection>()
 const connectionsStore = useConnectionsStore()
 
 const wh = ref<Connection>()
-const url_rules = ref([
-  (value: string) => {
-    return true
-    return 'Must be a valid URL'
+const rules = ref({
+  required: (value) => {
+    return !!value || 'Field is required'
   },
-])
+})
 
 onMounted(() => {
   wh.value = JSON.parse(JSON.stringify(connectionsStore.wh))
