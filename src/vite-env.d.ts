@@ -12,10 +12,5 @@ interface Window {
   ipcRenderer: import('electron').IpcRenderer
 }
 
-interface list_item {
-  title: string
-  value: string
-}
-
 declare const __APP_NAME__: string
 declare const __APP_VERSION__: string

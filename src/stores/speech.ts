@@ -12,8 +12,13 @@ import is_electron from '@/helpers/is_electron'
 import { i18n } from '@/plugins/i18n'
 import { WebSpeech } from '@/modules/speech'
 
-interface pinned_languages {
-  [key: string]: list_item
+interface ListItem {
+  title: string
+  value: string
+}
+
+interface PinnedLanguages {
+  [key: string]: ListItem
 }
 
 declare const window: any
@@ -38,7 +43,7 @@ export const useSpeechStore = defineStore('speech', () => {
     rate: 1,
     pitch: 1,
   })
-  const pinned_languages = ref<pinned_languages>({})
+  const pinned_languages = ref<PinnedLanguages>({})
 
   function initialize_speech(language: string) {
     const defaultStore = useDefaultStore()
@@ -228,7 +233,7 @@ export const useSpeechStore = defineStore('speech', () => {
     }
   }
 
-  function pin_language(selected_language: list_item) {
+  function pin_language(selected_language: ListItem) {
     const pins = pinned_languages
 
     // Pin
@@ -236,7 +241,7 @@ export const useSpeechStore = defineStore('speech', () => {
 
     // Alphabetically sort
     const sortedKeys = Object.keys(pins.value).sort()
-    const sortedPins = {} as pinned_languages
+    const sortedPins = {} as PinnedLanguages
 
     sortedKeys.forEach((key) => {
       sortedPins[key] = pins.value[key]
@@ -245,14 +250,14 @@ export const useSpeechStore = defineStore('speech', () => {
     pinned_languages.value = sortedPins
   }
 
-  function unpin_language(selected_language: list_item) {
+  function unpin_language(selected_language: ListItem) {
     const pins = pinned_languages
 
     // Unpin
     delete pins.value[selected_language.title]
   }
 
-  function is_pinned_language(selected_language: list_item) {
+  function is_pinned_language(selected_language: ListItem) {
     const pins = pinned_languages
 
     return pins.value.hasOwnProperty(selected_language.title)

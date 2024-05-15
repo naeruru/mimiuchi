@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 
-interface word_replacements {
+interface WordReplacements {
   [U: string]: string
 }
 
@@ -10,9 +10,9 @@ export const useWordReplaceStore = defineStore('wordreplace', () => {
   const match_whole_word = ref(true)
   const match_case = ref(false)
 
-  const word_replacements = ref<word_replacements>({})
+  const word_replacements = ref<WordReplacements>({})
 
-  const word_replacements_lowercase = ref<word_replacements>({})
+  const word_replacements_lowercase = ref<WordReplacements>({})
 
   // Escape regex metacharacters
   function escapeRegExp(input: string) {
