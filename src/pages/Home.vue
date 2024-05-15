@@ -5,7 +5,8 @@
   >
     <div>
       <a
-        v-for="log in logs"
+        v-for="(log, index) in logsStore.logs"
+        :key="index"
         :class="{ 'fade-out': log.hide, 'final-text': log.isFinal || log.isTranslationFinal, 'interim-text': !log.isFinal || (!log.isTranslationFinal && log.translate) }"
       >
         <a v-if="log.hide !== 2">
@@ -55,7 +56,6 @@ const interim_color = appearanceStore.text.interim_color
 const font_name = appearanceStore.text.font.name
 const font_subtype = appearanceStore.text.font.sub_type
 
-const logs = logsStore.logs
 
 const overlay_main = ref(false)
 const overlay_page = ref(0)

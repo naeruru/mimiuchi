@@ -144,7 +144,7 @@
 
 <script setup lang="ts">
 import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
-import { useSpeechStore } from '@/stores/speech'
+import { ListItem, useSpeechStore} from '@/stores/speech'
 import { WebSpeechLangs } from '@/modules/speech'
 
 import is_electron from '@/helpers/is_electron'
@@ -255,15 +255,15 @@ async function get_media_devices() {
   })
 }
 
-function pin_language(selected_language: list_item) {
+function pin_language(selected_language: ListItem) {
   speechStore.pin_language(selected_language)
 }
 
-function unpin_language(selected_language: list_item) {
+function unpin_language(selected_language: ListItem) {
   speechStore.unpin_language(selected_language)
 }
 
-function is_pinned_language(selected_language: list_item) {
+function is_pinned_language(selected_language: ListItem) {
   return speechStore.is_pinned_language(selected_language)
 }
 </script>

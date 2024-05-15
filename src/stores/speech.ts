@@ -12,7 +12,7 @@ import is_electron from '@/helpers/is_electron'
 import { i18n } from '@/plugins/i18n'
 import { WebSpeech } from '@/modules/speech'
 
-interface ListItem {
+export interface ListItem {
   title: string
   value: string
 }
