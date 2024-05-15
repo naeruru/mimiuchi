@@ -2,17 +2,16 @@
 import { createPinia } from 'pinia'
 import { createApp } from 'vue'
 import App from '@/App.vue'
+
 import vuetify from '@/plugins/vuetify'
-
 import router from '@/plugins/router'
-
 import i18n from '@/plugins/i18n'
+import storeReset from '@/plugins/storereset'
 
 // import { loadFonts } from './plugins/webfontloader'
 // loadFonts()
 
 import '@/assets/fonts/fonts.css'
-import storeReset from './plugins/storereset'
 
 const pinia = createPinia()
 pinia.use(storeReset)
