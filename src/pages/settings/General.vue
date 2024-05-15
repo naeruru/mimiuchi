@@ -14,7 +14,7 @@
         <v-col :cols="12">
           <v-radio-group v-model="settingsStore.language" :label="$t('settings.general.language')">
             <v-card
-              v-for="(language) in languages"
+              v-for="(language) in settingsStore.languages"
               :key="language.value"
               class="pa-2 mb-2" :color="language.value === settingsStore.language ? 'primary' : 'default'"
               @click="settingsStore.language = language.value"
@@ -88,21 +88,6 @@ import { useTranslationStore } from '@/stores/translation'
 import { useOSCStore } from '@/stores/osc'
 
 const { t } = useI18n()
-
-const languages = ref([
-  {
-    title: 'English (United States)',
-    value: 'en',
-  },
-  {
-    title: 'Spanish (España)',
-    value: 'es',
-  },
-  {
-    title: '日本語（日本）',
-    value: 'ja',
-  },
-])
 
 const snackbar = ref(false)
 const snackbar_text = ref('')
