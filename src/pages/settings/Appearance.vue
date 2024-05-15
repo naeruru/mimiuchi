@@ -14,6 +14,7 @@
         <v-col :cols="12" :md="8">
           <v-btn
             v-for="(theme_id, key) in theme.themes.value"
+            :key="theme_id.colors.primary"
             icon
             variant="flat"
             :color="theme_id.colors.primary"
