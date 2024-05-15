@@ -42,5 +42,15 @@ export const useOSCStore = defineStore('osc', () => {
 
   const current_profile = ref<string>('Default')
 
-  return { ip, port, osc_text, text_typing, stt_typing, sfx, show_keyboard, osc_profiles, current_profile }
+  return {
+    ip,
+    port,
+    osc_text,
+    text_typing,
+    stt_typing,
+    sfx,
+    show_keyboard,
+    osc_profiles,
+    current_profile,
+  }
 })

@@ -38,5 +38,8 @@ export const useConnectionsStore = defineStore('connections', () => {
     port: null,
   })
 
-  return { ws, wh }
+  return {
+    ws,
+    wh,
+  }
 })

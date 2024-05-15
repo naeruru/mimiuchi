@@ -79,5 +79,16 @@ export const useDefaultStore = defineStore('default', () => {
       connections.value += 1
   }
 
-  return { worker, ws1, loading_websocket, broadcasting, connections, typing_limited, speech, snackbar, show_snackbar, toggle_broadcast }
+  return {
+    worker,
+    ws1,
+    loading_websocket,
+    broadcasting,
+    connections,
+    typing_limited,
+    speech,
+    snackbar,
+    show_snackbar,
+    toggle_broadcast,
+  }
 })

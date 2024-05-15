@@ -30,5 +30,10 @@ export const useLogsStore = defineStore('logs', () => {
     a.click()
   }
 
-  return { logs, loading_result, wait_interval, exportLogs }
+  return {
+    logs,
+    loading_result,
+    wait_interval,
+    exportLogs,
+  }
 })
