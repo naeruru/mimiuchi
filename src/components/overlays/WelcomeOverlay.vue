@@ -13,7 +13,7 @@
         <v-avatar
           color="transparent"
         >
-          <v-img src="logo-256x256.png" />
+          <v-img :src="logo" />
         </v-avatar>
       </template>
       <v-card-text class="text-subtitle-1 py-2">
@@ -65,6 +65,7 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
 import { useSettingsStore } from '@/stores/settings'
+import logo from '@/assets/logo-256x256.png'
 
 const props = defineProps<{ overlay: boolean, page: number }>()
 const APP_NAME = __APP_NAME__
