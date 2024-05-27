@@ -20,7 +20,7 @@ const connectionsStore = useConnectionsStore()
 
 const wh = ref<Connection>()
 const rules = ref({
-  required: (value) => {
+  required: (value: string) => {
     return !!value || 'Field is required'
   },
 })
