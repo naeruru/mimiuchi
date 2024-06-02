@@ -159,10 +159,8 @@ onUnmounted(() => {
   if (is_electron()) {
     window.ipcRenderer.removeListener('websocket-connect')
     window.ipcRenderer.removeListener('receive-text-event')
+    window.ipcRenderer.removeListener('transformers-translate-render')
   }
-
-  if (defaultStore.worker)
-    defaultStore.worker.removeEventListener('message', translationStore.onMessageReceived)
 })
 
 onUpdated(() => {
@@ -174,13 +172,9 @@ onMounted(() => {
   onResize()
   reloadEvents()
 
-  if (!defaultStore.worker) {
-    defaultStore.worker = new Worker(new URL('../worker.ts', import.meta.url), {
-      type: 'module',
-    })
-
-    defaultStore.worker.addEventListener('message', translationStore.onMessageReceived)
-  }
+  window.ipcRenderer.on('transformers-translate-render', (event: any, data: any) => {
+    translationStore.onMessageReceived(data)
+  })
 
   speechStore.initialize_speech(speechStore.stt.language)
 })

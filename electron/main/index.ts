@@ -5,6 +5,7 @@ import os from 'node:os'
 import { BrowserWindow, app, ipcMain, shell } from 'electron'
 
 import { WebSocketServer } from 'ws'
+import { Worker } from "worker_threads"
 import Store from 'electron-store'
 import { emit_osc, empty_queue } from './modules/osc'
 import { initialize_ws } from './modules/ws'
@@ -108,6 +109,8 @@ async function createWindow() {
   })
 }
 
+const transformersWorker = new Worker(new URL('file://' + path.join(process.env.APP_ROOT, 'src/worker.js'), import.meta.url))
+
 app.whenReady().then(createWindow)
 
 app.on('window-all-closed', () => {
@@ -205,4 +208,24 @@ ipcMain.on('close-ws', () => {
 ipcMain.on('update-check', async () => {
   const latest = await check_update()
   win.webContents.send('update-check', latest)
+})
+
+// Translations
+//
+// Footer (user submission)
+// → Speech Store
+// → [Condition: translations are enabled]
+// → Electron ('transformers-translate')
+// → Worker (worker thread)
+// → Electron ('transformers-translate-output')
+// → Footer ('transformers-translate-render')
+
+ipcMain.on('transformers-translate', async (event, args) => {
+  transformersWorker.postMessage({ type: 'transformers-translate', data: args });
+})
+
+transformersWorker.on('message', async (message) => {
+  if (message.type === 'transformers-translate-output') {
+    win.webContents.send('transformers-translate-render', message.data)
+  }
 })

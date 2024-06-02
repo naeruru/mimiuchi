@@ -12,28 +12,28 @@ export const useTranslationStore = defineStore('translation', () => {
   const download = ref(-1) // percent downloaded 0-100. -1 = done
   const show_original = ref(true)
 
-  function onMessageReceived(e: any) {
+  function onMessageReceived(data: any) {
     const logsStore = useLogsStore()
-    switch (e.data.status) {
+    switch (data.status) {
       case 'progress':
-        if (e.data.file === 'onnx/encoder_model_quantized.onnx')
-          download.value = e.data.progress
+        if (data.file === 'onnx/encoder_model_quantized.onnx')
+          download.value = data.progress
         break
       case 'ready':
         download.value = -1
         break
       case 'update':
-        logsStore.logs[e.data.index].translation = e.data.output
+        logsStore.logs[data.index].translation = data.output
         logsStore.loading_result = true
         break
       case 'complete': {
         const { on_submit } = useSpeechStore()
 
-        logsStore.logs[e.data.index].translation = e.data.output[0].translation_text
+        logsStore.logs[data.index].translation = data.output[0].translation_text
         logsStore.loading_result = false
-        logsStore.logs[e.data.index].isTranslationFinal = true
+        logsStore.logs[data.index].isTranslationFinal = true
 
-        on_submit(logsStore.logs[e.data.index], e.data.index)
+        on_submit(logsStore.logs[data.index], data.index)
         break
       }
     }

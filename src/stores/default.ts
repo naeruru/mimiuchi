@@ -7,7 +7,6 @@ import { i18n } from '@/plugins/i18n'
 import is_electron from '@/helpers/is_electron'
 
 export const useDefaultStore = defineStore('default', () => {
-  const worker = ref<Worker | null>(null)
   const ws1 = ref<WebSocket | null>(null)
   const loading_websocket = ref(false)
   const broadcasting = ref(false)
@@ -80,7 +79,6 @@ export const useDefaultStore = defineStore('default', () => {
   }
 
   return {
-    worker,
     ws1,
     loading_websocket,
     broadcasting,
