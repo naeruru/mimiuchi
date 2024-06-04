@@ -109,7 +109,12 @@ async function createWindow() {
   })
 }
 
-const transformersWorker = new Worker(new URL('file://' + path.join(process.env.APP_ROOT, 'src/worker.js'), import.meta.url))
+
+const transformersWorkerPath = 'file://' + path.join(process.env.APP_ROOT, 'src', 'worker.mjs').replace('app.asar', 'app.asar.unpacked')
+const transformersWorker = new Worker(new URL(transformersWorkerPath, import.meta.url))
+
+const transformersPath = 'file://' + path.join(process.env.APP_ROOT, 'node_modules', '@xenova', 'transformers', 'src', 'transformers.js').replace('app.asar', 'app.asar.unpacked')
+transformersWorker.postMessage({ type: 'transformers-init', data: transformersPath })
 
 app.whenReady().then(createWindow)
 
@@ -221,7 +226,7 @@ ipcMain.on('update-check', async () => {
 // → Footer ('transformers-translate-render')
 
 ipcMain.on('transformers-translate', async (event, args) => {
-  transformersWorker.postMessage({ type: 'transformers-translate', data: args });
+  transformersWorker.postMessage({ type: 'transformers-translate', data: args })
 })
 
 transformersWorker.on('message', async (message) => {

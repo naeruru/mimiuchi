@@ -1,7 +1,8 @@
 import { parentPort } from 'worker_threads';
 
 // see: https://github.com/xenova/transformers.js
-import { pipeline } from '@xenova/transformers';
+
+let myPipeline;
 
 class MyTranslationPipeline {
   static task = 'translation';
@@ -10,13 +11,18 @@ class MyTranslationPipeline {
 
   static async getInstance(progress_callback = null) {
     if (this.instance === null)
-      this.instance = pipeline(this.task, this.model, { progress_callback });
+      this.instance = myPipeline(this.task, this.model, { progress_callback });
 
     return this.instance;
   }
 }
 
 parentPort.on('message', async (message) => {
+  if (message.type === 'transformers-init') {
+    const { pipeline } = await import(message.data);
+    myPipeline = pipeline
+  }
+
   if (message.type === 'transformers-translate') {
     // call translator. downloads and caches model if first load
     const translator = await MyTranslationPipeline.getInstance((download_progress) => {
