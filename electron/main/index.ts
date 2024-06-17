@@ -1,11 +1,11 @@
-import path, { join } from 'node:path'
+import path from 'node:path'
 import { createRequire } from 'node:module'
 import { fileURLToPath } from 'node:url'
 import os from 'node:os'
+import { Worker } from 'node:worker_threads'
 import { BrowserWindow, app, ipcMain, shell } from 'electron'
 
 import { WebSocketServer } from 'ws'
-import { Worker } from "worker_threads"
 import Store from 'electron-store'
 import { emit_osc, empty_queue } from './modules/osc'
 import { initialize_ws } from './modules/ws'
@@ -109,11 +109,10 @@ async function createWindow() {
   })
 }
 
-
-const transformersWorkerPath = 'file://' + path.join(process.env.APP_ROOT, 'src', 'worker.mjs').replace('app.asar', 'app.asar.unpacked')
+const transformersWorkerPath = `file://${path.join(process.env.APP_ROOT, 'src', 'worker.mjs').replace('app.asar', 'app.asar.unpacked')}`
 const transformersWorker = new Worker(new URL(transformersWorkerPath, import.meta.url))
 
-const transformersPath = 'file://' + path.join(process.env.APP_ROOT, 'node_modules', '@xenova', 'transformers', 'src', 'transformers.js').replace('app.asar', 'app.asar.unpacked')
+const transformersPath = `file://${path.join(process.env.APP_ROOT, 'node_modules', '@xenova', 'transformers', 'src', 'transformers.js').replace('app.asar', 'app.asar.unpacked')}`
 transformersWorker.postMessage({ type: 'transformers-init', data: transformersPath })
 
 app.whenReady().then(createWindow)

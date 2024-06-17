@@ -204,14 +204,14 @@ function paramTrigger(input: string) {
             return
 
           const key_check = `(^|\\s)(${keyword.text})($|[^a-zA-Z\\d])`
-          const reKey = new RegExp(key_check, 'ig')
+          const reKey = new RegExp(key_check, 'gi')
           matchesKey = reKey.exec(input)
         })
 
         if (matchesKey) {
           custom_param.assigns.forEach((assign) => {
             const assign_check = `(^|\\s)(${assign.keyword})($|[^a-zA-Z\\d])`
-            const reAssign = new RegExp(assign_check, 'ig')
+            const reAssign = new RegExp(assign_check, 'gi')
             const matchesAssign = reAssign.exec(input)
             if (matchesAssign) {
               show_snackbar('secondary', `<code>${custom_param.route} = ${assign.set1}</code>`)
