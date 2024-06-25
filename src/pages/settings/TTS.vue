@@ -76,9 +76,24 @@
           </v-slider>
         </v-col>
         <v-col :cols="12">
-          <v-radio-group v-model="speechStore.tts.voice" :label="$t('settings.tts.language')">
-            <v-text-field v-model="search_lang" class="mb-2" label="Search" variant="outlined" hide-details />
-            <v-card v-for="(language, i) in filtered_lang" class="pa-2 mb-2" :color="language.name === speechStore.tts.voice ? 'primary' : 'default'" @click="speechStore.tts.voice = language.name">
+          <v-radio-group
+            v-model="speechStore.tts.voice"
+            :label="$t('settings.tts.language')"
+          >
+            <v-text-field
+              v-model="search_lang"
+              class="mb-2"
+              label="Search"
+              variant="outlined"
+              hide-details
+            />
+            <v-card
+              v-for="(language) in filtered_lang"
+              :key="language.name"
+              class="pa-2 mb-2"
+              :color="language.name === speechStore.tts.voice ? 'primary' : 'default'"
+              @click="speechStore.tts.voice = language.name"
+            >
               <v-row class="pa-3">
                 <v-radio :label="language.name" :value="language.name">
                   <template #label>
@@ -96,59 +111,45 @@
   </v-card>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
+import { computed, onMounted, ref, watch } from 'vue'
 import { useSpeechStore } from '@/stores/speech'
 
 const synth = window.speechSynthesis
 
-export default {
-  name: 'STT',
-  setup() {
-    const speechStore = useSpeechStore()
+const speechStore = useSpeechStore()
 
-    return {
-      speechStore,
-    }
+const tts_options = ref([
+  {
+    title: 'Web Speech API',
+    value: 'webspeech',
   },
-  data: () => ({
-    tts_options: [
-      {
-        title: 'Web Speech API',
-        value: 'webspeech',
-      },
-    ],
-    language_choice: '',
-    search_lang: '',
-    languages: [] as SpeechSynthesisVoice[],
-  }),
-  computed: {
-    filtered_lang() {
-      return this.languages.filter(lang => `${lang.name} ${lang.lang}`.toLocaleLowerCase().includes(this.search_lang.toLocaleLowerCase()))
-    },
-  },
-  watch: {
-    language_choice(new_val) {
-      if (new_val.value)
-        this.speechStore.stt.language = new_val.value
-    },
-  },
-  mounted() {
-    if ('onvoiceschanged' in synth)
-      synth.onvoiceschanged = this.loadVoices
-    else
-      this.loadVoices()
+])
+const language_choice = ref('')
+const search_lang = ref('')
+const languages = ref([] as SpeechSynthesisVoice[])
 
-    this.loadVoices()
-    if (speechSynthesis.onvoiceschanged !== undefined)
-      speechSynthesis.onvoiceschanged = this.loadVoices
-  },
-  methods: {
-    loadVoices() {
-      this.languages = synth.getVoices()
-    },
-    openURL(url: string) {
-      window.open(url, '_blank')
-    },
-  },
+onMounted(() => {
+  if ('onvoiceschanged' in synth)
+    synth.onvoiceschanged = loadVoices
+  else
+    loadVoices()
+
+  loadVoices()
+  if (speechSynthesis.onvoiceschanged !== undefined)
+    speechSynthesis.onvoiceschanged = loadVoices
+})
+
+const filtered_lang = computed(() => {
+  return languages.value.filter(lang => `${lang.name} ${lang.lang}`.toLocaleLowerCase().includes(search_lang.value.toLocaleLowerCase()))
+})
+
+watch(language_choice, (new_val) => {
+  if (new_val)
+    speechStore.stt.language = new_val
+})
+
+function loadVoices() {
+  languages.value = synth.getVoices()
 }
 </script>

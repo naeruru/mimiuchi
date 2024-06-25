@@ -1,5 +1,8 @@
 <template>
-  <v-card :title="$t('settings.translation.title')" :subtitle="$t('settings.translation.description')" color="transparent" flat>
+  <v-card
+    :title="$t('settings.translation.title')" :subtitle="$t('settings.translation.description')"
+    color="transparent" flat
+  >
     <v-divider />
     <v-card-text>
       <v-row v-if="is_electron()">
@@ -33,7 +36,7 @@
             variant="outlined"
             hide-details
           >
-            <template #item="{ props, item }">
+            <template #item="{ props }">
               <v-list-item v-bind="props">
                 <template #append>
                   <v-icon icon="mdi-laptop" />
@@ -93,7 +96,9 @@
         <v-alert variant="outlined" type="warning" prominent>
           <v-alert-title>
             <i18n-t keypath="settings.translation.unsupported.text" tag="label" for="link" scope="global">
-              <a class="text-primary pointer" @click="openURL('https://github.com/naeruru/mimiuchi/releases')">{{ $t('settings.translation.unsupported.link') }}</a>
+              <a class="text-primary pointer" @click="openURL('https://github.com/naeruru/mimiuchi/releases')">
+                {{ $t('settings.translation.unsupported.link') }}
+              </a>
             </i18n-t>
           </v-alert-title>
         </v-alert>
@@ -102,44 +107,28 @@
   </v-card>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
+import { ref } from 'vue'
 import { useTranslationStore } from '@/stores/translation'
 import { useSpeechStore } from '@/stores/speech'
 import translation_options from '@/constants/translation_options'
 
 import is_electron from '@/helpers/is_electron'
 
-export default {
-  name: 'SettingsTranslation',
-  setup() {
-    const translationStore = useTranslationStore()
-    const speechStore = useSpeechStore()
+const translationStore = useTranslationStore()
+const speechStore = useSpeechStore()
 
-    return {
-      translationStore,
-      stt_language: speechStore.stt.language,
-      is_electron,
-    }
-  },
-  data() {
-    return {
-      translation_types: [
-        {
-          title: 'Transformers.js (BETA)',
-          value: 'Transformers.js',
-          type: 'local',
-        },
-      ],
-      translation_options,
-    }
-  },
-  async mounted() {
+const stt_language = speechStore.stt.language
 
+const translation_types = ref([
+  {
+    title: 'Transformers.js (BETA)',
+    value: 'Transformers.js',
+    type: 'local',
   },
-  methods: {
-    openURL(url: string) {
-      window.open(url, '_blank')
-    },
-  },
+])
+
+function openURL(url: string) {
+  window.open(url, '_blank')
 }
 </script>

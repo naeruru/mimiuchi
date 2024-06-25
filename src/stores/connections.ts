@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia'
+import { ref } from 'vue'
 
 // import { i18n } from '../plugins/i18n'
 
@@ -12,28 +13,33 @@ export interface Connection {
   port: number | null
 }
 
-export const useConnectionStore = defineStore('connections', {
-  state: () => ({
-    ws: {
-      enabled: true,
-      // name: i18n.t('settings.connections.ws.name'),
-      icon: 'mdi-transit-connection-horizontal',
-      // description: i18n.t('settings.connections.ws.description'),
-      type: 'websocket',
-      url: '127.0.0.1:7714',
-      port: 7714, // ミ・ミ・ウ・チ
-    } as Connection,
-    wh: {
-      enabled: false,
-      icon: 'mdi-webhook',
-      type: 'webhook',
-      url: '',
-    } as Connection,
-  }),
-  getters: {
+export interface ConnectionType {
+  title?: string
+  type?: string
+  icon?: string
+}
 
-  },
-  actions: {
+export const useConnectionsStore = defineStore('connections', () => {
+  const ws = ref<Connection>({
+    enabled: true,
+    icon: 'mdi-transit-connection-horizontal',
+    type: 'websocket',
+    url: '127.0.0.1:7714',
+    port: 7714, // ミ・ミ・ウ・チ
+    // description: i18n.t('settings.connections.ws.description'),
+    // name: i18n.t('settings.connections.ws.name'),
+  })
 
-  },
+  const wh = ref<Connection>({
+    enabled: false,
+    icon: 'mdi-webhook',
+    type: 'webhook',
+    url: '',
+    port: null,
+  })
+
+  return {
+    ws,
+    wh,
+  }
 })

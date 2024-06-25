@@ -3,18 +3,18 @@ import { createRouter, createWebHistory } from 'vue-router'
 
 import Header from '@/components/Header.vue'
 import Footer from '@/components/Footer.vue'
-import Home from '@/pages/Home.vue'
 
+import Home from '@/pages/Home.vue'
 import Settings from '@/pages/Settings.vue'
-import SettingsGeneral from '@/components/settings/General.vue'
-import STT from '@/components/settings/STT.vue'
-import TTS from '@/components/settings/TTS.vue'
-import Appearance from '@/components/settings/Appearance.vue'
-import WordReplace from '@/components/settings/WordReplace.vue'
-import Translation from '@/components/settings/Translation.vue'
+import SettingsGeneral from '@/pages/settings/General.vue'
+import STT from '@/pages/settings/STT.vue'
+import TTS from '@/pages/settings/TTS.vue'
+import Appearance from '@/pages/settings/Appearance.vue'
+import WordReplace from '@/pages/settings/WordReplace.vue'
+import Translation from '@/pages/settings/Translation.vue'
 import Connections from '@/components/settings/connections/Connections.vue'
-import OSC from '@/components/settings/OSC.vue'
-import OSCParams from '@/components/settings/OSCParams.vue'
+import OSC from '@/pages/settings/OSC.vue'
+import OSCParams from '@/pages/settings/OSCParams.vue'
 
 const routes = [
   {
@@ -30,98 +30,61 @@ const routes = [
     path: '/settings/',
     name: 'settings',
     components: {
-      default: Settings,
-      panel: SettingsGeneral,
       Header,
+      default: Settings,
       Footer,
     },
     children: [
       {
         path: 'general',
         name: 'general',
-        components: {
-          default: Settings,
-          panel: SettingsGeneral,
-          Header,
-        },
-      },
-      {
-        path: 'stt',
-        name: 'stt',
-        components: {
-          default: Settings,
-          panel: STT,
-          Header,
-        },
-      },
-      {
-        path: 'tts',
-        name: 'tts',
-        components: {
-          default: Settings,
-          panel: TTS,
-          Header,
-        },
+        component: SettingsGeneral,
       },
       {
         path: 'appearance',
         name: 'appearance',
-        components: {
-          default: Settings,
-          panel: Appearance,
-          Header,
-        },
+        component: Appearance,
+      },
+      {
+        path: 'stt',
+        name: 'stt',
+        component: STT,
+      },
+      {
+        path: 'tts',
+        name: 'tts',
+        component: TTS,
       },
       {
         path: 'wordreplace',
         name: 'wordreplace',
-        components: {
-          default: Settings,
-          panel: WordReplace,
-          Header,
-        },
+        component: WordReplace,
       },
       {
         path: 'translation',
         name: 'translation',
-        components: {
-          default: Settings,
-          panel: Translation,
-          Header,
-        },
+        component: Translation,
       },
       {
         path: 'connections',
         name: 'connections',
-        components: {
-          default: Settings,
-          panel: Connections,
-          Header,
-        },
+        component: Connections,
       },
       {
         path: 'osc',
         name: 'osc',
-        components: {
-          default: Settings,
-          panel: OSC,
-          Header,
-        },
+        component: OSC,
       },
       {
         path: 'oscparams',
         name: 'oscparams',
-        components: {
-          default: Settings,
-          panel: OSCParams,
-          Header,
-        },
+        component: OSCParams,
       },
     ],
   },
 ]
 
 export default createRouter({
-  history: createWebHistory('/'),
+  history: createWebHistory('./'),
   routes: routes as RouteRecordRaw[],
 })

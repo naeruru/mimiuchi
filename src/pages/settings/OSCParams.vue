@@ -1,13 +1,18 @@
 <template>
   <v-card color="transparent" flat class="pb-16">
     <template #title>
-      <span v-html="$t('settings.osc.params.title')" />
-      <v-chip prepend-icon="mdi-alert-circle-outline" color="warning" class="ml-2" variant="elevated" size="small">
+      <span>{{ $t('settings.osc.params.title') }}</span>
+      <v-chip
+        prepend-icon="mdi-alert-circle-outline"
+        color="warning" class="ml-2"
+        variant="elevated"
+        size="small"
+      >
         {{ $t('general.subject_to_change') }}
       </v-chip>
     </template>
     <template #subtitle>
-      <span v-html="$t('settings.osc.params.description')" />
+      <span>{{ $t('settings.osc.params.description') }}</span>
     </template>
 
     <v-divider />
@@ -112,9 +117,6 @@
             <v-card flat>
               <v-card-text>
                 <v-row>
-                  <!-- <v-col :cols="12">
-                    <v-text-field v-model="param.name" label="Name" hide-details></v-text-field>
-                  </v-col> -->
                   <v-col :cols="12" :md="6">
                     <v-text-field
                       v-model="param.ip"
@@ -137,11 +139,11 @@
                   </v-col>
 
                   <v-col :cols="12">
-                    <strong v-html="$t('settings.osc.params.param.trigger_phrases')" />
+                    <strong>{{ $t('settings.osc.params.param.trigger_phrases') }}</strong>
                   </v-col>
                   <v-col :cols="12">
                     <v-chip
-                      v-for="(keyword, i) in param.keywords"
+                      v-for="(keyword) in param.keywords"
                       v-model="keyword.enabled"
                       class="mx-1 mb-2"
                       label
@@ -152,10 +154,10 @@
                     </v-chip>
                   </v-col>
                   <v-col :cols="12">
-                    <strong v-html="$t('settings.osc.params.param.assign.phrases')" />
+                    <strong>{{ $t('settings.osc.params.param.assign.phrases') }}</strong>
                     <v-list density="compact">
                       <v-list-item
-                        v-for="(assign, i) in param.assigns"
+                        v-for="(assign) in param.assigns"
                         :value="assign"
                         :title="assign.keyword"
                         :subtitle="displayAssignSubtitle(assign)"
@@ -169,7 +171,9 @@
           </v-expansion-panel-text>
         </v-expansion-panel>
       </v-expansion-panels>
-      <p v-else v-html="$t('settings.osc.params.empty')" />
+      <p v-else>
+        {{ $t('settings.osc.params.empty') }}
+      </p>
       <v-card class="mt-2" color="transparent" flat>
         <v-card-actions>
           <v-btn
@@ -191,7 +195,10 @@
           <v-card-text>
             <v-row>
               <v-col :cols="12">
-                <v-form v-model="new_profile_name_valid" @submit.prevent="new_profile_name_valid ? confirmAddProfileDialog() : null">
+                <v-form
+                  v-model="new_profile_name_valid"
+                  @submit.prevent="new_profile_name_valid ? confirmAddProfileDialog() : null"
+                >
                   <v-text-field
                     v-model="new_profile_name"
                     :label="$t('settings.osc.params.profile.dialog.field_label')"
@@ -232,7 +239,10 @@
           <v-card-text>
             <v-row>
               <v-col :cols="12">
-                <v-form v-model="new_profile_name_valid" @submit.prevent="new_profile_name_valid ? confirmEditProfileDialog() : null">
+                <v-form
+                  v-model="new_profile_name_valid"
+                  @submit.prevent="new_profile_name_valid ? confirmEditProfileDialog() : null"
+                >
                   <v-text-field
                     v-model="new_profile_name"
                     :label="$t('settings.osc.params.profile.dialog.field_label')"
@@ -316,166 +326,162 @@
   </v-card>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
+import { computed, ref } from 'vue'
 import ParameterTrigger from '@/components/settings/oscparams/dialogs/ParameterTrigger.vue'
 import { useOSCStore } from '@/stores/osc'
 
-export default {
-  name: 'SettingsGeneral',
-  components: { ParameterTrigger },
-  setup() {
-    const oscStore = useOSCStore()
+const oscStore = useOSCStore()
 
-    // const { osc_settings, osc_params } = oscStore
+const rules = ref({
+  required: (value: string) => !!value || 'Required',
+  empty: (value: string) => !!value.trim() || 'Cannot be empty',
+  already_taken: (value: string, collection: object) => !(value in collection) || 'Already in use',
+})
 
-    // Object.keys(osc_settings).forEach((setting, i) => this.settings.push({ [setting]: osc_settings[setting]}))
+const new_profile_name = ref('')
+const new_profile_name_valid = ref(false)
 
-    // console.log(this.settings)
+const profile_add_dialog = ref(false)
 
-    return {
-      oscStore,
-    }
-  },
-  data: () => ({
-    rules: {
-      required: (value: string) => !!value || 'Required',
-      empty: (value: string) => !!value.trim() || 'Cannot be empty',
-      already_taken: (value: string, collection: object) => !(value in collection) || 'Already in use',
-    },
+const profile_edit_dialog = ref(false)
+const editing_profile_name = ref('')
 
-    new_profile_name: '',
-    new_profile_name_valid: false,
+const profile_delete_dialog = ref(false)
+const profile_delete_target = ref('')
 
-    profile_add_dialog: false,
+const param_panels = ref([])
 
-    profile_edit_dialog: false,
-    editing_profile_name: '',
+const param_dialog = ref(false)
+const param_dialog_mode = ref('') // "add", "edit"
 
-    profile_delete_dialog: false,
-    profile_delete_target: '',
+const param_editing_index = ref(Number.NaN)
 
-    param_panels: [],
+const param_delete_dialog = ref(false)
+const param_delete_target = ref(Number.NaN)
+const param_delete_target_display = ref('')
 
-    param_dialog: false,
-    param_dialog_mode: '', // "add", "edit"
+const sortedProfiles = computed(() => {
+  return Object.keys(oscStore.osc_profiles).sort((a, b) => {
+    if (a === 'Default')
+      return -1 // The profile "Default" is always first.
+    else if (b === 'Default')
+      return 1
+    else
+      return a.localeCompare(b)
+  })
+})
 
-    param_editing_index: Number.NaN,
+function clearFocus() {
+  const focusedElement = document.activeElement as HTMLElement
 
-    param_delete_dialog: false,
-    param_delete_target: Number.NaN,
-    param_delete_target_display: '',
-  }),
-  computed: {
-    sortedProfiles() {
-      return Object.keys(this.oscStore.osc_profiles).sort((a, b) => {
-        if (a === 'Default')
-          return -1 // The profile "Default" is always first.
-        else if (b === 'Default')
-          return 1
-        else
-          return a.localeCompare(b)
-      })
-    },
-  },
-  methods: {
-    clearFocus() {
-      const focusedElement = document.activeElement as HTMLElement
+  if (focusedElement)
+    focusedElement.blur()
+}
 
-      if (focusedElement)
-        focusedElement.blur()
-    },
-    openAddProfileDialog() {
-      this.clearFocus()
+function openAddProfileDialog() {
+  clearFocus()
 
-      this.new_profile_name = ''
+  new_profile_name.value = ''
 
-      this.profile_add_dialog = true
-    },
-    confirmAddProfileDialog() {
-      this.oscStore.osc_profiles[this.new_profile_name] = []
-      this.oscStore.current_profile = this.new_profile_name
+  profile_add_dialog.value = true
+}
 
-      this.new_profile_name = ''
+function confirmAddProfileDialog() {
+  oscStore.osc_profiles[new_profile_name.value] = []
+  oscStore.current_profile = new_profile_name.value
 
-      this.profile_add_dialog = false
-    },
-    closeAddProfileDialog() {
-      this.profile_add_dialog = false
-    },
-    openEditProfileDialog(profile_name: string) {
-      this.clearFocus()
+  new_profile_name.value = ''
 
-      this.editing_profile_name = profile_name
-      this.new_profile_name = profile_name
+  profile_add_dialog.value = false
+}
 
-      this.profile_edit_dialog = true
-    },
-    confirmEditProfileDialog() {
-      this.oscStore.osc_profiles[this.new_profile_name] = this.oscStore.osc_profiles[this.editing_profile_name]
+function closeAddProfileDialog() {
+  profile_add_dialog.value = false
+}
 
-      if (this.oscStore.current_profile === this.editing_profile_name)
-        this.oscStore.current_profile = this.new_profile_name
+function openEditProfileDialog(profile_name: string) {
+  clearFocus()
 
-      delete this.oscStore.osc_profiles[this.editing_profile_name]
+  editing_profile_name.value = profile_name
+  new_profile_name.value = profile_name
 
-      this.new_profile_name = ''
+  profile_edit_dialog.value = true
+}
 
-      this.profile_edit_dialog = false
-    },
-    closeEditProfileDialog() {
-      this.profile_edit_dialog = false
-    },
-    openDeleteProfileDialog(profile_name: string) {
-      this.profile_delete_target = profile_name
+function confirmEditProfileDialog() {
+  oscStore.osc_profiles[new_profile_name.value] = oscStore.osc_profiles[editing_profile_name.value]
 
-      this.profile_delete_dialog = true
-    },
-    confirmDeleteProfileDialog() {
-      if (this.oscStore.current_profile === this.profile_delete_target)
-        this.oscStore.current_profile = 'Default'
+  if (oscStore.current_profile === editing_profile_name.value)
+    oscStore.current_profile = new_profile_name.value
 
-      delete this.oscStore.osc_profiles[this.profile_delete_target]
+  delete oscStore.osc_profiles[editing_profile_name.value]
 
-      this.profile_delete_dialog = false
-    },
-    setProfile(selected_profile: string) {
-      this.oscStore.current_profile = selected_profile
+  new_profile_name.value = ''
 
-      this.param_panels = [] // Collapse all parameter trigger expansion panels.
-    },
-    displayAssignSubtitle(assign_object: any) {
-      let subtitle = `set ${assign_object.type} to ${assign_object.set1}`
+  profile_edit_dialog.value = false
+}
 
-      if (assign_object.activation === 'pulse')
-        subtitle = `${subtitle}, wait ${assign_object.pulse_duration}ms, set ${assign_object.type} to ${assign_object.set2}`
+function closeEditProfileDialog() {
+  profile_edit_dialog.value = false
+}
 
-      return subtitle
-    },
-    openAddParamDialog() {
-      this.param_dialog_mode = 'add'
-      this.param_dialog = true
-    },
-    openEditParamDialog(i: number) {
-      this.param_dialog_mode = 'edit'
-      this.param_editing_index = i
-      this.param_dialog = true
-    },
-    openDeleteParamDialog(i: number) {
-      const current_profile_params = this.oscStore.osc_profiles[this.oscStore.current_profile]
+function openDeleteProfileDialog(profile_name: string) {
+  profile_delete_target.value = profile_name
 
-      this.param_delete_target = i
-      this.param_delete_target_display = current_profile_params[i].route
+  profile_delete_dialog.value = true
+}
 
-      this.param_delete_dialog = true
-    },
-    confirmDeleteParamDialog() {
-      const current_profile_params = this.oscStore.osc_profiles[this.oscStore.current_profile]
+function confirmDeleteProfileDialog() {
+  if (oscStore.current_profile === profile_delete_target.value)
+    oscStore.current_profile = 'Default'
 
-      current_profile_params.splice(this.param_delete_target, 1)
+  delete oscStore.osc_profiles[profile_delete_target.value]
 
-      this.param_delete_dialog = false
-    },
-  },
+  profile_delete_dialog.value = false
+}
+
+function setProfile(selected_profile: string) {
+  oscStore.current_profile = selected_profile
+
+  param_panels.value = [] // Collapse all parameter trigger expansion panels.
+}
+
+function displayAssignSubtitle(assign_object: any) {
+  let subtitle = `set ${assign_object.type} to ${assign_object.set1}`
+
+  if (assign_object.activation === 'pulse')
+    subtitle = `${subtitle}, wait ${assign_object.pulse_duration}ms, set ${assign_object.type} to ${assign_object.set2}`
+
+  return subtitle
+}
+
+function openAddParamDialog() {
+  param_dialog_mode.value = 'add'
+  param_dialog.value = true
+}
+
+function openEditParamDialog(i: number) {
+  param_dialog_mode.value = 'edit'
+  param_editing_index.value = i
+  param_dialog.value = true
+}
+
+function openDeleteParamDialog(i: number) {
+  const current_profile_params = oscStore.osc_profiles[oscStore.current_profile]
+
+  param_delete_target.value = i
+  param_delete_target_display.value = current_profile_params[i].route
+
+  param_delete_dialog.value = true
+}
+
+function confirmDeleteParamDialog() {
+  const current_profile_params = oscStore.osc_profiles[oscStore.current_profile]
+
+  current_profile_params.splice(param_delete_target.value, 1)
+
+  param_delete_dialog.value = false
 }
 </script>
 

@@ -1,5 +1,8 @@
 <template>
-  <v-card :title="$t('settings.osc.general.title')" :subtitle="$t('settings.osc.general.description')" color="transparent" flat>
+  <v-card
+    :title="$t('settings.osc.general.title')" :subtitle="$t('settings.osc.general.description')"
+    color="transparent" flat
+  >
     <v-divider />
     <v-card-text>
       <v-row v-if="is_electron()">
@@ -87,7 +90,9 @@
             <v-alert-title>
               <i18n-t keypath="settings.osc.general.unsupported.text" tag="label">
                 <template #link>
-                  <a class="text-primary pointer" @click="openURL('https://github.com/naeruru/mimiuchi/releases')">{{ $t('settings.osc.general.unsupported.link') }}</a>
+                  <a class="text-primary pointer" @click="openURL('https://github.com/naeruru/mimiuchi/releases')">
+                    {{ $t('settings.osc.general.unsupported.link') }}
+                  </a>
                 </template>
                 <template #icon>
                   <v-icon color="success" size="small">
@@ -99,32 +104,17 @@
           </v-alert>
         </v-col>
       </v-row>
-      <!-- </v-sheet> -->
     </v-card-text>
   </v-card>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 import { useOSCStore } from '@/stores/osc'
 import is_electron from '@/helpers/is_electron'
 
-export default {
-  name: 'SettingsGeneral',
-  setup() {
-    const oscStore = useOSCStore()
+const oscStore = useOSCStore()
 
-    return {
-      oscStore,
-      is_electron,
-    }
-  },
-  data: () => ({
-    // settings: {}
-  }),
-  methods: {
-    openURL(url: string) {
-      window.open(url, '_blank')
-    },
-  },
+function openURL(url: string) {
+  window.open(url, '_blank')
 }
 </script>
