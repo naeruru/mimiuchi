@@ -172,9 +172,10 @@ onMounted(() => {
   onResize()
   reloadEvents()
 
-  window.ipcRenderer.on('transformers-translate-render', (event: any, data: any) => {
-    translationStore.onMessageReceived(data)
-  })
+  if (is_electron())
+    window.ipcRenderer.on('transformers-translate-render', (event: any, data: any) => {
+      translationStore.onMessageReceived(data)
+    })
 
   speechStore.initialize_speech(speechStore.stt.language)
 })
