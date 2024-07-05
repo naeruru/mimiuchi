@@ -51,9 +51,9 @@ export const useWordReplaceStore = defineStore('wordreplace', () => {
     else
       pattern = `(?<![\\w*])(${regex_keys})(?![\\w*])`
 
-    const replace_re = new RegExp(pattern, 'g')
+    const replace_re = new RegExp(pattern, match_case.value ? 'g' : 'gi')
 
-    return input_interpretation.replace(replace_re, (matched) => {
+    return input.replace(replace_re, (matched) => {
       if (!match_case.value)
         return word_replacements_lowercase.value[matched.toLowerCase()]
       else
