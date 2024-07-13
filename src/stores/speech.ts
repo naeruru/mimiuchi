@@ -169,14 +169,12 @@ export const useSpeechStore = defineStore('speech', () => {
       // translate if not translating and enabled
       if (is_electron() && translationStore.enabled && !log.translate && !log.translation) {
         logsStore.logs[i].translate = true
-        if (defaultStore.worker) {
-          defaultStore.worker.postMessage({
-            text: log.transcript,
-            src_lang: translationStore.source,
-            tgt_lang: translationStore.target,
-            index: i,
-          })
-        }
+        window.ipcRenderer.send('transformers-translate', {
+          text: log.transcript,
+          src_lang: translationStore.source,
+          tgt_lang: translationStore.target,
+          index: i,
+        })
       }
 
       // timestamp

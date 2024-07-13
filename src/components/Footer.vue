@@ -159,10 +159,8 @@ onUnmounted(() => {
   if (is_electron()) {
     window.ipcRenderer.removeListener('websocket-connect')
     window.ipcRenderer.removeListener('receive-text-event')
+    window.ipcRenderer.removeListener('transformers-translate-render')
   }
-
-  if (defaultStore.worker)
-    defaultStore.worker.removeEventListener('message', translationStore.onMessageReceived)
 })
 
 onUpdated(() => {
@@ -174,13 +172,10 @@ onMounted(() => {
   onResize()
   reloadEvents()
 
-  if (!defaultStore.worker) {
-    defaultStore.worker = new Worker(new URL('../worker.ts', import.meta.url), {
-      type: 'module',
+  if (is_electron())
+    window.ipcRenderer.on('transformers-translate-render', (event: any, data: any) => {
+      translationStore.onMessageReceived(data)
     })
-
-    defaultStore.worker.addEventListener('message', translationStore.onMessageReceived)
-  }
 
   speechStore.initialize_speech(speechStore.stt.language)
 })
@@ -210,14 +205,14 @@ function paramTrigger(input: string) {
             return
 
           const key_check = `(^|\\s)(${keyword.text})($|[^a-zA-Z\\d])`
-          const reKey = new RegExp(key_check, 'ig')
+          const reKey = new RegExp(key_check, 'gi')
           matchesKey = reKey.exec(input)
         })
 
         if (matchesKey) {
           custom_param.assigns.forEach((assign) => {
             const assign_check = `(^|\\s)(${assign.keyword})($|[^a-zA-Z\\d])`
-            const reAssign = new RegExp(assign_check, 'ig')
+            const reAssign = new RegExp(assign_check, 'gi')
             const matchesAssign = reAssign.exec(input)
             if (matchesAssign) {
               show_snackbar('secondary', `<code>${custom_param.route} = ${assign.set1}</code>`)

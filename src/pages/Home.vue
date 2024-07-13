@@ -56,7 +56,6 @@ const interim_color = appearanceStore.text.interim_color
 const font_name = appearanceStore.text.font.name
 const font_subtype = appearanceStore.text.font.sub_type
 
-
 const overlay_main = ref(false)
 const overlay_page = ref(0)
 
