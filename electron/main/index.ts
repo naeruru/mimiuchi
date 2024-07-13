@@ -2,7 +2,6 @@ import path from 'node:path'
 import { createRequire } from 'node:module'
 import { fileURLToPath } from 'node:url'
 import os from 'node:os'
-import { Worker } from 'node:worker_threads'
 import { BrowserWindow, app, ipcMain, shell } from 'electron'
 
 import { WebSocketServer } from 'ws'
@@ -10,6 +9,8 @@ import Store from 'electron-store'
 import { emit_osc, empty_queue } from './modules/osc'
 import { initialize_ws } from './modules/ws'
 import { check_update } from './modules/check_update'
+
+import { TranslationPipeline } from './modules/transformers'
 
 const store = new Store()
 
@@ -109,11 +110,11 @@ async function createWindow() {
   })
 }
 
-const transformersWorkerPath = `file://${path.join(process.env.APP_ROOT, 'src', 'worker.mjs').replace('app.asar', 'app.asar.unpacked')}`
-const transformersWorker = new Worker(new URL(transformersWorkerPath, import.meta.url))
+// const transformersWorkerPath = `file://${path.join(process.env.APP_ROOT, 'src', 'worker.mjs').replace('app.asar', 'app.asar.unpacked')}`
+// const transformersWorker = new Worker(new URL(transformersWorkerPath, import.meta.url))
 
-const transformersPath = `file://${path.join(process.env.APP_ROOT, 'node_modules', '@xenova', 'transformers', 'src', 'transformers.js').replace('app.asar', 'app.asar.unpacked')}`
-transformersWorker.postMessage({ type: 'transformers-init', data: transformersPath })
+// const transformersPath = `file://${path.join(process.env.APP_ROOT, 'node_modules', '@xenova', 'transformers', 'src', 'transformers.js').replace('app.asar', 'app.asar.unpacked')}`
+// transformersWorker.postMessage({ type: 'transformers-init', data: transformersPath })
 
 app.whenReady().then(createWindow)
 
@@ -225,11 +226,7 @@ ipcMain.on('update-check', async () => {
 // → Footer ('transformers-translate-render')
 
 ipcMain.on('transformers-translate', async (event, args) => {
-  transformersWorker.postMessage({ type: 'transformers-translate', data: args })
-})
-
-transformersWorker.on('message', async (message) => {
-  if (message.type === 'transformers-translate-output') {
-    win.webContents.send('transformers-translate-render', message.data)
-  }
+  // transformersWorker.postMessage({ type: 'transformers-translate', data: args })
+  const translator = new TranslationPipeline()
+  translator.translate(win, args)
 })
