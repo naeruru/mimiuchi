@@ -80,7 +80,7 @@ See the [release page](https://github.com/naeruru/mimiuchi/releases) to install 
 
 ### Requirements
 
-- [NodeJS 18.x+](https://nodejs.org/en/)
+- [NodeJS 20.x+](https://nodejs.org/en/)
 
 ### Setup
 

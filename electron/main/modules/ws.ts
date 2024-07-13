@@ -34,7 +34,7 @@ function initialize_ws(win: any, wss: any, port: number) {
           win.webContents.send('receive-text-event', JSON.stringify(message.data))
         }
       })
-      ws.send(`{"event": "connect", "msg":"connected to websocket ( •̀ ω •́ )", "version":"${pkg.version}"}`)
+      ws.send(`{"event": "connect", "msg": "connected to websocket ( •̀ ω •́ )", "version": "${pkg.version}"}`)
       win.webContents.send('websocket-connect', true)
     })
     wss.on('open', () => resolve(wss))

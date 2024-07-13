@@ -1,87 +1,92 @@
-import { defineStore } from 'pinia'
+import { defineStore, storeToRefs } from 'pinia'
 
-import { useConnectionStore } from '@/stores/connections'
+import { ref } from 'vue'
+import { useConnectionsStore } from '@/stores/connections'
 import type { WebSpeech } from '@/modules/speech'
 import { i18n } from '@/plugins/i18n'
 import is_electron from '@/helpers/is_electron'
 
-export const useDefaultStore = defineStore('default', {
-  state: () => ({
-    worker: null as any,
-    ws: null as any,
-    loading_websocket: false,
-    broadcasting: false,
-    connections: 0,
-    typing_limited: false,
-    speech: {} as WebSpeech,
-    snackbar: {
-      enabled: false,
-      type: 'error',
-      desc: '',
-    },
-  }),
-  getters: {
+export const useDefaultStore = defineStore('default', () => {
+  const ws1 = ref<WebSocket | null>(null)
+  const loading_websocket = ref(false)
+  const broadcasting = ref(false)
+  const connections = ref(0)
+  const typing_limited = ref(false)
+  const speech = ref(<WebSpeech>{})
+  const snackbar = ref({
+    enabled: false,
+    type: 'error',
+    desc: '',
+  })
 
-  },
-  actions: {
-    show_snackbar(type: string, desc: string) {
-      console.log(desc)
-      this.snackbar.type = type
-      this.snackbar.desc = desc
-      this.snackbar.enabled = true
-    },
-    toggle_broadcast() {
-      if (this.broadcasting) {
-        this.broadcasting = false
-        this.connections = 0
-        if (this.ws) {
-          this.ws.send('{"type": "command", "data": "stop"}')
-          this.ws.close()
-          this.ws = null
-        }
+  function show_snackbar(type: string, desc: string) {
+    console.log(desc)
+    snackbar.value.type = type
+    snackbar.value.desc = desc
+    snackbar.value.enabled = true
+  }
+  function toggle_broadcast() {
+    if (broadcasting.value) {
+      broadcasting.value = false
+      connections.value = 0
+      if (ws1.value) {
+        ws1.value.send('{"type": "command", "data": "stop"}')
+        ws1.value.close()
+        ws1.value = null
+      }
+      return
+    }
+
+    broadcasting.value = true
+    const { ws, wh } = storeToRefs(useConnectionsStore())
+
+    if (!is_electron() && ws.value.enabled) {
+      loading_websocket.value = true
+      try {
+        ws1.value = new WebSocket(`ws://${ws.value.url}`)
+      }
+      catch {
+        broadcasting.value = false
+        loading_websocket.value = false
+        ws1.value = null
+        show_snackbar('error', i18n.t('alerts.websocket_error'))
         return
       }
-
-      const { ws, wh } = useConnectionStore()
-
-      this.broadcasting = true
-
-      if (!is_electron() && ws.enabled) {
-        this.loading_websocket = true
-        try {
-          this.ws = new WebSocket(`ws://${ws.url}`)
-        }
-        catch {
-          this.broadcasting = false
-          this.loading_websocket = false
-          this.ws = null
-          this.show_snackbar('error', i18n.t('alerts.websocket_error'))
-          return
-        }
-        this.ws.onopen = () => {
-          this.broadcasting = true
-          this.loading_websocket = false
-          this.connections += 1
-        }
-        this.ws.onmessage = (event: any) => {
-          const msg = JSON.parse(event.data)
-          if (msg.event === 'connect' && msg.version !== __APP_VERSION__)
-            this.show_snackbar('error', i18n.t('alerts.version_mismatch'))
-        }
-        this.ws.onclose = () => {
-          console.log('websocket closed')
-          if (this.connections === 0)
-            this.broadcasting = false
-          this.loading_websocket = false
-          this.ws = null
-        }
-        this.ws.onerror = () => {
-          this.show_snackbar('error', i18n.t('alerts.broadcast_error'))
-        }
+      ws1.value.onopen = () => {
+        broadcasting.value = true
+        loading_websocket.value = false
+        connections.value += 1
       }
+      ws1.value.onmessage = (event: any) => {
+        const msg = JSON.parse(event.data)
+        if (msg.event === 'connect' && msg.version !== __APP_VERSION__)
+          show_snackbar('error', i18n.t('alerts.version_mismatch'))
+      }
+      ws1.value.onclose = () => {
+        console.log('websocket closed')
+        if (connections.value === 0)
+          broadcasting.value = false
+        loading_websocket.value = false
+        ws1.value = null
+      }
+      ws1.value.onerror = () => {
+        show_snackbar('error', i18n.t('alerts.broadcast_error'))
+      }
+    }
 
-      if (wh.enabled)
-        this.connections += 1
-    },
-  },
+    if (wh.value.enabled)
+      connections.value += 1
+  }
+
+  return {
+    ws1,
+    loading_websocket,
+    broadcasting,
+    connections,
+    typing_limited,
+    speech,
+    snackbar,
+    show_snackbar,
+    toggle_broadcast,
+  }
 })

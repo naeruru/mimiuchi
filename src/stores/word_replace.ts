@@ -1,69 +1,72 @@
 import { defineStore } from 'pinia'
+import { ref } from 'vue'
 
-interface word_replacements {
+interface WordReplacements {
   [U: string]: string
 }
 
-export const useWordReplaceStore = defineStore('wordreplace', {
-  state: () => ({
-    enabled: true,
-    match_whole_word: true,
-    match_case: false,
-    word_replacements: {} as word_replacements,
-    word_replacements_lowercase: {} as word_replacements,
-  }),
-  getters: {
+export const useWordReplaceStore = defineStore('wordreplace', () => {
+  const enabled = ref(true)
+  const match_whole_word = ref(true)
+  const match_case = ref(false)
 
-  },
-  actions: {
-    // Escape regex metacharacters
-    escapeRegExp(input: string) {
-      return input.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
-    },
-    // Add case insensitivity
-    case_insensitive_regex(input: string) {
-      return input.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
-    },
-    // Replace words.
-    // Longer keys have higher priority (e.g., "Hello world" → "apple", "Hello" → "banana".
-    // The transcript "Hello world" will become "apple"). Keys are sorted by the Word Replace component.
-    replace_words(input: string): string {
-      if (!this.enabled || !Object.keys(this.word_replacements).length)
-        return input
+  const word_replacements = ref<WordReplacements>({})
 
-      let joined_keys: string[] = []
-      let input_interpretation: string
+  const word_replacements_lowercase = ref<WordReplacements>({})
 
-      // Interpret depending on the "Match case" option.
-      if (!this.match_case) {
-        input_interpretation = input.toLowerCase()
-        joined_keys = Object.keys(this.word_replacements_lowercase)
-      }
-      else {
-        input_interpretation = input
-        joined_keys = Object.keys(this.word_replacements)
-      }
+  // Escape regex metacharacters
+  function escapeRegExp(input: string) {
+    return input.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+  }
 
-      const regex_keys = joined_keys.map(key => this.escapeRegExp(key)).join('|')
+  // Replace words.
+  // Longer keys have higher priority (e.g., "Hello world" → "apple", "Hello" → "banana".
+  // The transcript "Hello world" will become "apple"). Keys are sorted by the Word Replace component.
+  function replace_words(input: string): string {
+    if (!enabled.value || !Object.keys(word_replacements.value).length)
+      return input
 
-      // Build pattern depending on options.
-      let pattern
+    let joined_keys: string[] = []
+    let input_interpretation: string
 
-      // Option: Word/phrase match. Word boundaries prevent unexpected replacements
-      // (e.g, "script" → "HELLO" would undesirably cause "description" → "deHELLOion").
-      if (!this.match_whole_word)
-        pattern = regex_keys
+    // Interpret depending on the "Match case" option
+    if (!match_case.value) {
+      input_interpretation = input.toLowerCase()
+      joined_keys = Object.keys(word_replacements_lowercase.value)
+    }
+    else {
+      input_interpretation = input
+      joined_keys = Object.keys(word_replacements.value)
+    }
+
+    const regex_keys = joined_keys.map(key => escapeRegExp(key)).join('|')
+
+    // Build pattern depending on options
+    let pattern
+
+    // Option: Word/phrase match. Word boundaries prevent unexpected replacements.
+    // (e.g, "script" → "HELLO" would undesirably cause "description" → "deHELLOion").
+    if (!match_whole_word.value)
+      pattern = regex_keys
+    else
+      pattern = `(?<![\\w*])(${regex_keys})(?![\\w*])`
+
+    const replace_re = new RegExp(pattern, match_case.value ? 'g' : 'gi')
+
+    return input.replace(replace_re, (matched) => {
+      if (!match_case.value)
+        return word_replacements_lowercase.value[matched.toLowerCase()]
       else
-        pattern = `(?<![\\w*])(${regex_keys})(?![\\w*])`
+        return word_replacements.value[matched]
+    })
+  }
 
-      const replace_re = new RegExp(pattern, 'g')
-
-      return input_interpretation.replace(replace_re, (matched) => {
-        if (!this.match_case)
-          return this.word_replacements_lowercase[matched.toLowerCase()]
-        else
-          return this.word_replacements[matched]
-      })
-    },
-  },
+  return {
+    enabled,
+    match_whole_word,
+    match_case,
+    word_replacements,
+    word_replacements_lowercase,
+    replace_words,
+  }
 })

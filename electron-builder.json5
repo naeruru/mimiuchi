@@ -1,26 +1,80 @@
-/**
- * @see https://www.electron.build/configuration/configuration
- */
+// @see https://www.electron.build/configuration/configuration
 {
+  "$schema": "https://raw.githubusercontent.com/electron-userland/electron-builder/master/packages/app-builder-lib/scheme.json",
   "appId": "Mimiuchi",
   "asar": true,
-  "icon": "public/favicon.ico",
+  "productName": "mimiuchi",
   "directories": {
     "output": "release/${version}"
   },
   "files": [
-    "dist-electron",
-    "dist"
+    "dist",
+    "dist-electron"
+  ],
+  "extraResources": [
+    {
+      "from": "node_modules/@huggingface",
+      "to": "app.asar.unpacked/node_modules/@huggingface"
+    },
+    {
+      "from": "node_modules/@xenova/transformers",
+      "to": "app.asar.unpacked/node_modules/@xenova/transformers"
+    },
+    {
+      "from": "node_modules/color",
+      "to": "app.asar.unpacked/node_modules/color"
+    },
+    {
+      "from": "node_modules/color-convert",
+      "to": "app.asar.unpacked/node_modules/color-convert"
+    },
+    {
+      "from": "node_modules/color-name",
+      "to": "app.asar.unpacked/node_modules/color-name"
+    },
+    {
+      "from": "node_modules/color-string",
+      "to": "app.asar.unpacked/node_modules/color-string"
+    },
+    {
+      "from": "node_modules/detect-libc",
+      "to": "app.asar.unpacked/node_modules/detect-libc"
+    },
+    {
+      "from": "node_modules/is-arrayish",
+      "to": "app.asar.unpacked/node_modules/is-arrayish"
+    },
+    {
+      "from": "node_modules/onnxruntime-common",
+      "to": "app.asar.unpacked/node_modules/onnxruntime-common"
+    },
+    {
+      "from": "node_modules/onnxruntime-node",
+      "to": "app.asar.unpacked/node_modules/onnxruntime-node"
+    },
+    {
+      "from": "node_modules/onnxruntime-web",
+      "to": "app.asar.unpacked/node_modules/onnxruntime-web"
+    },
+    {
+      "from": "node_modules/sharp",
+      "to": "app.asar.unpacked/node_modules/sharp"
+    },
+    {
+      "from": "node_modules/simple-swizzle",
+      "to": "app.asar.unpacked/node_modules/simple-swizzle"
+    },
+    {
+      "from": "src/worker.mjs",
+      "to": "app.asar.unpacked/src/worker.mjs"
+    }
   ],
   "mac": {
-    "artifactName": "${productName}_${version}.${ext}",
     "target": [
       "dmg"
-    ]
-  },
-  "linux": {
-    "icon": "public/logo-256x256.png",
-    "category": "utility"
+    ],
+    "artifactName": "${productName}-Mac-${version}-Installer.${ext}",
+    "icon": "public/logo-256x256.png"
   },
   "win": {
     "target": [
@@ -31,12 +85,20 @@
         ]
       }
     ],
-    "artifactName": "${productName}_${version}.${ext}"
+    "artifactName": "${productName}-Windows-${version}-Setup.${ext}",
+    "icon": "public/favicon.ico"
   },
   "nsis": {
     "oneClick": false,
     "perMachine": false,
     "allowToChangeInstallationDirectory": true,
     "deleteAppDataOnUninstall": false
+  },
+  "linux": {
+    "target": [
+      "AppImage"
+    ],
+    "artifactName": "${productName}-Linux-${version}.${ext}",
+    "icon": "public/logo-256x256.png"
   }
 }

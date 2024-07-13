@@ -62,14 +62,24 @@
         </v-row>
 
         <v-col :cols="12">
-          <v-radio-group v-if="Object.keys(speechStore.pinned_languages).length > 0" v-model="speechStore.stt.language" :label="$t('settings.stt.pinned_languages')">
-            <v-card v-for="language in speechStore.pinned_languages" class="language-card pa-2 mb-2" :color="language.value === speechStore.stt.language ? 'primary' : 'default'" @click="speechStore.stt.language = language.value">
+          <v-radio-group
+            v-if="Object.keys(speechStore.pinned_languages).length > 0" v-model="speechStore.stt.language"
+            :label="$t('settings.stt.pinned_languages')"
+          >
+            <v-card
+              v-for="language in speechStore.pinned_languages" class="language-card pa-2 mb-2"
+              :color="language.value === speechStore.stt.language ? 'primary' : 'default'"
+              @click="speechStore.stt.language = language.value"
+            >
               <v-radio :label="language.title" :value="language.value">
                 <template #label>
                   <div class="d-flex flex-grow-1 justify-space-between me-2">
                     <div>{{ language.title }}</div>
                     <div class="pin-icon">
-                      <v-icon v-if="!is_pinned_language(language)" class="pin-icon-not-pinned" @click.prevent="pin_language(language)">
+                      <v-icon
+                        v-if="!is_pinned_language(language)" class="pin-icon-not-pinned"
+                        @click.prevent="pin_language(language)"
+                      >
                         mdi-star-outline
                       </v-icon>
                       <v-icon v-else class="pin-icon-pinned" @click.prevent="unpin_language(language)">
@@ -82,14 +92,24 @@
             </v-card>
           </v-radio-group>
           <v-radio-group v-model="speechStore.stt.language" :label="$t('settings.stt.language')">
-            <v-text-field v-model="search_lang" class="mb-2" label="Search" variant="outlined" single-line hide-details />
-            <v-card v-for="(language, i) in filtered_lang" class="language-card pa-2 mb-2" :color="language.value === speechStore.stt.language ? 'primary' : 'default'" @click="speechStore.stt.language = language.value">
+            <v-text-field
+              v-model="search_lang" class="mb-2" label="Search" variant="outlined" single-line
+              hide-details
+            />
+            <v-card
+              v-for="(language) in filtered_lang" class="language-card pa-2 mb-2"
+              :color="language.value === speechStore.stt.language ? 'primary' : 'default'"
+              @click="speechStore.stt.language = language.value"
+            >
               <v-radio :label="language.title" :value="language.value">
                 <template #label>
                   <div class="d-flex flex-grow-1 justify-space-between me-2">
                     <div>{{ language.title }}</div>
                     <div class="pin-icon">
-                      <v-icon v-if="!is_pinned_language(language)" class="pin-icon-not-pinned" @click.prevent="pin_language(language)">
+                      <v-icon
+                        v-if="!is_pinned_language(language)" class="pin-icon-not-pinned"
+                        @click.prevent="pin_language(language)"
+                      >
                         mdi-star-outline
                       </v-icon>
                       <v-icon v-else class="pin-icon-pinned" @click.prevent="unpin_language(language)">
@@ -108,7 +128,12 @@
         <v-alert variant="outlined" type="warning" prominent>
           <v-alert-title>
             <i18n-t keypath="settings.stt.unsupported.text" tag="label" for="link" scope="global">
-              <a class="text-primary pointer" @click="openURL('https://mimiuchi.com/')">{{ $t('settings.stt.unsupported.link') }}</a>
+              <a
+                class="text-primary pointer"
+                @click="openURL('https://mimiuchi.com/')"
+              >
+                {{ $t('settings.stt.unsupported.link') }}
+              </a>
             </i18n-t>
           </v-alert-title>
         </v-alert>
@@ -117,8 +142,9 @@
   </v-card>
 </template>
 
-<script lang="ts">
-import { useSpeechStore } from '@/stores/speech'
+<script setup lang="ts">
+import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
+import { ListItem, useSpeechStore} from '@/stores/speech'
 import { WebSpeechLangs } from '@/modules/speech'
 
 import is_electron from '@/helpers/is_electron'
@@ -129,120 +155,116 @@ declare interface MediaDevice {
   id?: string
 }
 
-export default {
-  name: 'STT',
-  setup() {
-    const speechStore = useSpeechStore()
+const speechStore = useSpeechStore()
 
-    return {
-      speechStore,
-      is_electron,
-      languages: WebSpeechLangs,
-    }
-  },
-  data: () => ({
-    stt_options: [
-      {
-        title: 'Web Speech API',
-        value: 'webspeech',
-      },
-    ],
-    language_choice: '',
-    search_lang: '',
+const languages = WebSpeechLangs
 
-    active_device: '',
-    media_devices: [] as any,
-    stream: null as any,
-    sensitivity: 0,
-    loading_media: false,
-  }),
-  computed: {
-    filtered_lang() {
-      return this.languages.filter(lang => `${lang.title} ${lang.value}`.toLocaleLowerCase().includes(this.search_lang.toLocaleLowerCase()))
-    },
+const stt_options = ref([
+  {
+    title: 'Web Speech API',
+    value: 'webspeech',
   },
-  watch: {
-    language_choice(new_val) {
-      if (new_val.value)
-        this.speechStore.stt.language = new_val.value
-    },
-  },
-  unmounted() {
-    this.stop_stream()
-  },
-  mounted() {
-    this.languages.map((language) => {
-      if (language.value === this.speechStore.stt.language)
-        this.language_choice = language.value
+])
+
+const language_choice = ref('')
+const search_lang = ref('')
+
+const active_device = ref('')
+const media_devices = ref(<any>[])
+const stream = ref(<any>null)
+const sensitivity = ref(0)
+const loading_media = ref(false)
+
+const filtered_lang = computed(() => {
+  return languages.filter(lang => `${lang.title} ${lang.value}`.toLocaleLowerCase().includes(search_lang.value.toLocaleLowerCase()))
+})
+
+watch(language_choice, (new_val) => {
+  if (new_val)
+    speechStore.stt.language = new_val
+})
+
+onUnmounted(() => {
+  stop_stream()
+})
+
+onMounted(() => {
+  languages.forEach((language) => {
+    if (language.value === speechStore.stt.language)
+      language_choice.value = language.value
+  })
+  get_media_devices()
+})
+
+function openURL(url: string) {
+  window.open(url, '_blank')
+}
+
+async function test_sensitivity() {
+  if (stream.value) {
+    stop_stream()
+    return
+  }
+
+  loading_media.value = true
+  stream.value = await navigator.mediaDevices.getUserMedia({ audio: true, video: false })
+  stream.value.getTracks().forEach((track: any) => active_device.value = track.label)
+  const audioContext = new AudioContext()
+  const mediaStreamAudioSourceNode = audioContext.createMediaStreamSource(stream.value)
+  const analyserNode = audioContext.createAnalyser()
+  mediaStreamAudioSourceNode.connect(analyserNode)
+
+  const pcmData = new Float32Array(analyserNode.fftSize)
+  const onFrame = () => {
+    if (!stream.value)
+      return
+    analyserNode.getFloatTimeDomainData(pcmData)
+    let sumSquares = 0.0
+    for (const amplitude of pcmData) sumSquares += amplitude * amplitude
+    sensitivity.value = Math.round(Math.sqrt(sumSquares / pcmData.length) * 1000) / 1000
+    window.requestAnimationFrame(onFrame)
+  }
+  window.requestAnimationFrame(onFrame)
+  loading_media.value = false
+}
+
+function stop_stream() {
+  if (stream.value) {
+    stream.value.getTracks().forEach((track: any) => {
+      track.stop()
+      stream.value = null
+      sensitivity.value = 0
+      loading_media.value = false
+      active_device.value = ''
     })
-    this.get_media_devices()
-  },
-  methods: {
-    openURL(url: string) {
-      window.open(url, '_blank')
-    },
-    async test_sensitivity() {
-      if (this.stream) {
-        this.stop_stream()
-        return
-      }
+  }
+}
 
-      this.loading_media = true
-      this.stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false })
-      this.stream.getTracks().forEach((track: any) => this.active_device = track.label)
-      const audioContext = new AudioContext()
-      const mediaStreamAudioSourceNode = audioContext.createMediaStreamSource(this.stream)
-      const analyserNode = audioContext.createAnalyser()
-      mediaStreamAudioSourceNode.connect(analyserNode)
-
-      const pcmData = new Float32Array(analyserNode.fftSize)
-      const onFrame = () => {
-        if (!this.stream)
-          return
-        analyserNode.getFloatTimeDomainData(pcmData)
-        let sumSquares = 0.0
-        for (const amplitude of pcmData) sumSquares += amplitude * amplitude
-        this.sensitivity = Math.round(Math.sqrt(sumSquares / pcmData.length) * 1000) / 1000
-        window.requestAnimationFrame(onFrame)
-      }
-      window.requestAnimationFrame(onFrame)
-      this.loading_media = false
-    },
-    stop_stream() {
-      if (this.stream) {
-        this.stream.getTracks().forEach((track: any) => {
-          track.stop()
-          this.stream = null
-          this.sensitivity = 0
-          this.loading_media = false
-          this.active_device = ''
+async function get_media_devices() {
+  media_devices.value = []
+  navigator.mediaDevices.enumerateDevices().then((devices: any) => {
+    devices.forEach((device: MediaDevice) => {
+      if (device.kind === 'audioinput') {
+        media_devices.value.push({
+          kind: device.kind,
+          label: device.label,
+          id: device.label,
         })
       }
-    },
-    async get_media_devices() {
-      this.media_devices = []
-      navigator.mediaDevices.enumerateDevices().then((devices: any) => {
-        devices.forEach((device: MediaDevice) => {
-          if (device.kind === 'audioinput') {
-            this.media_devices.push({
-              kind: device.kind,
-              label: device.label,
-              id: device.label,
-            })
-          }
-        })
-      })
-    },
-    pin_language(selected_language: list_item) {
-      this.speechStore.pin_language(selected_language)
-    },
-    unpin_language(selected_language: list_item) {
-      this.speechStore.unpin_language(selected_language)
-    },
-    is_pinned_language(selected_language: list_item) {
-      return this.speechStore.is_pinned_language(selected_language)
-    },
-  },
+    })
+  })
+}
+
+function pin_language(selected_language: ListItem) {
+  speechStore.pin_language(selected_language)
+}
+
+function unpin_language(selected_language: ListItem) {
+  speechStore.unpin_language(selected_language)
+}
+
+function is_pinned_language(selected_language: ListItem) {
+  return speechStore.is_pinned_language(selected_language)
 }
 </script>
 

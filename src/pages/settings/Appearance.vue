@@ -1,21 +1,25 @@
 <template>
-  <v-card :title="$t('settings.appearance.title')" :subtitle="$t('settings.appearance.description')" color="transparent" flat>
+  <v-card
+    :title="$t('settings.appearance.title')" :subtitle="$t('settings.appearance.description')" color="transparent"
+    flat
+  >
     <v-divider />
     <v-card-text>
       <v-row>
         <v-col :cols="12">
-          <p class="text-h6" label color="secondary">
+          <p class="text-h6">
             {{ $t('settings.appearance.theme') }}
           </p>
         </v-col>
         <v-col :cols="12" :md="8">
           <v-btn
             v-for="(theme_id, key) in theme.themes.value"
+            :key="theme_id.colors.primary"
             icon
             variant="flat"
             :color="theme_id.colors.primary"
             class="mr-2 mb-2 border-md"
-            :class="(key === appearanceStore.current_theme) ? 'theme_selected' : 'theme_unselected'"
+            :class="(key === current_theme) ? 'theme_selected' : 'theme_unselected'"
             @click="set_theme(key)"
           >
             <v-tooltip
@@ -29,13 +33,13 @@
       </v-row>
       <v-row>
         <v-col :cols="12">
-          <p class="text-h6" label color="secondary">
+          <p class="text-h6">
             {{ $t('settings.appearance.text.title') }}
           </p>
         </v-col>
         <v-col :cols="12" :md="8">
           <v-autocomplete
-            v-model="appearanceStore.text.font"
+            v-model="text.font"
             :items="fonts"
             item-title="name"
             :label="$t('settings.appearance.text.font_family')"
@@ -48,8 +52,8 @@
           >
             <template #append>
               <v-select
-                v-model="appearanceStore.text.font.sub_type"
-                :items="appearanceStore.text.font.sub_types"
+                v-model="text.font.sub_type"
+                :items="text.font.sub_types"
                 item-title="style"
                 :label="$t('settings.appearance.text.font_type')"
                 variant="solo"
@@ -67,10 +71,10 @@
             </template>
             <template #append-inner>
               <v-btn
-                v-if="appearanceStore.text.font.info"
+                v-if="text.font.info"
                 icon="mdi-information-outline"
                 density="compact"
-                @click="open_external(appearanceStore.text.font.info)"
+                @click="open_external(text.font.info)"
                 @focus="null"
               />
             </template>
@@ -78,7 +82,7 @@
         </v-col>
         <v-col :cols="12" :md="4">
           <v-text-field
-            v-model="appearanceStore.text.font_size"
+            v-model="text.font_size"
             :label="$t('settings.appearance.text.font_size')"
             type="number"
             suffix="px"
@@ -87,7 +91,7 @@
         </v-col>
         <v-col>
           <v-select
-            v-model="appearanceStore.text.new_line_delay"
+            v-model="text.new_line_delay"
             :items="line_delay_options"
             :label="$t('settings.appearance.text.new_line_delay.hint')"
             variant="solo"
@@ -100,7 +104,7 @@
             <v-list-item :title="$t('settings.appearance.text.fade')">
               <template #append>
                 <v-switch
-                  v-model="appearanceStore.text.enable_fade"
+                  v-model="text.enable_fade"
                   color="primary"
                   hide-details
                   inset
@@ -111,8 +115,8 @@
         </v-col>
         <v-col :cols="12" :sm="6">
           <v-text-field
-            v-model="appearanceStore.text.hide_after"
-            :disabled="!appearanceStore.text.enable_fade"
+            v-model="text.hide_after"
+            :disabled="!text.enable_fade"
             :label="$t('settings.appearance.text.fade_after')"
             :suffix="$t('settings.appearance.text.seconds')"
             type="number"
@@ -121,8 +125,8 @@
         </v-col>
         <v-col :cols="12" :sm="6">
           <v-text-field
-            v-model="appearanceStore.text.fade_time"
-            :disabled="!appearanceStore.text.enable_fade"
+            v-model="text.fade_time"
+            :disabled="!text.enable_fade"
             :label="$t('settings.appearance.text.fade_for')"
             :suffix="$t('settings.appearance.text.seconds')"
             type="number"
@@ -134,9 +138,9 @@
           <v-card-title class="text-subtitle-1">
             {{ $t('settings.appearance.text.color') }}
           </v-card-title>
-          <v-btn :color="appearanceStore.text.color" width="20vw" class="ma-2" flat>
+          <v-btn :color="text.color" width="20vw" class="ma-2" flat>
             <v-menu activator="parent" :close-on-content-click="false">
-              <v-color-picker v-model="appearanceStore.text.color" :modes="['hexa']" flat class="pa-2" />
+              <v-color-picker v-model="text.color" :modes="['hexa']" flat class="pa-2" />
             </v-menu>
           </v-btn>
         </v-col>
@@ -145,9 +149,9 @@
           <v-card-title class="text-subtitle-1">
             {{ $t('settings.appearance.text.interim_color') }}
           </v-card-title>
-          <v-btn :color="appearanceStore.text.interim_color" width="20vw" class="ma-2" flat>
+          <v-btn :color="text.interim_color" width="20vw" class="ma-2" flat>
             <v-menu activator="parent" :close-on-content-click="false">
-              <v-color-picker v-model="appearanceStore.text.interim_color" :modes="['hexa']" flat class="pa-2" />
+              <v-color-picker v-model="text.interim_color" :modes="['hexa']" flat class="pa-2" />
             </v-menu>
           </v-btn>
         </v-col>
@@ -156,9 +160,9 @@
           <v-card-title class="text-subtitle-1">
             {{ $t('settings.appearance.ui.color') }}
           </v-card-title>
-          <v-btn :color="appearanceStore.ui.color" width="20vw" class="ma-2" flat>
+          <v-btn :color="ui.color" width="20vw" class="ma-2" flat>
             <v-menu activator="parent" :close-on-content-click="false">
-              <v-color-picker v-model="appearanceStore.ui.color" :modes="['hexa']" flat class="pa-2" />
+              <v-color-picker v-model="ui.color" :modes="['hexa']" flat class="pa-2" />
             </v-menu>
           </v-btn>
         </v-col>
@@ -168,67 +172,66 @@
   </v-card>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 import { useTheme } from 'vuetify'
-import { useAppearanceStore } from '@/stores/appearance'
+import { storeToRefs } from 'pinia'
+import { onMounted, ref, watch } from 'vue'
+
+import { useI18n } from 'vue-i18n'
+import type { Font } from '@/helpers/get_fonts'
 import { get_fonts } from '@/helpers/get_fonts'
+import { useAppearanceStore } from '@/stores/appearance'
 
-export default {
-  name: 'SettingsGeneral',
-  setup() {
-    const appearanceStore = useAppearanceStore()
-    const theme = useTheme()
+const { tm } = useI18n()
 
-    return {
-      appearanceStore,
-      theme,
-    }
+const theme = useTheme()
+
+const line_delay_options: any[] = JSON.parse(JSON.stringify(tm('settings.appearance.text.new_line_delay.options')))
+
+const fonts = ref< Font[]>([])
+
+onMounted(async () => {
+  await get_fonts()
+    .then(res => fonts.value = res)
+})
+
+const { text, ui, current_theme } = storeToRefs(useAppearanceStore())
+watch(
+  () => text.value.font,
+  (v) => {
+    v.sub_type = { style: 'regular', weight: '400' }
   },
-  data() {
-    return {
-      fonts: [] as any[],
-      line_delay_options: [] as any[],
-    }
-  },
-  watch: {
-    'appearanceStore.text.font': (v) => {
-      v.sub_type = { style: 'regular', weight: '400' }
-    },
-  },
-  async mounted() {
-    this.fonts = await get_fonts()
-    this.line_delay_options = JSON.parse(JSON.stringify(this.$tm('settings.appearance.text.new_line_delay.options')))
-  },
-  methods: {
-    open_external(link: string | null) {
-      if (link)
-        window.open(link, '_blank')
-    },
-    to_title_case(str: string): string {
-      return str.replace(/\w\S*/g, (str2) => {
-        return str2.charAt(0).toUpperCase() + str2.substring(1).toLowerCase()
-      })
-    },
-    set_theme(selected_theme: string) {
-      this.theme.global.name.value = selected_theme // Immediately set the current theme to the selected theme.
-      this.appearanceStore.current_theme = selected_theme // Store the setting.
-    },
-  },
+)
+
+function open_external(link: string | null) {
+  if (link)
+    window.open(link, '_blank')
+}
+
+function to_title_case(str: string): string {
+  return str.replace(/\w\S*/g, (str2) => {
+    return str2.charAt(0).toUpperCase() + str2.substring(1).toLowerCase()
+  })
+}
+
+function set_theme(selected_theme: string) {
+  theme.global.name.value = selected_theme // Immediately set the current theme to the selected theme
+  current_theme.value = selected_theme // Store the setting
 }
 </script>
 
-<style>
-.v-tooltip > .v-overlay__content {
+<style scoped>
+.v-tooltip > :deep(.v-overlay__content) {
   background: #222 !important;
   color: #ddd !important;
   transition-property: opacity !important;
 }
 
 .theme_selected {
-  border-color: rgba(255,255,255,1) !important;
+  border-color: rgba(255, 255, 255, 1) !important;
 }
 
 .theme_unselected {
-  border-color: rgba(255,255,255,0.25) !important;
+  border-color: rgba(255, 255, 255, 0.25) !important;
 }
 </style>

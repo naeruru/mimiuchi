@@ -1,14 +1,20 @@
-import { join } from 'node:path'
+import path from 'node:path'
+import { createRequire } from 'node:module'
+import { fileURLToPath } from 'node:url'
+import os from 'node:os'
+import { Worker } from 'node:worker_threads'
 import { BrowserWindow, app, ipcMain, shell } from 'electron'
 
-import Store from 'electron-store'
-
 import { WebSocketServer } from 'ws'
+import Store from 'electron-store'
 import { emit_osc, empty_queue } from './modules/osc'
 import { initialize_ws } from './modules/ws'
 import { check_update } from './modules/check_update'
 
 const store = new Store()
+
+const require = createRequire(import.meta.url)
+const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
 // The built directory structure
 //
@@ -16,49 +22,53 @@ const store = new Store()
 // │ ├─┬ main
 // │ │ └── index.js    > Electron-Main
 // │ └─┬ preload
-// │   └── index.js    > Preload-Scripts
+// │   └── index.mjs   > Preload-Scripts
 // ├─┬ dist
 // │ └── index.html    > Electron-Renderer
 //
-process.env.DIST_ELECTRON = join(__dirname, '..')
-process.env.DIST = join(process.env.DIST_ELECTRON, '../dist')
-process.env.PUBLIC = process.env.VITE_DEV_SERVER_URL
-  ? join(process.env.DIST_ELECTRON, '../public')
-  : process.env.DIST
+process.env.APP_ROOT = path.join(__dirname, '../..')
 
-// Remove electron security warnings
-// This warning only shows in development mode
-// Read more on https://www.electronjs.org/docs/latest/tutorial/security
-// process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true'
+export const MAIN_DIST = path.join(process.env.APP_ROOT, 'dist-electron')
+export const RENDERER_DIST = path.join(process.env.APP_ROOT, 'dist')
+export const VITE_DEV_SERVER_URL = process.env.VITE_DEV_SERVER_URL
 
-// export const ROOT_PATH = {
-//   // /dist
-//   dist: join(__dirname, '../..'),
-//   // /dist or /public
-//   public: join(__dirname, app.isPackaged ? '../..' : '../../../public'),
-// }
+process.env.VITE_PUBLIC = VITE_DEV_SERVER_URL
+  ? path.join(process.env.APP_ROOT, 'public')
+  : RENDERER_DIST
+
+// Disable GPU Acceleration for Windows 7
+if (os.release().startsWith('6.1'))
+  app.disableHardwareAcceleration()
+
+// Set application name for Windows 10+ notifications
+if (process.platform === 'win32')
+  app.setAppUserModelId(app.getName())
+
+if (!app.requestSingleInstanceLock()) {
+  app.quit()
+  process.exit(0)
+}
 
 let win: BrowserWindow | null = null
-// Here, you can also use other preload
-const preload = join(__dirname, '../preload/index.js')
-const url = process.env.VITE_DEV_SERVER_URL
-const indexHtml = join(process.env.DIST, 'index.html')
-
-let wss: any
+const preload = path.join(__dirname, '../preload/index.mjs')
+const indexHtml = path.join(RENDERER_DIST, 'index.html')
 
 const window_config: any = {
   title: 'Main window',
   width: 1000,
   height: 700,
-  icon: join(process.env.PUBLIC, 'favicon.ico'),
+  icon: path.join(process.env.VITE_PUBLIC, 'favicon.ico'),
   frame: false,
   webPreferences: {
     preload,
     // Warning: Enable nodeIntegration and disable contextIsolation is not secure in production
+    // nodeIntegration: true,
+
     // Consider using contextBridge.exposeInMainWorld
     // Read more on https://www.electronjs.org/docs/latest/tutorial/context-isolation
+    // contextIsolation: false,
     nodeIntegration: true,
-    contextIsolation: true, // was false
+    contextIsolation: true,
   },
 }
 
@@ -66,16 +76,12 @@ async function createWindow() {
   Object.assign(window_config, store.get('win_bounds'))
   win = new BrowserWindow(window_config)
 
-  if (window_config.isMaximized)
-    win.maximize()
-
-  if (process.env.VITE_DEV_SERVER_URL) {
-    win.loadURL(url)
+  if (VITE_DEV_SERVER_URL) { // #298
+    win.loadURL(VITE_DEV_SERVER_URL)
     // Open devTool if the app is not packaged
     win.webContents.openDevTools()
   }
   else {
-    // win.removeMenu()
     win.loadFile(indexHtml)
   }
 
@@ -86,8 +92,7 @@ async function createWindow() {
 
   // Make all links open with the browser, not with the application
   win.webContents.setWindowOpenHandler(({ url }) => {
-    if (url.startsWith('https:'))
-      shell.openExternal(url)
+    if (url.startsWith('https:')) shell.openExternal(url)
     return { action: 'deny' }
   })
   // win.webContents.on('will-navigate', (event, url) => { }) #344
@@ -104,32 +109,38 @@ async function createWindow() {
   })
 }
 
+const transformersWorkerPath = `file://${path.join(process.env.APP_ROOT, 'src', 'worker.mjs').replace('app.asar', 'app.asar.unpacked')}`
+const transformersWorker = new Worker(new URL(transformersWorkerPath, import.meta.url))
+
+const transformersPath = `file://${path.join(process.env.APP_ROOT, 'node_modules', '@xenova', 'transformers', 'src', 'transformers.js').replace('app.asar', 'app.asar.unpacked')}`
+transformersWorker.postMessage({ type: 'transformers-init', data: transformersPath })
+
 app.whenReady().then(createWindow)
 
 app.on('window-all-closed', () => {
   win = null
-  if (process.platform !== 'darwin')
-    app.quit()
+  if (process.platform !== 'darwin') app.quit()
 })
 
 app.on('second-instance', () => {
   if (win) {
     // Focus on the main window if the user tried to open another
-    if (win.isMinimized())
-      win.restore()
+    if (win.isMinimized()) win.restore()
     win.focus()
   }
 })
 
 app.on('activate', () => {
   const allWindows = BrowserWindow.getAllWindows()
-  if (allWindows.length)
+  if (allWindows.length) {
     allWindows[0].focus()
-  else
+  }
+  else {
     createWindow()
+  }
 })
 
-// new window example arg: new windows url
+// New window example arg: new windows url
 ipcMain.handle('open-win', (_, arg) => {
   const childWindow = new BrowserWindow({
     webPreferences: {
@@ -139,8 +150,8 @@ ipcMain.handle('open-win', (_, arg) => {
     },
   })
 
-  if (process.env.VITE_DEV_SERVER_URL)
-    childWindow.loadURL(`${url}#${arg}`)
+  if (VITE_DEV_SERVER_URL)
+    childWindow.loadURL(`${VITE_DEV_SERVER_URL}#${arg}`)
   else
     childWindow.loadFile(indexHtml, { hash: arg })
 })
@@ -167,7 +178,7 @@ ipcMain.on('typing-text-event', (event, args) => {
 })
 
 // event for sending text
-export let text_queue = []
+let text_queue = []
 ipcMain.on('send-text-event', (event, args) => {
   args = JSON.parse(args)
   const new_text = args.transcript.includes(' ') ? args.transcript.match(/.{1,140}(\s|$)/g) : args.transcript.match(/.{1,140}/g)
@@ -181,22 +192,44 @@ ipcMain.on('send-param-event', (event, args) => {
   emit_osc([args.route, args.value], args.ip, args.port)
 })
 
+let wss: WebSocketServer = null
 // websocket events
 ipcMain.on('start-ws', (event, args) => {
   wss = new WebSocketServer({ port: args })
   initialize_ws(win, wss, args)
-    .then((ws: WebSocket) => {
+    .then(() => {
       win.webContents.send('websocket-started', true)
     })
-    .catch((error: any) => {
+    .catch(() => {
       win.webContents.send('websocket-error', true)
     })
 })
-ipcMain.on('close-ws', (event, args) => {
+
+ipcMain.on('close-ws', () => {
   wss.close()
 })
 
-ipcMain.on('update-check', async (event) => {
+ipcMain.on('update-check', async () => {
   const latest = await check_update()
   win.webContents.send('update-check', latest)
+})
+
+// Translations
+//
+// Footer (user submission)
+// → Speech Store
+// → [Condition: translations are enabled]
+// → Electron ('transformers-translate')
+// → Worker (worker thread)
+// → Electron ('transformers-translate-output')
+// → Footer ('transformers-translate-render')
+
+ipcMain.on('transformers-translate', async (event, args) => {
+  transformersWorker.postMessage({ type: 'transformers-translate', data: args })
+})
+
+transformersWorker.on('message', async (message) => {
+  if (message.type === 'transformers-translate-output') {
+    win.webContents.send('transformers-translate-render', message.data)
+  }
 })

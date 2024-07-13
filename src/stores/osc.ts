@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia'
+import { ref } from 'vue'
 
 interface Profile {
   [name: string]: Param[]
@@ -23,31 +24,33 @@ interface Assign {
   pulse_duration: number
 }
 
-export const useOSCStore = defineStore('osc', {
-  state: () => ({
-    ws: {
-      ip: '127.0.0.1',
-      port: '8999',
-    },
-
+export const useOSCStore = defineStore('osc', () => {
+  const ws = ref({
     ip: '127.0.0.1',
-    port: '9000',
-    osc_text: true,
-    text_typing: true, // typing indicator
-    stt_typing: true, // talking indicator
-    sfx: true, // vrchat sfx indicator
-    show_keyboard: false,
+    port: '8999',
+  })
 
-    osc_profiles: {
-      Default: [],
-    } as Profile,
+  const ip = ref('127.0.0.1')
+  const port = ref('9000')
+  const osc_text = ref(true)
+  const text_typing = ref(true)
+  const stt_typing = ref(true)
+  const sfx = ref(true)
+  const show_keyboard = ref(false)
 
-    current_profile: 'Default',
-  }),
-  getters: {
+  const osc_profiles = ref<Profile>({ Default: [] })
 
-  },
-  actions: {
+  const current_profile = ref<string>('Default')
 
-  },
+  return {
+    ip,
+    port,
+    osc_text,
+    text_typing,
+    stt_typing,
+    sfx,
+    show_keyboard,
+    osc_profiles,
+    current_profile,
+  }
 })
