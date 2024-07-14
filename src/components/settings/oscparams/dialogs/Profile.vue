@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="model" width="50vw">
+  <v-dialog v-model="model" width="50vw" max-width="512px">
     <v-card v-click-outside="closeDialog">
       <v-card-title v-if="mode === 'add'">
         {{ $t('settings.osc.params.profile.dialog.title.add') }}
