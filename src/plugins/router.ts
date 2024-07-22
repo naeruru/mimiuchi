@@ -14,7 +14,7 @@ import WordReplace from '@/pages/settings/WordReplace.vue'
 import Translation from '@/pages/settings/Translation.vue'
 import Connections from '@/components/settings/connections/Connections.vue'
 import OSC from '@/pages/settings/OSC.vue'
-import OSCParams from '@/pages/settings/OSCParams.vue'
+import OSCParams from '@/components/settings/oscparams/OSCParams.vue'
 
 const routes = [
   {

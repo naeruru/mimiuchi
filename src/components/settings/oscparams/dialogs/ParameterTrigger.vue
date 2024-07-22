@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="model" width="50vw" persistent>
+  <v-dialog v-model="model" width="50vw" max-width="512px" persistent>
     <v-card>
       <v-card-title v-if="mode === 'add'">
         {{ $t('settings.osc.params.param.dialog_title.add') }}
@@ -12,10 +12,10 @@
           <v-col :cols="12">
             <v-text-field v-model="new_param.route" :label="$t('settings.osc.params.param.address')" hide-details />
           </v-col>
-          <v-col :cols="12" :md="6">
+          <v-col :cols="12" :lg="8" :sm="8">
             <v-text-field v-model="new_param.ip" label="OSC IP" hide-details />
           </v-col>
-          <v-col>
+          <v-col :cols="12" :lg="4" :sm="4">
             <v-text-field v-model="new_param.port" label="OSC port" hide-details />
           </v-col>
         </v-row>
@@ -66,7 +66,7 @@
             <v-chip v-if="!new_param.assigns.length" variant="text">
               {{ $t('settings.osc.params.param.empty') }}
             </v-chip>
-            <v-list density="compact">
+            <v-list v-if="new_param.assigns.length" density="compact">
               <v-list-item
                 v-for="(assign, i) in new_param.assigns"
                 :value="assign"
@@ -77,7 +77,7 @@
               />
             </v-list>
           </v-col>
-          <v-col :cols="12" :lg="6">
+          <v-col :cols="12" :lg="6" :sm="6">
             <v-select
               v-model="new_assign.type"
               :items="value_types"
@@ -86,7 +86,7 @@
               @update:model-value="validateAssignValueAll"
             />
           </v-col>
-          <v-col :cols="12" :lg="6">
+          <v-col :cols="12" :lg="6" :sm="6">
             <v-select
               v-model="new_assign.activation"
               :items="[
@@ -125,7 +125,7 @@
 
         <!-- This row is displayed if the assign activation is "pulse". -->
         <v-row v-if="new_assign.activation === 'pulse'">
-          <v-col :cols="12" :lg="4">
+          <v-col :cols="12" :lg="4" :md="4">
             <v-text-field
               v-if="new_assign.type !== 'bool'"
               v-model="new_assign.set1"
@@ -143,20 +143,18 @@
             />
           </v-col>
 
-          <v-col :cols="12" :lg="4">
+          <v-col :cols="12" :lg="4" :md="4">
             <v-text-field
               v-model="new_assign.pulse_duration"
               hide-details
               :label="$t('settings.osc.params.param.assign.behavior_options.pulse_wait')"
               type="number"
               suffix="ms"
-              prepend-icon="mdi-arrow-right-bold"
-              append-icon="mdi-arrow-right-bold"
               @input="new_assign.pulse_duration = Math.round(new_assign.pulse_duration)"
             />
           </v-col>
 
-          <v-col :cols="12" :lg="4">
+          <v-col :cols="12" :lg="4" :md="4">
             <v-text-field
               v-if="new_assign.type !== 'bool'"
               v-model="new_assign.set2"
@@ -189,8 +187,6 @@
         </v-row>
       </v-card-text>
 
-      <v-divider class="mt-4" />
-
       <div v-if="new_param.keywords.length && new_param.assigns.length" class="ma-2">
         <v-list-item
           :title="`Example phrase: 'set ${new_param.keywords[0]?.text} to ${new_param.assigns[0]?.keyword}'`"
@@ -199,7 +195,7 @@
       </div>
       <v-card-actions>
         <v-spacer />
-        <v-btn @click="cancelParamDialog">
+        <v-btn @click="closeDialog">
           {{ $t('settings.osc.params.button.cancel') }}
         </v-btn>
         <v-btn v-if="mode === 'add'" color="primary" @click="confirmAddParam">
@@ -291,25 +287,21 @@ watch(model, (enabled) => {
   }
 })
 
-function cancelParamDialog() {
-  emit('update:modelValue', false) // Close the dialog.
+function closeDialog() {
+  emit('update:modelValue', false)
 }
 
 function confirmAddParam() {
   oscStore.osc_profiles[oscStore.current_profile].push(new_param.value)
 
-  emit('update:modelValue', false)
+  closeDialog()
 }
 
 function confirmEditParam() {
   oscStore.osc_profiles[oscStore.current_profile][props.editingIndex as number] = JSON.parse(JSON.stringify(new_param.value)) // Deep copy
 
-  emit('update:modelValue', false)
+  closeDialog()
 }
-
-// function deleteParam(i: number) {
-//   oscStore.osc_profiles[oscStore.current_profile].splice(i, 1)
-// }
 
 function addTrigger() {
   if (!trigger_phrase.value.trim()) // The trigger phrase field is empty

@@ -187,92 +187,13 @@
       </v-card>
     </v-card-text>
 
-    <!-- Profile Add Dialog -->
+    <!-- Profile Dialog -->
     <v-row justify="center">
-      <v-dialog v-model="profile_add_dialog" width="50vw">
-        <v-card v-click-outside="closeAddProfileDialog">
-          <v-card-title>{{ $t('settings.osc.params.profile.dialog.title.add') }}</v-card-title>
-          <v-card-text>
-            <v-row>
-              <v-col :cols="12">
-                <v-form
-                  v-model="new_profile_name_valid"
-                  @submit.prevent="new_profile_name_valid ? confirmAddProfileDialog() : null"
-                >
-                  <v-text-field
-                    v-model="new_profile_name"
-                    :label="$t('settings.osc.params.profile.dialog.field_label')"
-                    :rules="[
-                      rules.required,
-                      rules.empty,
-                      rules.already_taken(new_profile_name, oscStore.osc_profiles),
-                    ]"
-                    autofocus
-                    spellcheck="false"
-                  />
-                </v-form>
-              </v-col>
-            </v-row>
-          </v-card-text>
-          <v-card-actions>
-            <v-spacer />
-            <v-btn @click="closeAddProfileDialog">
-              {{ $t('settings.osc.params.button.cancel') }}
-            </v-btn>
-            <v-btn
-              color="primary"
-              :disabled="!new_profile_name_valid"
-              @click="confirmAddProfileDialog"
-            >
-              {{ $t('settings.osc.params.button.add') }}
-            </v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
-    </v-row>
-
-    <!-- Profile Edit Dialog -->
-    <v-row justify="center">
-      <v-dialog v-model="profile_edit_dialog" width="50vw">
-        <v-card v-click-outside="closeEditProfileDialog">
-          <v-card-title>{{ $t('settings.osc.params.profile.dialog.title.edit') }}</v-card-title>
-          <v-card-text>
-            <v-row>
-              <v-col :cols="12">
-                <v-form
-                  v-model="new_profile_name_valid"
-                  @submit.prevent="new_profile_name_valid ? confirmEditProfileDialog() : null"
-                >
-                  <v-text-field
-                    v-model="new_profile_name"
-                    :label="$t('settings.osc.params.profile.dialog.field_label')"
-                    :rules="[
-                      rules.required,
-                      rules.empty,
-                      rules.already_taken(new_profile_name, oscStore.osc_profiles),
-                    ]"
-                    autofocus
-                    spellcheck="false"
-                  />
-                </v-form>
-              </v-col>
-            </v-row>
-          </v-card-text>
-          <v-card-actions>
-            <v-spacer />
-            <v-btn @click="closeEditProfileDialog">
-              {{ $t('settings.osc.params.button.cancel') }}
-            </v-btn>
-            <v-btn
-              color="primary"
-              :disabled="!new_profile_name_valid"
-              @click="confirmEditProfileDialog"
-            >
-              {{ $t('settings.osc.params.button.confirm') }}
-            </v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
+      <Profile
+        v-model="profile_dialog"
+        :mode="profile_dialog_mode"
+        :new_name="profile_dialog_new_name"
+      />
     </v-row>
 
     <!-- Profile Delete Dialog -->
@@ -328,24 +249,15 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import ParameterTrigger from '@/components/settings/oscparams/dialogs/ParameterTrigger.vue'
 import { useOSCStore } from '@/stores/osc'
+import Profile from '@/components/settings/oscparams/dialogs/Profile.vue'
+import ParameterTrigger from '@/components/settings/oscparams/dialogs/ParameterTrigger.vue'
 
 const oscStore = useOSCStore()
 
-const rules = ref({
-  required: (value: string) => !!value || 'Required',
-  empty: (value: string) => !!value.trim() || 'Cannot be empty',
-  already_taken: (value: string, collection: object) => !(value in collection) || 'Already in use',
-})
-
-const new_profile_name = ref('')
-const new_profile_name_valid = ref(false)
-
-const profile_add_dialog = ref(false)
-
-const profile_edit_dialog = ref(false)
-const editing_profile_name = ref('')
+const profile_dialog = ref(false)
+const profile_dialog_mode = ref('') // "add", "edit"
+const profile_dialog_new_name = ref('')
 
 const profile_delete_dialog = ref(false)
 const profile_delete_target = ref('')
@@ -382,48 +294,19 @@ function clearFocus() {
 function openAddProfileDialog() {
   clearFocus()
 
-  new_profile_name.value = ''
+  profile_dialog_mode.value = 'add'
+  profile_dialog_new_name.value = ''
 
-  profile_add_dialog.value = true
-}
-
-function confirmAddProfileDialog() {
-  oscStore.osc_profiles[new_profile_name.value] = []
-  oscStore.current_profile = new_profile_name.value
-
-  new_profile_name.value = ''
-
-  profile_add_dialog.value = false
-}
-
-function closeAddProfileDialog() {
-  profile_add_dialog.value = false
+  profile_dialog.value = true
 }
 
 function openEditProfileDialog(profile_name: string) {
   clearFocus()
 
-  editing_profile_name.value = profile_name
-  new_profile_name.value = profile_name
+  profile_dialog_mode.value = 'edit'
+  profile_dialog_new_name.value = profile_name
 
-  profile_edit_dialog.value = true
-}
-
-function confirmEditProfileDialog() {
-  oscStore.osc_profiles[new_profile_name.value] = oscStore.osc_profiles[editing_profile_name.value]
-
-  if (oscStore.current_profile === editing_profile_name.value)
-    oscStore.current_profile = new_profile_name.value
-
-  delete oscStore.osc_profiles[editing_profile_name.value]
-
-  new_profile_name.value = ''
-
-  profile_edit_dialog.value = false
-}
-
-function closeEditProfileDialog() {
-  profile_edit_dialog.value = false
+  profile_dialog.value = true
 }
 
 function openDeleteProfileDialog(profile_name: string) {
