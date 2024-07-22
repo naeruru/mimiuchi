@@ -19,17 +19,19 @@
         </v-col>
         <v-col :cols="12">
           <v-select
-            v-model="speechStore.tts.type"
+            v-model="selected_option"
             :label="$t('settings.tts.type')"
             :items="tts_options"
             item-title="title"
             item-value="value"
             variant="outlined"
+            @update:model-value="loadVoices"
           />
         </v-col>
         <v-col :cols="12" :md="6">
           <v-slider
             v-model="speechStore.tts.rate"
+            :disabled="selected_option !== 'webspeech'"
             class="align-center"
             max="1.5"
             min=".1"
@@ -54,6 +56,7 @@
         <v-col :cols="12" :md="6">
           <v-slider
             v-model="speechStore.tts.pitch"
+            :disabled="selected_option !== 'webspeech'"
             class="align-center"
             max="1.5"
             min=".1"
@@ -92,7 +95,7 @@
               :key="language.name"
               class="pa-2 mb-2"
               :color="language.name === speechStore.tts.voice ? 'primary' : 'default'"
-              @click="speechStore.tts.voice = language.name"
+              @click="update_voice(language.name)"
             >
               <v-row class="pa-3">
                 <v-radio :label="language.name" :value="language.name">
@@ -100,7 +103,7 @@
                     <div>{{ language.name }}</div>
                   </template>
                 </v-radio>
-                <v-icon class="pt-4 pr-2" :icon="language.localService ? 'mdi-laptop' : 'mdi-weather-cloudy'" />
+                <v-icon class="pt-4 pr-2" :icon="language.local_service ? 'mdi-laptop' : 'mdi-weather-cloudy'" />
               </v-row>
             </v-card>
           </v-radio-group>
@@ -112,8 +115,14 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref, watch } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { useSpeechStore } from '@/stores/speech'
+
+interface Voice {
+  lang: string
+  name: string
+  local_service: boolean
+}
 
 const synth = window.speechSynthesis
 
@@ -121,21 +130,28 @@ const speechStore = useSpeechStore()
 
 const tts_options = ref([
   {
+    title: 'TikTok',
+    value: 'tiktok',
+  },
+  {
     title: 'Web Speech API',
     value: 'webspeech',
   },
+  {
+    title: 'Yukumo!',
+    value: 'yukumo',
+  },
 ])
-const language_choice = ref('')
+const selected_option = ref(speechStore.tts.type)
 const search_lang = ref('')
-const languages = ref([] as SpeechSynthesisVoice[])
+const languages = ref([] as Voice[])
 
 onMounted(() => {
   if ('onvoiceschanged' in synth)
     synth.onvoiceschanged = loadVoices
-  else
-    loadVoices()
 
   loadVoices()
+
   if (speechSynthesis.onvoiceschanged !== undefined)
     speechSynthesis.onvoiceschanged = loadVoices
 })
@@ -144,12 +160,12 @@ const filtered_lang = computed(() => {
   return languages.value.filter(lang => `${lang.name} ${lang.lang}`.toLocaleLowerCase().includes(search_lang.value.toLocaleLowerCase()))
 })
 
-watch(language_choice, (new_val) => {
-  if (new_val)
-    speechStore.stt.language = new_val
-})
-
 function loadVoices() {
-  languages.value = synth.getVoices()
+  languages.value = speechStore.load_voices(selected_option.value)
+}
+
+function update_voice(voice: string) {
+  speechStore.tts.voice = voice
+  speechStore.tts.type = selected_option.value
 }
 </script>

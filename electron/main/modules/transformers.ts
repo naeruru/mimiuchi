@@ -1,5 +1,6 @@
 // see: https://github.com/xenova/transformers.js
-import { PipelineType, pipeline } from '@xenova/transformers'
+import type { PipelineType } from '@xenova/transformers'
+import { pipeline } from '@xenova/transformers'
 
 export class TranslationPipeline {
   static task: PipelineType = 'translation'
@@ -16,15 +17,15 @@ export class TranslationPipeline {
   async translate(win: any, data: any) {
     // call translator. downloads and caches model if first load
     const translator = await TranslationPipeline.getInstance((x: any) => {
-        // self.postMessage(x)
-        win.webContents.send('transformers-translate-render', x)
+      // self.postMessage(x)
+      win.webContents.send('transformers-translate-render', x)
     })
-  
+
     // console.log(data)
     const output = await translator(data.text, {
       tgt_lang: data.tgt_lang,
       src_lang: data.src_lang,
-  
+
       // partial outputs
       callback_function: (x: any) => {
         win.webContents.send('transformers-translate-render', {
@@ -34,7 +35,7 @@ export class TranslationPipeline {
         })
       },
     })
-  
+
     // send back to main thread
     win.webContents.send('transformers-translate-render', {
       status: 'complete',

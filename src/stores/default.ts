@@ -13,6 +13,7 @@ export const useDefaultStore = defineStore('default', () => {
   const connections = ref(0)
   const typing_limited = ref(false)
   const speech = ref(<WebSpeech>{})
+  const audio = ref<HTMLAudioElement>(new Audio())
   const snackbar = ref({
     enabled: false,
     type: 'error',
@@ -85,6 +86,7 @@ export const useDefaultStore = defineStore('default', () => {
     connections,
     typing_limited,
     speech,
+    audio,
     snackbar,
     show_snackbar,
     toggle_broadcast,

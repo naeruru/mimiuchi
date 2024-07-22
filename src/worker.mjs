@@ -39,7 +39,7 @@ parentPort.on('message', async (message) => {
           status: 'update',
           output: translator.tokenizer.decode(x[0].output_token_ids, { skip_special_tokens: true }),
           index: message.data.index,
-        }})
+        } })
       },
     })
 
@@ -48,6 +48,6 @@ parentPort.on('message', async (message) => {
       status: 'complete',
       output,
       index: message.data.index,
-    }})
+    } })
   }
 })

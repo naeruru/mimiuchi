@@ -8,9 +8,12 @@ import { useTranslationStore } from '@/stores/translation'
 import { useConnectionsStore } from '@/stores/connections'
 import { useWordReplaceStore } from '@/stores/word_replace'
 import webhook from '@/helpers/webhook'
+import { post } from '@/helpers/fetch'
 import is_electron from '@/helpers/is_electron'
 import { i18n } from '@/plugins/i18n'
 import { WebSpeech } from '@/modules/speech'
+import yukumo from '@/constants/voices/yukumo'
+import tiktok from '@/constants/voices/tiktok'
 
 export interface ListItem {
   title: string
@@ -35,10 +38,7 @@ export const useSpeechStore = defineStore('speech', () => {
   })
   const tts = ref({
     enabled: false,
-    type: {
-      title: 'Web Speech API',
-      value: 'webspeech',
-    },
+    type: 'webspeech',
     voice: '',
     rate: 1,
     pitch: 1,
@@ -108,9 +108,54 @@ export const useSpeechStore = defineStore('speech', () => {
     }
   }
 
-  function speak(input: string) {
-    const { speech } = useDefaultStore()
-    speech.speak(input)
+  async function speak(input: string) {
+    let response: any
+    const defaultStore = useDefaultStore()
+    switch (tts.value.type) {
+      case 'tiktok':
+        const body = {
+          text: input,
+          voice: tiktok.voices.find(voice => voice.name === tts.value.voice)?.lang,
+        }
+        try {
+          response = await post(tiktok.api, body)
+        }
+        catch (e) {
+          console.error(e)
+          response = await post(tiktok.api, body)
+        }
+        if (!defaultStore.audio.src || defaultStore.audio.ended) {
+          defaultStore.audio.src = `data:audio/mpeg;base64,${response.data}`
+          defaultStore.audio.play()
+        }
+        else {
+          defaultStore.audio.onended = function () {
+            defaultStore.audio.src = `data:audio/mpeg;base64,${response.data}`
+            defaultStore.audio.play()
+            defaultStore.audio.onended = null
+          }
+        }
+        break
+
+      case 'webspeech':
+        const { speech } = useDefaultStore()
+        speech.speak(input)
+        break
+
+      case 'yukumo':
+        if (!defaultStore.audio.src || defaultStore.audio.ended) {
+          defaultStore.audio.src = yukumo.build_api(tts.value.voice, input)
+          defaultStore.audio.play()
+        }
+        else {
+          defaultStore.audio.onended = function () {
+            defaultStore.audio.src = yukumo.build_api(tts.value.voice, input)
+            defaultStore.audio.play()
+            defaultStore.audio.onended = null
+          }
+        }
+        break
+    }
   }
 
   async function on_submit(log: any, index: number) {
@@ -231,6 +276,34 @@ export const useSpeechStore = defineStore('speech', () => {
     }
   }
 
+  // temp
+  interface Voice {
+    lang: string
+    name: string
+    local_service: boolean
+  }
+  function load_voices(option: string): Voice[] {
+    let voices: Voice[] = []
+    switch (option) {
+      case 'tiktok':
+        voices = tiktok.voices
+        break
+      case 'webspeech':
+        const synth = window.speechSynthesis
+        voices = synth.getVoices().map((lang: SpeechSynthesisVoice) => ({
+          lang: lang.lang,
+          name: lang.name,
+          local_service: lang.localService,
+        } as Voice))
+        break
+      case 'yukumo':
+        voices = yukumo.voices
+        break
+    }
+
+    return voices
+  }
+
   function pin_language(selected_language: ListItem) {
     const pins = pinned_languages
 
@@ -270,6 +343,7 @@ export const useSpeechStore = defineStore('speech', () => {
     typing_event,
     speak,
     on_submit,
+    load_voices,
     pin_language,
     unpin_language,
     is_pinned_language,

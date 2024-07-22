@@ -16,7 +16,7 @@
       </v-btn>
     </template>
   </v-snackbar>
-  <v-footer app class="d-flex flex-column pl-2" height="60" permanent fixed>
+  <v-footer app class="d-flex flex-column pl-2" height="55" permanent fixed>
     <div class="d-flex w-100 align-center">
       <v-form
         class="d-flex w-100 align-center"

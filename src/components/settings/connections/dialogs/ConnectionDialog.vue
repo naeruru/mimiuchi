@@ -29,6 +29,9 @@
                 class="text-subtitle-1"
               >
                 {{ $t('settings.connections.wh.description') }}
+                <v-col>
+                  <code>=> { transcript: 'text here' }</code>
+                </v-col>
               </label>
             </v-col>
             <v-col :cols="12" class="pt-2">
