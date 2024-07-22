@@ -38,7 +38,7 @@ export const useSpeechStore = defineStore('speech', () => {
   })
   const tts = ref({
     enabled: false,
-    type: 'webspeech',
+    type: 'tiktok',
     voice: '',
     rate: 1,
     pitch: 1,
