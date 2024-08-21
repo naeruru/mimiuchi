@@ -124,6 +124,7 @@ const defaultStore = useDefaultStore()
 
 const router = useRouter()
 const input_text = ref('')
+const input_index = ref<any>(null)
 
 const windowSize = ref({
   x: 0,
@@ -137,6 +138,11 @@ const last_setting = computed(() => {
 watch(input_text, () => {
   if (oscStore.osc_text && oscStore.text_typing && defaultStore.broadcasting)
     typing_event(true)
+
+  if (input_index.value === null) {
+    input_index.value = logsStore.logs.length
+  }
+  speechStore.submit_text(input_text.value, input_index.value)
 })
 
 const { stt } = storeToRefs(speechStore)
@@ -296,10 +302,11 @@ async function onSubmit(log: Log | null = null) {
   }
   if (log && log.isFinal)
     paramTrigger(log.transcript)
-  speechStore.on_submit(log, Math.max(logsStore.logs.length - 1, 0))
+  speechStore.on_submit(log, input_index.value ?? Math.max(logsStore.logs.length - 1, 0))
 
   // clear chatbox
   input_text.value = ''
+  input_index.value = null
 }
 
 function toggleBroadcast() {
