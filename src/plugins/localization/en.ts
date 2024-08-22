@@ -35,6 +35,7 @@ export default {
       description: 'General application settings',
       language: 'Select a UI language',
       transcript: 'Download session transcript',
+      realtime_text: 'Instant textbox updates',
       reset: {
         button: 'Reset all settings',
         dialog: {

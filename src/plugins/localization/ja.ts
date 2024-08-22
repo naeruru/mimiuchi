@@ -35,6 +35,7 @@ export default {
       description: 'アプリ全般の設定',
       language: 'UIの言語を選択',
       transcript: 'セッショントランスクリプトをダウンロードする',
+      realtime_text: 'テキストボックスのテキストは継続的に送信する',
       reset: {
         button: 'アプリの設定をリセットする',
         dialog: {

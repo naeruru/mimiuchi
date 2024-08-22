@@ -111,6 +111,7 @@ import { useLogsStore } from '@/stores/logs'
 import { useTranslationStore } from '@/stores/translation'
 import { useOSCStore } from '@/stores/osc'
 import { useDefaultStore } from '@/stores/default'
+import { useSettingsStore } from '@/stores/settings'
 
 declare const window: any
 
@@ -121,6 +122,7 @@ const logsStore = useLogsStore()
 const translationStore = useTranslationStore()
 const oscStore = useOSCStore()
 const defaultStore = useDefaultStore()
+const settingsStore = useSettingsStore()
 
 const router = useRouter()
 const input_text = ref('')
@@ -142,7 +144,8 @@ watch(input_text, () => {
   if (input_index.value === null) {
     input_index.value = logsStore.logs.length
   }
-  speechStore.submit_text(input_text.value, input_index.value)
+  if (settingsStore.realtime_text)
+    speechStore.submit_text(input_text.value, input_index.value, false)
 })
 
 const { stt } = storeToRefs(speechStore)
