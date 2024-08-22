@@ -124,6 +124,10 @@ export const useSpeechStore = defineStore('speech', () => {
       if (defaultStore.ws1) {
         defaultStore.ws1.send(`{"type": "text", "data": ${JSON.stringify(logsStore.logs[input_index])}}`)
       }
+    } else {
+      if (input_index === logsStore.logs.length - 1) {
+        logsStore.logs[input_index].transcript = input_text
+      }
     }
   }
 
