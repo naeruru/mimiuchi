@@ -81,6 +81,20 @@ export default {
       title: 'Appearance',
       description: 'Change the appearance of the app',
       theme: 'Theme',
+      footer: 'Footer Settings',
+      footer_size: {
+        hint: 'Footer size',
+        options: [
+          {
+            title: 'Small',
+            value: 0
+          },
+          {
+            title: 'Large',
+            value: 1
+          }
+        ]
+      },
       text: {
         title: 'Text Settings',
         font_family: 'Font family',

@@ -3,6 +3,7 @@ import { ref } from 'vue'
 
 export const useAppearanceStore = defineStore('appearance', () => {
   const current_theme = ref('midnight_purple')
+  const footer_size = ref(0)
 
   const text = ref({
     color: '#FFFFFF',
@@ -39,6 +40,7 @@ export const useAppearanceStore = defineStore('appearance', () => {
 
   return {
     current_theme,
+    footer_size,
     text,
     ui,
   }

@@ -81,6 +81,20 @@ export default {
       title: 'テーマ',
       description: 'アプリのテーマを変更',
       theme: 'テーマ',
+      footer: 'フッター設定',
+      footer_size: {
+        hint: 'フッターサイズ',
+        options: [
+          {
+            title: '小さい',
+            value: 0
+          },
+          {
+            title: '大きい',
+            value: 1
+          }
+        ]
+      },
       text: {
         title: '文字設定',
         font_family: 'フォント',
