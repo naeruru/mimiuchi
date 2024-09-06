@@ -29,7 +29,7 @@ export const useAppearanceStore = defineStore('appearance', () => {
       ],
     },
     outline: true,
-    outline_size: 0,
+    outline_size: 4,
     outline_color: '#6d6d6d',
     font_size: 64,
     enable_fade: true,
