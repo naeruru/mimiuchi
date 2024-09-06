@@ -99,8 +99,41 @@ export const useSpeechStore = defineStore('speech', () => {
     }
   }
 
+  function submit_text(input_text: string, input_index: number, isFinal: boolean) {
+    const defaultStore = useDefaultStore()
+    const connectionsStore = useConnectionsStore()
+    const logsStore = useLogsStore()
+
+    if (connectionsStore.wh.enabled && defaultStore.broadcasting)
+      webhook.post(connectionsStore.wh.url, { transcript: input_text, isFinal: isFinal })
+
+    if (input_text) {
+      if (input_index === logsStore.logs.length - 1) {
+        logsStore.logs[input_index].transcript = input_text
+      } else {
+        const log = {
+          transcript: input_text,
+          isFinal: false,
+          isTranslationFinal: false,
+          translate: false,
+          hide: 0, // 1 = fade, 2 = hide
+        }
+        logsStore.logs.push(log)
+      }
+
+      if (defaultStore.ws1) {
+        defaultStore.ws1.send(`{"type": "text", "data": ${JSON.stringify(logsStore.logs[input_index])}}`)
+      }
+    } else {
+      if (input_index === logsStore.logs.length - 1) {
+        logsStore.logs[input_index].transcript = input_text
+      }
+    }
+  }
+
   function typing_event(event: boolean) {
     const defaultStore = useDefaultStore()
+
     if (is_electron() && !defaultStore.typing_limited) {
       defaultStore.typing_limited = true
       window.ipcRenderer.send('typing-text-event', event)
@@ -248,7 +281,7 @@ export const useSpeechStore = defineStore('speech', () => {
 
       // webhook
       if (connectionsStore.wh.enabled && defaultStore.broadcasting)
-        webhook.post(connectionsStore.wh.url, { transcript: log.transcript })
+        webhook.post(connectionsStore.wh.url, { transcript: log.transcript, isFinal: true })
     }
 
     // send text via osc
@@ -340,6 +373,7 @@ export const useSpeechStore = defineStore('speech', () => {
     pinned_languages,
     initialize_speech,
     toggle_listen,
+    submit_text,
     typing_event,
     speak,
     on_submit,

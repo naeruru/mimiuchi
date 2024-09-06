@@ -4,6 +4,7 @@ import { ref } from 'vue'
 export const useSettingsStore = defineStore('settings', () => {
   const welcome = ref(true)
   const drawer = ref(true)
+  const realtime_text = ref(false)
 
   const stt_Settings = ref({
     language: 'en-US',
@@ -30,6 +31,7 @@ export const useSettingsStore = defineStore('settings', () => {
   return {
     welcome,
     drawer,
+    realtime_text,
     stt_Settings,
     languages,
     language,

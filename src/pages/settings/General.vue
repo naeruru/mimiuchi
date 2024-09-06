@@ -33,17 +33,65 @@
         <v-divider />
       </v-row>
       <v-row>
-        <v-col :cols="12" class="d-flex flex-no-wrap justify-space-between">
-          <v-card-text class="text-subtitle-1 font-weight-medium">
-            {{ $t('settings.general.transcript') }}
-          </v-card-text>
-          <v-btn color="primary" class="mt-2" @click="logsStore.exportLogs()">
-            <v-icon>mdi-download</v-icon>
-          </v-btn>
+        <v-col :cols="12" :md="12" class="pb-0">
+          <v-card>
+            <v-list-item :title="$t('settings.general.realtime_text')">
+              <template #append>
+                <v-switch
+                  v-model="settingsStore.realtime_text"
+                  color="primary"
+                  hide-details
+                  inset
+                />
+              </template>
+            </v-list-item>
+          </v-card>
         </v-col>
-        <v-divider />
+      </v-row>
+      <v-row class="mt-12">
       </v-row>
       <v-row>
+        <v-col :cols="12" class="pb-0">
+          <v-card>
+            <v-list-item :title="$t('settings.general.transcript')">
+              <template #append>
+                <v-btn color="primary" class="my-2" @click="logsStore.exportLogs()">
+                  <v-icon>mdi-download</v-icon>
+                </v-btn>
+              </template>
+            </v-list-item>
+          </v-card>
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col :cols="12" class="pb-0">
+          <v-card>
+            <v-list-item :title="$t('settings.general.reset.button')">
+              <template #append>
+                <v-btn color="error" class="my-2">
+                  <v-icon>mdi-restore</v-icon>
+                  <v-dialog
+                    v-model="reset_dialog"
+                    activator="parent"
+                    max-width="500"
+                  >
+                    <v-card>
+                      <v-card-title>{{ $t('settings.general.reset.dialog.title') }}</v-card-title>
+                      <v-card-text>
+                        {{ $t('settings.general.reset.dialog.description') }}
+                      </v-card-text>
+                      <v-btn class="mt-2" color="error" @click="reset_settings()">
+                        {{ $t('settings.general.reset.dialog.button') }}
+                      </v-btn>
+                    </v-card>
+                  </v-dialog>
+                </v-btn>
+              </template>
+            </v-list-item>
+          </v-card>
+        </v-col>
+      </v-row>
+      <!-- <v-row>
         <v-col :cols="12" :md="12" class="d-flex flex-no-wrap justify-space-between">
           <v-card-text class="text-subtitle-1 font-weight-medium">
             {{ $t('settings.general.reset.button') }}
@@ -68,7 +116,7 @@
           </v-btn>
         </v-col>
         <v-divider />
-      </v-row>
+      </v-row> -->
     </v-card-text>
   </v-card>
 </template>

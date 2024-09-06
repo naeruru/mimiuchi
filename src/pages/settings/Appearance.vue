@@ -168,6 +168,22 @@
         </v-col>
         <v-divider />
       </v-row>
+      <v-row>
+        <v-col :cols="12">
+          <p class="text-h6">
+            {{ $t('settings.appearance.footer') }}
+          </p>
+        </v-col>
+        <v-col>
+          <v-select
+            v-model="footer_size"
+            :items="footer_size_options"
+            :label="$t('settings.appearance.footer_size.hint')"
+            variant="solo"
+            hide-details
+          />
+        </v-col>
+      </v-row>
     </v-card-text>
   </v-card>
 </template>
@@ -187,6 +203,7 @@ const { tm } = useI18n()
 const theme = useTheme()
 
 const line_delay_options: any[] = JSON.parse(JSON.stringify(tm('settings.appearance.text.new_line_delay.options')))
+const footer_size_options: any[] = JSON.parse(JSON.stringify(tm('settings.appearance.footer_size.options')))
 
 const fonts = ref< Font[]>([])
 
@@ -195,7 +212,7 @@ onMounted(async () => {
     .then(res => fonts.value = res)
 })
 
-const { text, ui, current_theme } = storeToRefs(useAppearanceStore())
+const { text, ui, current_theme, footer_size } = storeToRefs(useAppearanceStore())
 watch(
   () => text.value.font,
   (v) => {

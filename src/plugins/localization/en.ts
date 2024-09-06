@@ -35,6 +35,7 @@ export default {
       description: 'General application settings',
       language: 'Select a UI language',
       transcript: 'Download session transcript',
+      realtime_text: 'Instant textbox updates',
       reset: {
         button: 'Reset all settings',
         dialog: {
@@ -80,6 +81,20 @@ export default {
       title: 'Appearance',
       description: 'Change the appearance of the app',
       theme: 'Theme',
+      footer: 'Footer Settings',
+      footer_size: {
+        hint: 'Footer size',
+        options: [
+          {
+            title: 'Small',
+            value: 0
+          },
+          {
+            title: 'Large',
+            value: 1
+          }
+        ]
+      },
       text: {
         title: 'Text Settings',
         font_family: 'Font family',

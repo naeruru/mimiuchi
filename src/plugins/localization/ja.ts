@@ -35,6 +35,7 @@ export default {
       description: 'アプリ全般の設定',
       language: 'UIの言語を選択',
       transcript: 'セッショントランスクリプトをダウンロードする',
+      realtime_text: 'テキストボックスのテキストは継続的に送信する',
       reset: {
         button: 'アプリの設定をリセットする',
         dialog: {
@@ -80,6 +81,20 @@ export default {
       title: 'テーマ',
       description: 'アプリのテーマを変更',
       theme: 'テーマ',
+      footer: 'フッター設定',
+      footer_size: {
+        hint: 'フッターサイズ',
+        options: [
+          {
+            title: '小さい',
+            value: 0
+          },
+          {
+            title: '大きい',
+            value: 1
+          }
+        ]
+      },
       text: {
         title: '文字設定',
         font_family: 'フォント',

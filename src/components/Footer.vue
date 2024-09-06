@@ -16,14 +16,42 @@
       </v-btn>
     </template>
   </v-snackbar>
-  <v-footer app class="d-flex flex-column pl-2" height="55" permanent fixed>
+  <v-footer app class="d-flex flex-column pl-2" :height="$route.name === 'home' && appearanceStore.footer_size ? 200 : 55" permanent fixed>
     <div class="d-flex w-100 align-center">
       <v-form
         class="d-flex w-100 align-center"
         @submit.prevent="onSubmit()"
       >
-        <div class="d-flex w-100 align-center">
+        <div class="d-flex w-100">
+
+          <v-textarea 
+            v-if="$route.name === 'home' && appearanceStore.footer_size"
+            v-model="input_text"
+            variant="outlined"
+            :label="$t('general.type_message')"
+            append-inner-icon="mdi-chevron-right"
+            class="mr-6 mt-1 fill-height"
+            rows="6"
+            hide-details
+            flat
+            loading
+            @keyup.enter="onSubmit()"
+          >
+            <template #loader>
+              <v-progress-linear
+                :active="logsStore.loading_result || translationStore.download >= 0"
+                :color="translationStore.download !== -1 ? 'warning' : 'secondary'"
+                :indeterminate="translationStore.download === -1"
+                :model-value="translationStore.download"
+                :max="100"
+                height="5"
+                rounded
+              />
+            </template>
+          </v-textarea>
+
           <v-text-field
+            v-else
             v-model="input_text"
             density="compact"
             variant="outlined"
@@ -73,7 +101,7 @@
                 @click="toggleBroadcast"
               />
             </v-badge>
-            <v-divider class="mr-4" vertical />
+            <v-divider height="50" class="mr-4" vertical />
             <v-btn
               v-if="$route.name === 'home'" color="transparent"
               size="small"
@@ -111,6 +139,8 @@ import { useLogsStore } from '@/stores/logs'
 import { useTranslationStore } from '@/stores/translation'
 import { useOSCStore } from '@/stores/osc'
 import { useDefaultStore } from '@/stores/default'
+import { useSettingsStore } from '@/stores/settings'
+import { useAppearanceStore } from '@/stores/appearance'
 
 declare const window: any
 
@@ -121,9 +151,12 @@ const logsStore = useLogsStore()
 const translationStore = useTranslationStore()
 const oscStore = useOSCStore()
 const defaultStore = useDefaultStore()
+const settingsStore = useSettingsStore()
+const appearanceStore = useAppearanceStore()
 
 const router = useRouter()
 const input_text = ref('')
+const input_index = ref<any>(null)
 
 const windowSize = ref({
   x: 0,
@@ -137,6 +170,12 @@ const last_setting = computed(() => {
 watch(input_text, () => {
   if (oscStore.osc_text && oscStore.text_typing && defaultStore.broadcasting)
     typing_event(true)
+
+  if (input_index.value === null) {
+    input_index.value = logsStore.logs.length
+  }
+  if (settingsStore.realtime_text)
+    speechStore.submit_text(input_text.value, input_index.value, false)
 })
 
 const { stt } = storeToRefs(speechStore)
@@ -296,10 +335,11 @@ async function onSubmit(log: Log | null = null) {
   }
   if (log && log.isFinal)
     paramTrigger(log.transcript)
-  speechStore.on_submit(log, Math.max(logsStore.logs.length - 1, 0))
+  speechStore.on_submit(log, input_index.value ?? Math.max(logsStore.logs.length - 1, 0))
 
   // clear chatbox
   input_text.value = ''
+  input_index.value = null
 }
 
 function toggleBroadcast() {

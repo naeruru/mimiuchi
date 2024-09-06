@@ -1,7 +1,7 @@
 <template>
   <v-card
     id="log-list" v-resize="onResize" class="fill-height pa-4 overflow-auto log-list"
-    :color="appearanceStore.ui.color" :height="height - 55" tile
+    :color="appearanceStore.ui.color" :height="height - (appearanceStore.footer_size ? 200 : 55)" tile
   >
     <div>
       <a
@@ -64,7 +64,12 @@ const windowSize = ref({
   y: 0,
 })
 
-const outer_size = computed(() => is_electron() ? '90px' : '55px')
+const outer_size = computed(() => {
+  let value = 55
+  if (is_electron()) value += 35
+  if (appearanceStore.footer_size) value += 145
+  return `${value}px`
+})
 
 onMounted(() => {
   if (appearanceStore.current_theme in theme.themes.value)
