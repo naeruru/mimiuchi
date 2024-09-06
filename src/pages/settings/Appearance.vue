@@ -99,6 +99,33 @@
           />
         </v-col>
         <v-divider />
+
+        <v-col :cols="12" :md="12" class="pb-0">
+          <v-card>
+            <v-list-item :title="$t('settings.appearance.text.outline.enabled')">
+              <template #append>
+                <v-switch
+                  v-model="text.outline"
+                  color="primary"
+                  hide-details
+                  inset
+                />
+              </template>
+            </v-list-item>
+          </v-card>
+        </v-col>
+        <v-col :cols="12" :md="12">
+          <v-text-field
+            v-model="text.outline_size"
+            :disabled="!text.outline"
+            :label="$t('settings.appearance.text.outline.size')"
+            type="number"
+            suffix="px"
+            hide-details
+          />
+        </v-col>
+
+        <v-divider />
         <v-col :cols="12" :md="12" class="pb-0">
           <v-card>
             <v-list-item :title="$t('settings.appearance.text.fade')">
@@ -163,6 +190,17 @@
           <v-btn :color="ui.color" width="20vw" class="ma-2" flat>
             <v-menu activator="parent" :close-on-content-click="false">
               <v-color-picker v-model="ui.color" :modes="['hexa']" flat class="pa-2" />
+            </v-menu>
+          </v-btn>
+        </v-col>
+        <v-divider />
+        <v-col :cols="12" :md="12" class="d-flex flex-no-wrap justify-space-between mt-1">
+          <v-card-title class="text-subtitle-1" :opacity="text.outline ? 100 : 50">
+            {{ $t('settings.appearance.text.outline.color') }}
+          </v-card-title>
+          <v-btn :color="text.outline_color" width="20vw" class="ma-2" flat>
+            <v-menu activator="parent" :close-on-content-click="false">
+              <v-color-picker v-model="text.outline_color" :modes="['hexa']" flat class="pa-2" />
             </v-menu>
           </v-btn>
         </v-col>

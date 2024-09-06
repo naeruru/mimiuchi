@@ -56,6 +56,9 @@ const interim_color = appearanceStore.text.interim_color
 const font_name = appearanceStore.text.font.name
 const font_subtype = appearanceStore.text.font.sub_type
 
+const outline_size = `${appearanceStore.text.outline ? appearanceStore.text.outline_size : 0}px`
+const outline_color = appearanceStore.text.outline_color
+
 const overlay_main = ref(false)
 const overlay_page = ref(0)
 
@@ -100,6 +103,8 @@ html {
   font-size: v-bind(font_size);
   overflow-y: auto;
   max-height: calc(100vh - v-bind(outer_size));
+  -webkit-text-stroke: v-bind(outline_size) v-bind(outline_color);
+  paint-order: stroke fill;
 }
 
 .log-list::-webkit-scrollbar {

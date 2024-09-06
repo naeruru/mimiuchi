@@ -100,6 +100,11 @@ export default {
         font_family: 'フォント',
         font_type: 'タイプ',
         font_size: '文字の大きさ',
+        outline: {
+          enabled: 'テキスト輪郭',
+          size: 'テキスト輪郭の大きさ',
+          color: 'テキスト輪郭色'
+        },
         fade: 'フェード',
         fade_after: '〇〇秒後にフェード',
         fade_for: '〇〇秒間のフェード',

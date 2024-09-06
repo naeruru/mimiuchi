@@ -100,6 +100,11 @@ export default {
         font_family: 'Font family',
         font_type: 'Type',
         font_size: 'Font Size',
+        outline: {
+          enabled: 'Text outline',
+          size: 'Text outline size',
+          color: 'Text outline color'
+        },
         fade: 'Fade text',
         fade_after: 'Fade text after',
         seconds: 'seconds',
