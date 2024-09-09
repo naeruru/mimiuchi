@@ -28,7 +28,7 @@ export const useAppearanceStore = defineStore('appearance', () => {
         { style: 'italic', weight: '900' },
       ],
     },
-    outline: true,
+    outline: false,
     outline_size: 4,
     outline_color: '#6d6d6d',
     font_size: 64,
