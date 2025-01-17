@@ -24,6 +24,10 @@ export const useSettingsStore = defineStore('settings', () => {
       title: '日本語（日本）',
       value: 'ja',
     },
+    {
+      title: '中文（中国）',
+      value: 'zh',
+    },
   ])
 
   const language = ref(languages.value.map(language => language.value).includes(navigator.language.split('-')[0]) ? navigator.language.split('-')[0] : 'en')
