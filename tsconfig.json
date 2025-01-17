@@ -15,15 +15,10 @@
     "noEmit": true,
     "esModuleInterop": true,
     "isolatedModules": true,
-    "skipLibCheck": true,
-    "types": ["vue"]
+    "skipLibCheck": true
   },
   "references": [
     { "path": "./tsconfig.node.json" }
   ],
-  "include": [
-    "src/**/*.ts",
-    "src/**/*.d.ts",
-    "src/**/*.vue"
-  ]
+  "include": ["src"]
 }
