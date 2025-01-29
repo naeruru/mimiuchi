@@ -20,6 +20,7 @@ import { useSpeechStore } from '@/stores/speech'
 import { useTranslationStore } from '@/stores/translation'
 import { useConnectionsStore } from '@/stores/connections'
 import { useOSCStore } from '@/stores/osc'
+import { global_langs } from '@/plugins/i18n'
 
 import is_electron from '@/helpers/is_electron'
 
@@ -71,6 +72,8 @@ wordReplaceStore.$patch(JSON.parse(localStorage.getItem('word_replace') || '{}')
 translationStore.$patch(JSON.parse(localStorage.getItem('translation') || '{}'))
 connectionsStore.$patch(JSON.parse(localStorage.getItem('connections') || '{}'))
 oscStore.$patch(JSON.parse(localStorage.getItem('osc') || '{}'))
+
+settingsStore.languages = global_langs
 
 onUnmounted(() => {
   if (is_electron())
