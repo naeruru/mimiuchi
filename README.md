@@ -4,7 +4,7 @@
 
 # mimiuchi: speech-to-text
 
-mimiuchi is a free, customizable, OSC capable, speech-to-text application for displaying text or relaying it to other applications like VRChat. Its customizable text window is also designed to be paired with applications like OBS. It runs on the web, with little setup required beyond customization. You can try it out right now at [mimiuchi.com](https://mimiuchi.com/) with Chrome, Safari, or Edge. UI currently supports English and Japanese日本語！
+mimiuchi is a free, customizable, OSC capable, speech-to-text application for displaying text or relaying it to other applications like VRChat. Its customizable text window is also designed to be paired with applications like OBS. It runs on the web, with little setup required beyond customization. You can try it out right now at [mimiuchi.com](https://mimiuchi.com/) with Chrome, Safari, or Edge. UI currently supports English and Japanese日本語 Chinese简体中文！
 
 ### Features
 

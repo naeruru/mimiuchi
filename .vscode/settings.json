@@ -8,5 +8,8 @@
       ],
       "url": "https://json.schemastore.org/electron-builder"
     }
-  ]
+  ],
+  "typescript.tsserver.enableRegionDiagnostics": true,
+  "typescript.tsserver.useSyntaxServer": "never",
+  "github.copilot.chat.completionContext.typescript.mode": "on"
 }
