@@ -87,13 +87,13 @@ export default {
         options: [
           {
             title: 'Small',
-            value: 0
+            value: 0,
           },
           {
             title: 'Large',
-            value: 1
-          }
-        ]
+            value: 1,
+          },
+        ],
       },
       text: {
         title: 'Text Settings',
@@ -103,7 +103,7 @@ export default {
         outline: {
           enabled: 'Text outline',
           size: 'Text outline size',
-          color: 'Text outline color'
+          color: 'Text outline color',
         },
         fade: 'Fade text',
         fade_after: 'Fade text after',
@@ -171,6 +171,8 @@ export default {
       show_original: 'Show original phrase before translating',
       ml_notice: '{0} is an ML-powered library that uses local compute resources (CPU) to generate translations on your device. On lower end computers, it might not run well.',
       speech_lang: 'Your Speech-to-text language is ',
+      downloading: 'Downloading translation model',
+      translate_all: 'Translate all existing texts',
       unsupported: {
         text: 'Translations are currently only available on the {0}. (^・ω・^)',
         link: 'desktop version',
@@ -201,6 +203,11 @@ export default {
         speech_indicator: 'Enable typing indicator for speech-to-text',
         show_keyboard: 'Open keyboard in VRChat when sending text',
         sfx: 'Play a sound effect after sending text',
+        test: 'Test OSC connection',
+        test_message: 'Message to send',
+        send_test: 'Send Test',
+        sent_successfully: 'sent successfully!',
+        send_error: 'Failed to send message. Is OSC enabled?',
         unsupported: {
           text: 'To use OSC, you must use the {link}. Once installed, the website and desktop versions can be used together with the {icon} button. (  ᐡᴗ  ̫ ᴗᐡ)',
           link: 'desktop app',
@@ -262,6 +269,23 @@ export default {
         },
         empty: 'Use the + button to add a new custom parameter trigger!',
       },
+    },
+  },
+  speech_control: {
+    title: 'Speech Recognition',
+    status: {
+      listening: 'Listening to your voice...',
+      not_listening: 'Speech recognition is off',
+    },
+    button: {
+      start: 'Start Listening',
+      stop: 'Stop Listening',
+    },
+    language: {
+      selector: 'Select Language',
+    },
+    transcript: {
+      label: 'Recognized Text',
     },
   },
 }

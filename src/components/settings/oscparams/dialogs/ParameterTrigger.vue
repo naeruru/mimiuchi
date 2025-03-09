@@ -2,15 +2,15 @@
   <v-dialog v-model="model" width="50vw" max-width="512px" persistent>
     <v-card>
       <v-card-title v-if="mode === 'add'">
-        {{ $t('settings.osc.params.param.dialog_title.add') }}
+        {{ t('settings.osc.params.param.dialog_title.add') }}
       </v-card-title>
       <v-card-title v-if="mode === 'edit'">
-        {{ $t('settings.osc.params.param.dialog_title.edit') }}
+        {{ t('settings.osc.params.param.dialog_title.edit') }}
       </v-card-title>
       <v-card-text>
         <v-row>
           <v-col :cols="12">
-            <v-text-field v-model="new_param.route" :label="$t('settings.osc.params.param.address')" hide-details />
+            <v-text-field v-model="new_param.route" :label="t('settings.osc.params.param.address')" hide-details />
           </v-col>
           <v-col :cols="12" :lg="8" :sm="8">
             <v-text-field v-model="new_param.ip" label="OSC IP" hide-details />
@@ -26,9 +26,9 @@
       <v-card-text class="mt-2">
         <v-row>
           <v-col>
-            <strong>{{ $t('settings.osc.params.param.trigger_phrases') }}</strong>
+            <strong>{{ t('settings.osc.params.param.trigger_phrases') }}</strong>
             <v-chip v-if="!new_param.keywords.length" variant="text">
-              {{ $t('settings.osc.params.param.empty') }}
+              {{ t('settings.osc.params.param.empty') }}
             </v-chip>
             <v-chip
               v-for="(keyword, i) in new_param.keywords"
@@ -47,7 +47,7 @@
           <v-col :cols="12">
             <v-text-field
               v-model="trigger_phrase"
-              :label="$t('settings.osc.params.param.trigger_phrases_add')"
+              :label="t('settings.osc.params.param.trigger_phrases_add')"
               hide-details
               append-icon="mdi-plus"
               @click:append="addTrigger"
@@ -62,9 +62,9 @@
       <v-card-text class="mt-2">
         <v-row>
           <v-col :cols="12">
-            <strong>{{ $t('settings.osc.params.param.assign.phrases') }}</strong>
+            <strong>{{ t('settings.osc.params.param.assign.phrases') }}</strong>
             <v-chip v-if="!new_param.assigns.length" variant="text">
-              {{ $t('settings.osc.params.param.empty') }}
+              {{ t('settings.osc.params.param.empty') }}
             </v-chip>
             <v-list v-if="new_param.assigns.length" density="compact">
               <v-list-item
@@ -82,7 +82,7 @@
               v-model="new_assign.type"
               :items="value_types"
               hide-details
-              :label="$t('settings.osc.params.param.assign.phrases_type')"
+              :label="t('settings.osc.params.param.assign.phrases_type')"
               @update:model-value="validateAssignValueAll"
             />
           </v-col>
@@ -90,13 +90,13 @@
             <v-select
               v-model="new_assign.activation"
               :items="[
-                { name: $t('settings.osc.params.param.assign.behavior_options.default'), value: 'default' },
-                { name: $t('settings.osc.params.param.assign.behavior_options.pulse'), value: 'pulse' },
+                { name: t('settings.osc.params.param.assign.behavior_options.default'), value: 'default' },
+                { name: t('settings.osc.params.param.assign.behavior_options.pulse'), value: 'pulse' },
               ]"
               item-title="name"
               item-value="value"
               hide-details
-              :label="$t('settings.osc.params.param.assign.behavior')"
+              :label="t('settings.osc.params.param.assign.behavior')"
               @update:model-value="validateAssignValueAll"
             />
           </v-col>
@@ -109,7 +109,7 @@
               v-if="new_assign.type !== 'bool'"
               v-model="new_assign.set1"
               hide-details
-              :label="$t('settings.osc.params.param.assign.phrases_value')"
+              :label="t('settings.osc.params.param.assign.phrases_value')"
               type="number"
               @input="validateAssignValue1"
             />
@@ -118,7 +118,7 @@
               v-model="new_assign.set1"
               :items="['true', 'false']"
               hide-details
-              :label="$t('settings.osc.params.param.assign.phrases_value')"
+              :label="t('settings.osc.params.param.assign.phrases_value')"
             />
           </v-col>
         </v-row>
@@ -130,7 +130,7 @@
               v-if="new_assign.type !== 'bool'"
               v-model="new_assign.set1"
               hide-details
-              :label="`${$t('settings.osc.params.param.assign.phrases_value')}1`"
+              :label="`${t('settings.osc.params.param.assign.phrases_value')}1`"
               type="number"
               @input="validateAssignValue1"
             />
@@ -139,7 +139,7 @@
               v-model="new_assign.set1"
               :items="['true', 'false']"
               hide-details
-              :label="`${$t('settings.osc.params.param.assign.phrases_value')}1`"
+              :label="`${t('settings.osc.params.param.assign.phrases_value')}1`"
             />
           </v-col>
 
@@ -147,7 +147,7 @@
             <v-text-field
               v-model="new_assign.pulse_duration"
               hide-details
-              :label="$t('settings.osc.params.param.assign.behavior_options.pulse_wait')"
+              :label="t('settings.osc.params.param.assign.behavior_options.pulse_wait')"
               type="number"
               suffix="ms"
               @input="new_assign.pulse_duration = Math.round(new_assign.pulse_duration)"
@@ -159,7 +159,7 @@
               v-if="new_assign.type !== 'bool'"
               v-model="new_assign.set2"
               hide-details
-              :label="`${$t('settings.osc.params.param.assign.phrases_value')}2`"
+              :label="`${t('settings.osc.params.param.assign.phrases_value')}2`"
               type="number"
               @input="validateAssignValue2"
             />
@@ -168,7 +168,7 @@
               v-model="new_assign.set2"
               :items="['true', 'false']"
               hide-details
-              :label="`${$t('settings.osc.params.param.assign.phrases_value')}2`"
+              :label="`${t('settings.osc.params.param.assign.phrases_value')}2`"
             />
           </v-col>
         </v-row>
@@ -177,7 +177,7 @@
           <v-col :cols="12">
             <v-text-field
               v-model="new_assign.keyword"
-              :label="$t('settings.osc.params.param.assign.phrases_add')"
+              :label="t('settings.osc.params.param.assign.phrases_add')"
               hide-details
               append-icon="mdi-plus"
               @click:append="addAssign"
@@ -196,13 +196,13 @@
       <v-card-actions>
         <v-spacer />
         <v-btn @click="closeDialog">
-          {{ $t('settings.osc.params.button.cancel') }}
+          {{ t('settings.osc.params.button.cancel') }}
         </v-btn>
         <v-btn v-if="mode === 'add'" color="primary" @click="confirmAddParam">
-          {{ $t('settings.osc.params.button.add') }}
+          {{ t('settings.osc.params.button.add') }}
         </v-btn>
         <v-btn v-if="mode === 'edit'" color="primary" @click="confirmEditParam">
-          {{ $t('settings.osc.params.button.confirm') }}
+          {{ t('settings.osc.params.button.confirm') }}
         </v-btn>
       </v-card-actions>
     </v-card>
@@ -210,9 +210,13 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue'
 import { useOSCStore } from '@/stores/osc'
+import { ref, watch } from 'vue'
+import { useI18n } from 'vue-i18n'
 
+const props = defineProps<{ mode: string, editingIndex: number }>()
+const emit = defineEmits(['update:modelValue'])
+const { t } = useI18n()
 interface Keyword {
   enabled: boolean
   text: string
@@ -227,8 +231,6 @@ interface Assign {
   pulse_duration: number
 }
 
-const props = defineProps<{ mode: string, editingIndex: number }>()
-const emit = defineEmits(['update:modelValue'])
 const model = defineModel<boolean>()
 
 const oscStore = useOSCStore()

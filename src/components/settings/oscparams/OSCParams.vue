@@ -1,18 +1,18 @@
 <template>
   <v-card color="transparent" flat class="pb-16">
     <template #title>
-      <span>{{ $t('settings.osc.params.title') }}</span>
+      <span>{{ t('settings.osc.params.title') }}</span>
       <v-chip
         prepend-icon="mdi-alert-circle-outline"
         color="warning" class="ml-2"
         variant="elevated"
         size="small"
       >
-        {{ $t('general.subject_to_change') }}
+        {{ t('general.subject_to_change') }}
       </v-chip>
     </template>
     <template #subtitle>
-      <span>{{ $t('settings.osc.params.description') }}</span>
+      <span>{{ t('settings.osc.params.description') }}</span>
     </template>
 
     <v-divider />
@@ -23,7 +23,7 @@
         <v-col :cols="10" class="d-flex align-center">
           <v-select
             v-model="oscStore.current_profile"
-            :label="$t('settings.osc.params.profile.label')"
+            :label="t('settings.osc.params.profile.label')"
             :items="sortedProfiles"
             variant="outlined"
             :menu-props="{ closeOnContentClick: true }"
@@ -100,7 +100,7 @@
               append-icon="mdi-pencil"
               @click.stop="openEditParamDialog(i)"
             >
-              {{ $t('settings.osc.params.param.button.edit') }}
+              {{ t('settings.osc.params.param.button.edit') }}
             </v-btn>
             <v-btn
               class="ml-4 mr-4"
@@ -110,7 +110,7 @@
               append-icon="mdi-delete"
               @click.stop="openDeleteParamDialog(i)"
             >
-              {{ $t('settings.osc.params.param.button.delete') }}
+              {{ t('settings.osc.params.param.button.delete') }}
             </v-btn>
           </v-expansion-panel-title>
           <v-expansion-panel-text>
@@ -120,7 +120,7 @@
                   <v-col :cols="12" :md="6">
                     <v-text-field
                       v-model="param.ip"
-                      :label="$t('settings.osc.general.osc_ip')"
+                      :label="t('settings.osc.general.osc_ip')"
                       flat
                       variant="solo-filled"
                       hide-details
@@ -130,7 +130,7 @@
                   <v-col>
                     <v-text-field
                       v-model="param.port"
-                      :label="$t('settings.osc.general.osc_port')"
+                      :label="t('settings.osc.general.osc_port')"
                       flat
                       variant="solo-filled"
                       hide-details
@@ -139,7 +139,7 @@
                   </v-col>
 
                   <v-col :cols="12">
-                    <strong>{{ $t('settings.osc.params.param.trigger_phrases') }}</strong>
+                    <strong>{{ t('settings.osc.params.param.trigger_phrases') }}</strong>
                   </v-col>
                   <v-col :cols="12">
                     <v-chip
@@ -154,7 +154,7 @@
                     </v-chip>
                   </v-col>
                   <v-col :cols="12">
-                    <strong>{{ $t('settings.osc.params.param.assign.phrases') }}</strong>
+                    <strong>{{ t('settings.osc.params.param.assign.phrases') }}</strong>
                     <v-list density="compact">
                       <v-list-item
                         v-for="(assign) in param.assigns"
@@ -172,7 +172,7 @@
         </v-expansion-panel>
       </v-expansion-panels>
       <p v-else>
-        {{ $t('settings.osc.params.empty') }}
+        {{ t('settings.osc.params.empty') }}
       </p>
       <v-card class="mt-2" color="transparent" flat>
         <v-card-actions>
@@ -200,16 +200,16 @@
     <v-row justify="center">
       <v-dialog v-model="profile_delete_dialog" width="50vw">
         <v-card>
-          <v-card-title>{{ $t('settings.osc.params.profile.delete_dialog.title') }}</v-card-title>
+          <v-card-title>{{ t('settings.osc.params.profile.delete_dialog.title') }}</v-card-title>
           <v-card-text>{{ `${profile_delete_target}` }}</v-card-text>
-          <v-card-text>{{ $t('settings.osc.params.profile.delete_dialog.text') }}</v-card-text>
+          <v-card-text>{{ t('settings.osc.params.profile.delete_dialog.text') }}</v-card-text>
           <v-card-actions>
             <v-spacer />
             <v-btn @click="profile_delete_dialog = false">
-              {{ $t('settings.osc.params.button.cancel') }}
+              {{ t('settings.osc.params.button.cancel') }}
             </v-btn>
             <v-btn color="primary" @click="confirmDeleteProfileDialog">
-              {{ $t('settings.osc.params.button.delete') }}
+              {{ t('settings.osc.params.button.delete') }}
             </v-btn>
           </v-card-actions>
         </v-card>
@@ -229,16 +229,16 @@
     <v-row justify="center">
       <v-dialog v-model="param_delete_dialog" width="50vw">
         <v-card>
-          <v-card-title>{{ $t('settings.osc.params.param.delete_dialog.title') }}</v-card-title>
+          <v-card-title>{{ t('settings.osc.params.param.delete_dialog.title') }}</v-card-title>
           <v-card-text>{{ `${param_delete_target_display}` }}</v-card-text>
-          <v-card-text>{{ $t('settings.osc.params.param.delete_dialog.text') }}</v-card-text>
+          <v-card-text>{{ t('settings.osc.params.param.delete_dialog.text') }}</v-card-text>
           <v-card-actions>
             <v-spacer />
             <v-btn @click="param_delete_dialog = false">
-              {{ $t('settings.osc.params.button.cancel') }}
+              {{ t('settings.osc.params.button.cancel') }}
             </v-btn>
             <v-btn color="primary" @click="confirmDeleteParamDialog">
-              {{ $t('settings.osc.params.button.delete') }}
+              {{ t('settings.osc.params.button.delete') }}
             </v-btn>
           </v-card-actions>
         </v-card>
@@ -248,11 +248,13 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
-import { useOSCStore } from '@/stores/osc'
-import Profile from '@/components/settings/oscparams/dialogs/Profile.vue'
 import ParameterTrigger from '@/components/settings/oscparams/dialogs/ParameterTrigger.vue'
+import Profile from '@/components/settings/oscparams/dialogs/Profile.vue'
+import { useOSCStore } from '@/stores/osc'
+import { computed, ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 
+const { t } = useI18n()
 const oscStore = useOSCStore()
 
 const profile_dialog = ref(false)

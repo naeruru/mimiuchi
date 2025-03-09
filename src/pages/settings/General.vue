@@ -1,10 +1,10 @@
 <template>
-  <v-card :title="$t('settings.general.title')" :subtitle="$t('settings.general.description')" color="transparent" flat>
+  <v-card :title="t('settings.general.title')" :subtitle="t('settings.general.description')" color="transparent" flat>
     <v-snackbar v-model="snackbar" location="top" color="success">
       {{ snackbar_text }}
       <template #actions>
         <v-btn variant="text" @click="snackbar = false">
-          {{ $t('settings.general.reset.snackbar.button') }}
+          {{ t('settings.general.reset.snackbar.button') }}
         </v-btn>
       </template>
     </v-snackbar>
@@ -12,7 +12,7 @@
     <v-card-text>
       <v-row>
         <v-col :cols="12">
-          <v-radio-group v-model="settingsStore.language" :label="$t('settings.general.language')">
+          <v-radio-group v-model="settingsStore.language" :label="t('settings.general.language')">
             <v-card
               v-for="(language) in settingsStore.languages"
               :key="language.value"
@@ -35,7 +35,7 @@
       <v-row>
         <v-col :cols="12" :md="12" class="pb-0">
           <v-card>
-            <v-list-item :title="$t('settings.general.realtime_text')">
+            <v-list-item :title="t('settings.general.realtime_text')">
               <template #append>
                 <v-switch
                   v-model="settingsStore.realtime_text"
@@ -48,12 +48,11 @@
           </v-card>
         </v-col>
       </v-row>
-      <v-row class="mt-12">
-      </v-row>
+      <v-row class="mt-12" />
       <v-row>
         <v-col :cols="12" class="pb-0">
           <v-card>
-            <v-list-item :title="$t('settings.general.transcript')">
+            <v-list-item :title="t('settings.general.transcript')">
               <template #append>
                 <v-btn color="primary" class="my-2" @click="logsStore.exportLogs()">
                   <v-icon>mdi-download</v-icon>
@@ -66,7 +65,7 @@
       <v-row>
         <v-col :cols="12" class="pb-0">
           <v-card>
-            <v-list-item :title="$t('settings.general.reset.button')">
+            <v-list-item :title="t('settings.general.reset.button')">
               <template #append>
                 <v-btn color="error" class="my-2">
                   <v-icon>mdi-restore</v-icon>
@@ -76,12 +75,12 @@
                     max-width="500"
                   >
                     <v-card>
-                      <v-card-title>{{ $t('settings.general.reset.dialog.title') }}</v-card-title>
+                      <v-card-title>{{ t('settings.general.reset.dialog.title') }}</v-card-title>
                       <v-card-text>
-                        {{ $t('settings.general.reset.dialog.description') }}
+                        {{ t('settings.general.reset.dialog.description') }}
                       </v-card-text>
                       <v-btn class="mt-2" color="error" @click="reset_settings()">
-                        {{ $t('settings.general.reset.dialog.button') }}
+                        {{ t('settings.general.reset.dialog.button') }}
                       </v-btn>
                     </v-card>
                   </v-dialog>
@@ -94,7 +93,7 @@
       <!-- <v-row>
         <v-col :cols="12" :md="12" class="d-flex flex-no-wrap justify-space-between">
           <v-card-text class="text-subtitle-1 font-weight-medium">
-            {{ $t('settings.general.reset.button') }}
+            {{ t('settings.general.reset.button') }}
           </v-card-text>
           <v-btn color="error" class="mt-2">
             <v-icon>mdi-restore</v-icon>
@@ -104,12 +103,12 @@
               max-width="500"
             >
               <v-card>
-                <v-card-title>{{ $t('settings.general.reset.dialog.title') }}</v-card-title>
+                <v-card-title>{{ t('settings.general.reset.dialog.title') }}</v-card-title>
                 <v-card-text>
-                  {{ $t('settings.general.reset.dialog.description') }}
+                  {{ t('settings.general.reset.dialog.description') }}
                 </v-card-text>
                 <v-btn class="mt-2" color="error" @click="reset_settings()">
-                  {{ $t('settings.general.reset.dialog.button') }}
+                  {{ t('settings.general.reset.dialog.button') }}
                 </v-btn>
               </v-card>
             </v-dialog>
@@ -122,18 +121,18 @@
 </template>
 
 <script setup lang="ts">
+import { useAppearanceStore } from '@/stores/appearance'
+import { useConnectionsStore } from '@/stores/connections'
+import { useLogsStore } from '@/stores/logs'
+
+import { useOSCStore } from '@/stores/osc'
+import { useSettingsStore } from '@/stores/settings'
+import { useSpeechStore } from '@/stores/speech'
+import { useTranslationStore } from '@/stores/translation'
+import { useWordReplaceStore } from '@/stores/word_replace'
 import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
-
-import { useAppearanceStore } from '@/stores/appearance'
-import { useWordReplaceStore } from '@/stores/word_replace'
-import { useSettingsStore } from '@/stores/settings'
-import { useSpeechStore } from '@/stores/speech'
-import { useConnectionsStore } from '@/stores/connections'
-import { useLogsStore } from '@/stores/logs'
-import { useTranslationStore } from '@/stores/translation'
-import { useOSCStore } from '@/stores/osc'
 
 const { t } = useI18n()
 

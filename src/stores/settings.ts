@@ -1,6 +1,6 @@
+import { global_langs } from '@/plugins/i18n'
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-import { global_langs } from '@/plugins/i18n'
 
 export const useSettingsStore = defineStore('settings', () => {
   const welcome = ref(true)

@@ -87,13 +87,13 @@ export default {
         options: [
           {
             title: '小さい',
-            value: 0
+            value: 0,
           },
           {
             title: '大きい',
-            value: 1
-          }
-        ]
+            value: 1,
+          },
+        ],
       },
       text: {
         title: '文字設定',
@@ -103,7 +103,7 @@ export default {
         outline: {
           enabled: 'テキスト輪郭',
           size: 'テキスト輪郭の大きさ',
-          color: 'テキスト輪郭色'
+          color: 'テキスト輪郭色',
         },
         fade: 'フェード',
         fade_after: '〇〇秒後にフェード',

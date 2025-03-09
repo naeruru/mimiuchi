@@ -1,12 +1,12 @@
 <template>
-  <v-card :title="$t('settings.stt.title')" :subtitle="$t('settings.stt.description')" color="transparent" flat>
+  <v-card :title="t('settings.stt.title')" :subtitle="t('settings.stt.description')" color="transparent" flat>
     <v-divider />
     <v-card-text>
       <v-row>
         <v-col :cols="12">
           <v-select
             v-model="speechStore.stt.type"
-            :label="$t('settings.stt.type')"
+            :label="t('settings.stt.type')"
             :items="stt_options"
             item-title="title"
             item-value="value"
@@ -19,7 +19,7 @@
         <v-col :cols="12">
           <v-slider
             v-model="speechStore.stt.sensitivity"
-            :label="$t('settings.stt.sensitivity')"
+            :label="t('settings.stt.sensitivity')"
             max="1"
             color="orange"
             track-color="green"
@@ -46,13 +46,13 @@
                   :loading="loading_media"
                   @click="test_sensitivity()"
                 >
-                  {{ stream ? $t('settings.stt.sensitivity_stop') : $t('settings.stt.sensitivity_start') }}
+                  {{ stream ? t('settings.stt.sensitivity_stop') : t('settings.stt.sensitivity_start') }}
                 </v-btn>
               </template>
             </v-slider>
             <div v-if="active_device" class="text-caption d-flex flex-row-reverse mr-2">
               <p class="text-glow">
-                {{ $t('settings.stt.device') }}{{ active_device }}
+                {{ t('settings.stt.device') }}{{ active_device }}
               </p>
               <v-icon class="fa fa-circle text-glow blink mr-1">
                 mdi-circle
@@ -63,11 +63,11 @@
 
         <v-col :cols="12">
           <v-radio-group
-            v-if="Object.keys(speechStore.pinned_languages).length > 0" v-model="speechStore.stt.language"
-            :label="$t('settings.stt.pinned_languages')"
+            v-if="Object.keys(pinned_languages).length > 0" v-model="speechStore.stt.language"
+            :label="t('settings.stt.pinned_languages')"
           >
             <v-card
-              v-for="language in speechStore.pinned_languages" class="language-card pa-2 mb-2"
+              v-for="language in pinned_languages" class="language-card pa-2 mb-2"
               :color="language.value === speechStore.stt.language ? 'primary' : 'default'"
               @click="speechStore.stt.language = language.value"
             >
@@ -91,7 +91,7 @@
               </v-radio>
             </v-card>
           </v-radio-group>
-          <v-radio-group v-model="speechStore.stt.language" :label="$t('settings.stt.language')">
+          <v-radio-group v-model="speechStore.stt.language" :label="t('settings.stt.language')">
             <v-text-field
               v-model="search_lang" class="mb-2" label="Search" variant="outlined" single-line
               hide-details
@@ -132,7 +132,7 @@
                 class="text-primary pointer"
                 @click="openURL('https://mimiuchi.com/')"
               >
-                {{ $t('settings.stt.unsupported.link') }}
+                {{ t('settings.stt.unsupported.link') }}
               </a>
             </i18n-t>
           </v-alert-title>
@@ -144,10 +144,13 @@
 
 <script setup lang="ts">
 import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
-import { ListItem, useSpeechStore} from '@/stores/speech'
+import { useI18n } from 'vue-i18n'
 import { WebSpeechLangs } from '@/modules/speech'
-
 import is_electron from '@/helpers/is_electron'
+
+// Import du store pour la compatibilité et des composables pour la nouvelle architecture
+import { useSpeechStore } from '@/stores/speech'
+import { useSpeech } from '@/composables/useSpeech'
 
 declare interface MediaDevice {
   kind?: string
@@ -155,7 +158,11 @@ declare interface MediaDevice {
   id?: string
 }
 
+const { t } = useI18n()
 const speechStore = useSpeechStore()
+
+// Utiliser le composable useSpeech
+const { pinned_languages, pin_language, unpin_language, is_pinned_language } = useSpeech()
 
 const languages = WebSpeechLangs
 
@@ -253,18 +260,6 @@ async function get_media_devices() {
       }
     })
   })
-}
-
-function pin_language(selected_language: ListItem) {
-  speechStore.pin_language(selected_language)
-}
-
-function unpin_language(selected_language: ListItem) {
-  speechStore.unpin_language(selected_language)
-}
-
-function is_pinned_language(selected_language: ListItem) {
-  return speechStore.is_pinned_language(selected_language)
 }
 </script>
 

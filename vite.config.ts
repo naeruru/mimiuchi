@@ -1,7 +1,7 @@
 import fs from 'node:fs'
-import { URL, fileURLToPath } from 'node:url'
-import { defineConfig } from 'vite'
+import { fileURLToPath, URL } from 'node:url'
 import vue from '@vitejs/plugin-vue'
+import { defineConfig } from 'vite'
 import electron from 'vite-plugin-electron/simple'
 import vuetify from 'vite-plugin-vuetify'
 import pkg from './package.json'
@@ -84,5 +84,24 @@ export default defineConfig(({ command }) => {
       }
     })(),
     clearScreen: false,
+    build: {
+      // Improve build performance
+      target: 'esnext',
+      // Better source maps for production build
+      sourcemap: true,
+      chunkSizeWarningLimit: 2000,
+      rollupOptions: {
+        output: {
+          manualChunks: {
+            'vue-vendor': ['vue', 'vue-router', 'vue-i18n'],
+            'vuetify-vendor': ['vuetify'],
+            'pinia-store': ['pinia'],
+          },
+        },
+      },
+    },
+    optimizeDeps: {
+      exclude: ['electron'],
+    },
   }
 })

@@ -2,10 +2,10 @@
   <v-dialog v-model="model" width="50vw" max-width="512px">
     <v-card v-click-outside="closeDialog">
       <v-card-title v-if="mode === 'add'">
-        {{ $t('settings.osc.params.profile.dialog.title.add') }}
+        {{ t('settings.osc.params.profile.dialog.title.add') }}
       </v-card-title>
       <v-card-title v-if="mode === 'edit'">
-        {{ $t('settings.osc.params.profile.dialog.title.edit') }}
+        {{ t('settings.osc.params.profile.dialog.title.edit') }}
       </v-card-title>
 
       <v-divider class="mx-4" />
@@ -19,7 +19,7 @@
             >
               <v-text-field
                 v-model="new_profile_name"
-                :label="$t('settings.osc.params.profile.dialog.field_label')"
+                :label="t('settings.osc.params.profile.dialog.field_label')"
                 :rules="[
                   rules.required,
                   rules.empty,
@@ -35,7 +35,7 @@
       <v-card-actions>
         <v-spacer />
         <v-btn @click="closeDialog">
-          {{ $t('settings.osc.params.button.cancel') }}
+          {{ t('settings.osc.params.button.cancel') }}
         </v-btn>
         <v-btn
           v-if="mode === 'add'"
@@ -43,7 +43,7 @@
           :disabled="!new_profile_name_valid"
           @click="confirmAddProfileDialog"
         >
-          {{ $t('settings.osc.params.button.add') }}
+          {{ t('settings.osc.params.button.add') }}
         </v-btn>
         <v-btn
           v-if="mode === 'edit'"
@@ -51,7 +51,7 @@
           :disabled="!new_profile_name_valid"
           @click="confirmEditProfileDialog"
         >
-          {{ $t('settings.osc.params.button.confirm') }}
+          {{ t('settings.osc.params.button.confirm') }}
         </v-btn>
       </v-card-actions>
     </v-card>
@@ -59,11 +59,13 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue'
 import { useOSCStore } from '@/stores/osc'
+import { ref, watch } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 const props = defineProps<{ mode: string, new_name: string }>()
 const emit = defineEmits(['update:modelValue'])
+const { t } = useI18n()
 const model = defineModel<boolean>()
 
 const oscStore = useOSCStore()

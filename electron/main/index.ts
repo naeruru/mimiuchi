@@ -1,16 +1,16 @@
-import path from 'node:path'
 import { createRequire } from 'node:module'
-import { fileURLToPath } from 'node:url'
 import os from 'node:os'
-import { BrowserWindow, app, ipcMain, shell } from 'electron'
+import path from 'node:path'
+import { fileURLToPath } from 'node:url'
+import { app, BrowserWindow, ipcMain, shell } from 'electron'
 
-import { WebSocketServer } from 'ws'
 import Store from 'electron-store'
-import { emit_osc, empty_queue } from './modules/osc'
-import { initialize_ws } from './modules/ws'
+import { WebSocketServer } from 'ws'
 import { check_update } from './modules/check_update'
-
+import { emit_osc, empty_queue } from './modules/osc'
 import { TranslationPipeline } from './modules/transformers'
+
+import { initialize_ws } from './modules/ws'
 
 const store = new Store()
 

@@ -11,9 +11,9 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
 import type { Connection } from '@/stores/connections'
 import { useConnectionsStore } from '@/stores/connections'
+import { onMounted, ref } from 'vue'
 
 const model = defineModel<Connection>()
 const connectionsStore = useConnectionsStore()

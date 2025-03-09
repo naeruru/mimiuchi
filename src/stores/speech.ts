@@ -1,19 +1,18 @@
-import { defineStore } from 'pinia'
-import { ref } from 'vue'
+import tiktok from '@/constants/voices/tiktok'
+import yukumo from '@/constants/voices/yukumo'
+import is_electron from '@/helpers/is_electron'
+import { WebSpeech } from '@/modules/speech'
+import { i18n } from '@/plugins/i18n'
+import { sendWebhook } from '@/services/webhook.service'
+import { useAppearanceStore } from '@/stores/appearance'
+import { useConnectionsStore } from '@/stores/connections'
 import { useDefaultStore } from '@/stores/default'
 import { useLogsStore } from '@/stores/logs'
-import { useAppearanceStore } from '@/stores/appearance'
 import { useOSCStore } from '@/stores/osc'
 import { useTranslationStore } from '@/stores/translation'
-import { useConnectionsStore } from '@/stores/connections'
 import { useWordReplaceStore } from '@/stores/word_replace'
-import webhook from '@/helpers/webhook'
-import { post } from '@/helpers/fetch'
-import is_electron from '@/helpers/is_electron'
-import { i18n } from '@/plugins/i18n'
-import { WebSpeech } from '@/modules/speech'
-import yukumo from '@/constants/voices/yukumo'
-import tiktok from '@/constants/voices/tiktok'
+import { defineStore } from 'pinia'
+import { ref } from 'vue'
 
 export interface ListItem {
   title: string
@@ -36,6 +35,7 @@ export const useSpeechStore = defineStore('speech', () => {
     confidence: 0.9,
     sensitivity: 0.0,
   })
+
   const tts = ref({
     enabled: false,
     type: 'tiktok',
@@ -43,6 +43,7 @@ export const useSpeechStore = defineStore('speech', () => {
     rate: 1,
     pitch: 1,
   })
+
   const pinned_languages = ref<PinnedLanguages>({})
 
   function initialize_speech(language: string) {
@@ -58,7 +59,7 @@ export const useSpeechStore = defineStore('speech', () => {
       // listening = false
       defaultStore.speech.listening_error = true
       defaultStore.show_snackbar('error', i18n.t('alerts.no_speech'))
-      return
+      return false
     }
 
     defaultStore.speech.listening = !defaultStore.speech.listening
@@ -97,6 +98,8 @@ export const useSpeechStore = defineStore('speech', () => {
     else {
       defaultStore.speech.stop()
     }
+
+    return defaultStore.speech.listening
   }
 
   function submit_text(input_text: string, input_index: number, isFinal: boolean) {
@@ -104,13 +107,20 @@ export const useSpeechStore = defineStore('speech', () => {
     const connectionsStore = useConnectionsStore()
     const logsStore = useLogsStore()
 
-    if (connectionsStore.wh.enabled && defaultStore.broadcasting)
-      webhook.post(connectionsStore.wh.url, { transcript: input_text, isFinal: isFinal })
+    if (connectionsStore.wh.enabled && defaultStore.broadcasting) {
+      try {
+        sendWebhook(connectionsStore.wh.url, { transcript: input_text, isFinal })
+      }
+      catch (error) {
+        console.error('Failed to send webhook:', error)
+      }
+    }
 
     if (input_text) {
       if (input_index === logsStore.logs.length - 1) {
         logsStore.logs[input_index].transcript = input_text
-      } else {
+      }
+      else {
         const log = {
           transcript: input_text,
           isFinal: false,
@@ -124,7 +134,8 @@ export const useSpeechStore = defineStore('speech', () => {
       if (defaultStore.ws1) {
         defaultStore.ws1.send(`{"type": "text", "data": ${JSON.stringify(logsStore.logs[input_index])}}`)
       }
-    } else {
+    }
+    else {
       if (input_index === logsStore.logs.length - 1) {
         logsStore.logs[input_index].transcript = input_text
       }
@@ -133,7 +144,6 @@ export const useSpeechStore = defineStore('speech', () => {
 
   function typing_event(event: boolean) {
     const defaultStore = useDefaultStore()
-
     if (is_electron() && !defaultStore.typing_limited) {
       defaultStore.typing_limited = true
       window.ipcRenderer.send('typing-text-event', event)
@@ -151,28 +161,41 @@ export const useSpeechStore = defineStore('speech', () => {
           voice: tiktok.voices.find(voice => voice.name === tts.value.voice)?.lang,
         }
         try {
-          response = await post(tiktok.api, body)
+          response = await fetch(tiktok.api, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(body),
+          })
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`)
+          }
+          const data = await response.json()
+
+          if (!defaultStore.audio.src || defaultStore.audio.ended) {
+            defaultStore.audio.src = `data:audio/mpeg;base64,${data.data}`
+            defaultStore.audio.play()
+          }
+          else {
+            defaultStore.audio.onended = function () {
+              defaultStore.audio.src = `data:audio/mpeg;base64,${data.data}`
+              defaultStore.audio.play()
+              defaultStore.audio.onended = null
+            }
+          }
         }
         catch (e) {
-          console.error(e)
-          response = await post(tiktok.api, body)
-        }
-        if (!defaultStore.audio.src || defaultStore.audio.ended) {
-          defaultStore.audio.src = `data:audio/mpeg;base64,${response.data}`
-          defaultStore.audio.play()
-        }
-        else {
-          defaultStore.audio.onended = function () {
-            defaultStore.audio.src = `data:audio/mpeg;base64,${response.data}`
-            defaultStore.audio.play()
-            defaultStore.audio.onended = null
-          }
+          console.error('TikTok TTS error:', e)
         }
         break
 
       case 'webspeech':
         const { speech } = useDefaultStore()
-        speech.speak(input)
+        if (speech && speech.speak) {
+          speech.speak(input)
+        }
+        else {
+          console.error('WebSpeech not initialized')
+        }
         break
 
       case 'yukumo':
@@ -192,8 +215,7 @@ export const useSpeechStore = defineStore('speech', () => {
   }
 
   async function on_submit(log: any, index: number) {
-    if (!log.transcript.trim()) // If the submitted input is only whitespace, do nothing. This may occur if the user only submitted whitespace.
-      return
+    if (!log.transcript.trim()) return
 
     const logsStore = useLogsStore()
     const { text } = useAppearanceStore()
@@ -207,9 +229,8 @@ export const useSpeechStore = defineStore('speech', () => {
 
     // word replace
     log.transcript = replace_words(log.transcript)
-    if (!log.transcript.trim()) { // If the processed input is only whitespace, do nothing. This may occur if the entire log transcript was replaced with whitespace.
+    if (!log.transcript.trim()) {
       logsStore.loading_result = false
-
       return
     }
 
@@ -280,8 +301,14 @@ export const useSpeechStore = defineStore('speech', () => {
       }
 
       // webhook
-      if (connectionsStore.wh.enabled && defaultStore.broadcasting)
-        webhook.post(connectionsStore.wh.url, { transcript: log.transcript, isFinal: true })
+      if (connectionsStore.wh.enabled && defaultStore.broadcasting) {
+        try {
+          sendWebhook(connectionsStore.wh.url, { transcript: log.transcript, isFinal: true })
+        }
+        catch (error) {
+          console.error('Failed to send webhook:', error)
+        }
+      }
     }
 
     // send text via osc
@@ -309,25 +336,21 @@ export const useSpeechStore = defineStore('speech', () => {
     }
   }
 
-  // temp
-  interface Voice {
-    lang: string
-    name: string
-    local_service: boolean
-  }
-  function load_voices(option: string): Voice[] {
-    let voices: Voice[] = []
+  function load_voices(option: string): any[] {
+    let voices: any[] = []
     switch (option) {
       case 'tiktok':
         voices = tiktok.voices
         break
       case 'webspeech':
         const synth = window.speechSynthesis
-        voices = synth.getVoices().map((lang: SpeechSynthesisVoice) => ({
-          lang: lang.lang,
-          name: lang.name,
-          local_service: lang.localService,
-        } as Voice))
+        if (synth) {
+          voices = synth.getVoices().map((lang: SpeechSynthesisVoice) => ({
+            lang: lang.lang,
+            name: lang.name,
+            local_service: lang.localService,
+          }))
+        }
         break
       case 'yukumo':
         voices = yukumo.voices

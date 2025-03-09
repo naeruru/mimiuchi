@@ -1,20 +1,20 @@
 import type { RouteRecordRaw } from 'vue-router'
-import { createRouter, createWebHistory } from 'vue-router'
-
-import Header from '@/components/Header.vue'
 import Footer from '@/components/Footer.vue'
 
+import Header from '@/components/Header.vue'
+import Connections from '@/components/settings/connections/Connections.vue'
+
+import OSCParams from '@/components/settings/oscparams/OSCParams.vue'
 import Home from '@/pages/Home.vue'
 import Settings from '@/pages/Settings.vue'
-import SettingsGeneral from '@/pages/settings/General.vue'
-import STT from '@/pages/settings/STT.vue'
-import TTS from '@/pages/settings/TTS.vue'
 import Appearance from '@/pages/settings/Appearance.vue'
-import WordReplace from '@/pages/settings/WordReplace.vue'
-import Translation from '@/pages/settings/Translation.vue'
-import Connections from '@/components/settings/connections/Connections.vue'
+import SettingsGeneral from '@/pages/settings/General.vue'
 import OSC from '@/pages/settings/OSC.vue'
-import OSCParams from '@/components/settings/oscparams/OSCParams.vue'
+import STT from '@/pages/settings/STT.vue'
+import Translation from '@/pages/settings/Translation.vue'
+import TTS from '@/pages/settings/TTS.vue'
+import WordReplace from '@/pages/settings/WordReplace.vue'
+import { createRouter, createWebHistory } from 'vue-router'
 
 const routes = [
   {

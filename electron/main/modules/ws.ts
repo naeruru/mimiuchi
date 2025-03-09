@@ -45,4 +45,4 @@ function close_ws(wss: any) {
   wss.close()
 }
 
-export { initialize_ws, close_ws }
+export { close_ws, initialize_ws }

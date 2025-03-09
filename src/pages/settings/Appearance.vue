@@ -1,6 +1,6 @@
 <template>
   <v-card
-    :title="$t('settings.appearance.title')" :subtitle="$t('settings.appearance.description')" color="transparent"
+    :title="t('settings.appearance.title')" :subtitle="t('settings.appearance.description')" color="transparent"
     flat
   >
     <v-divider />
@@ -8,7 +8,7 @@
       <v-row>
         <v-col :cols="12">
           <p class="text-h6">
-            {{ $t('settings.appearance.theme') }}
+            {{ t('settings.appearance.theme') }}
           </p>
         </v-col>
         <v-col :cols="12" :md="8">
@@ -34,7 +34,7 @@
       <v-row>
         <v-col :cols="12">
           <p class="text-h6">
-            {{ $t('settings.appearance.text.title') }}
+            {{ t('settings.appearance.text.title') }}
           </p>
         </v-col>
         <v-col :cols="12" :md="8">
@@ -42,7 +42,7 @@
             v-model="text.font"
             :items="fonts"
             item-title="name"
-            :label="$t('settings.appearance.text.font_family')"
+            :label="t('settings.appearance.text.font_family')"
             variant="solo"
             hide-details
             return-object
@@ -55,7 +55,7 @@
                 v-model="text.font.sub_type"
                 :items="text.font.sub_types"
                 item-title="style"
-                :label="$t('settings.appearance.text.font_type')"
+                :label="t('settings.appearance.text.font_type')"
                 variant="solo"
                 hide-details
                 return-object
@@ -83,7 +83,7 @@
         <v-col :cols="12" :md="4">
           <v-text-field
             v-model="text.font_size"
-            :label="$t('settings.appearance.text.font_size')"
+            :label="t('settings.appearance.text.font_size')"
             type="number"
             suffix="px"
             hide-details
@@ -93,7 +93,7 @@
           <v-select
             v-model="text.new_line_delay"
             :items="line_delay_options"
-            :label="$t('settings.appearance.text.new_line_delay.hint')"
+            :label="t('settings.appearance.text.new_line_delay.hint')"
             variant="solo"
             hide-details
           />
@@ -102,7 +102,7 @@
 
         <v-col :cols="12" :md="12" class="pb-0">
           <v-card>
-            <v-list-item :title="$t('settings.appearance.text.outline.enabled')">
+            <v-list-item :title="t('settings.appearance.text.outline.enabled')">
               <template #append>
                 <v-switch
                   v-model="text.outline"
@@ -118,7 +118,7 @@
           <v-text-field
             v-model="text.outline_size"
             :disabled="!text.outline"
-            :label="$t('settings.appearance.text.outline.size')"
+            :label="t('settings.appearance.text.outline.size')"
             type="number"
             suffix="px"
             hide-details
@@ -128,7 +128,7 @@
         <v-divider />
         <v-col :cols="12" :md="12" class="pb-0">
           <v-card>
-            <v-list-item :title="$t('settings.appearance.text.fade')">
+            <v-list-item :title="t('settings.appearance.text.fade')">
               <template #append>
                 <v-switch
                   v-model="text.enable_fade"
@@ -144,8 +144,8 @@
           <v-text-field
             v-model="text.hide_after"
             :disabled="!text.enable_fade"
-            :label="$t('settings.appearance.text.fade_after')"
-            :suffix="$t('settings.appearance.text.seconds')"
+            :label="t('settings.appearance.text.fade_after')"
+            :suffix="t('settings.appearance.text.seconds')"
             type="number"
             hide-details
           />
@@ -154,8 +154,8 @@
           <v-text-field
             v-model="text.fade_time"
             :disabled="!text.enable_fade"
-            :label="$t('settings.appearance.text.fade_for')"
-            :suffix="$t('settings.appearance.text.seconds')"
+            :label="t('settings.appearance.text.fade_for')"
+            :suffix="t('settings.appearance.text.seconds')"
             type="number"
             hide-details
           />
@@ -163,7 +163,7 @@
         <v-divider />
         <v-col :cols="12" :md="12" class="d-flex flex-no-wrap justify-space-between mt-1">
           <v-card-title class="text-subtitle-1">
-            {{ $t('settings.appearance.text.color') }}
+            {{ t('settings.appearance.text.color') }}
           </v-card-title>
           <v-btn :color="text.color" width="20vw" class="ma-2" flat>
             <v-menu activator="parent" :close-on-content-click="false">
@@ -174,7 +174,7 @@
         <v-divider />
         <v-col :cols="12" :md="12" class="d-flex flex-no-wrap justify-space-between mt-1">
           <v-card-title class="text-subtitle-1">
-            {{ $t('settings.appearance.text.interim_color') }}
+            {{ t('settings.appearance.text.interim_color') }}
           </v-card-title>
           <v-btn :color="text.interim_color" width="20vw" class="ma-2" flat>
             <v-menu activator="parent" :close-on-content-click="false">
@@ -185,7 +185,7 @@
         <v-divider />
         <v-col :cols="12" :md="12" class="d-flex flex-no-wrap justify-space-between mt-1">
           <v-card-title class="text-subtitle-1">
-            {{ $t('settings.appearance.ui.color') }}
+            {{ t('settings.appearance.ui.color') }}
           </v-card-title>
           <v-btn :color="ui.color" width="20vw" class="ma-2" flat>
             <v-menu activator="parent" :close-on-content-click="false">
@@ -196,7 +196,7 @@
         <v-divider />
         <v-col :cols="12" :md="12" class="d-flex flex-no-wrap justify-space-between mt-1">
           <v-card-title class="text-subtitle-1" :opacity="text.outline ? 100 : 50">
-            {{ $t('settings.appearance.text.outline.color') }}
+            {{ t('settings.appearance.text.outline.color') }}
           </v-card-title>
           <v-btn :color="text.outline_color" width="20vw" class="ma-2" flat>
             <v-menu activator="parent" :close-on-content-click="false">
@@ -209,14 +209,14 @@
       <v-row>
         <v-col :cols="12">
           <p class="text-h6">
-            {{ $t('settings.appearance.footer') }}
+            {{ t('settings.appearance.footer') }}
           </p>
         </v-col>
         <v-col>
           <v-select
             v-model="footer_size"
             :items="footer_size_options"
-            :label="$t('settings.appearance.footer_size.hint')"
+            :label="t('settings.appearance.footer_size.hint')"
             variant="solo"
             hide-details
           />
@@ -227,23 +227,23 @@
 </template>
 
 <script setup lang="ts">
-import { useTheme } from 'vuetify'
-import { storeToRefs } from 'pinia'
-import { onMounted, ref, watch } from 'vue'
-
-import { useI18n } from 'vue-i18n'
 import type { Font } from '@/helpers/get_fonts'
 import { get_fonts } from '@/helpers/get_fonts'
 import { useAppearanceStore } from '@/stores/appearance'
 
-const { tm } = useI18n()
+import { storeToRefs } from 'pinia'
+import { onMounted, ref, watch } from 'vue'
+import { useI18n } from 'vue-i18n'
+import { useTheme } from 'vuetify'
+
+const { t, tm } = useI18n()
 
 const theme = useTheme()
 
 const line_delay_options: any[] = JSON.parse(JSON.stringify(tm('settings.appearance.text.new_line_delay.options')))
 const footer_size_options: any[] = JSON.parse(JSON.stringify(tm('settings.appearance.footer_size.options')))
 
-const fonts = ref< Font[]>([])
+const fonts = ref<Font[]>([])
 
 onMounted(async () => {
   await get_fonts()

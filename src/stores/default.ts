@@ -1,10 +1,10 @@
-import { defineStore, storeToRefs } from 'pinia'
-
-import { ref } from 'vue'
-import { useConnectionsStore } from '@/stores/connections'
 import type { WebSpeech } from '@/modules/speech'
-import { i18n } from '@/plugins/i18n'
+
 import is_electron from '@/helpers/is_electron'
+import { i18n } from '@/plugins/i18n'
+import { useConnectionsStore } from '@/stores/connections'
+import { defineStore, storeToRefs } from 'pinia'
+import { ref } from 'vue'
 
 export const useDefaultStore = defineStore('default', () => {
   const ws1 = ref<WebSocket | null>(null)

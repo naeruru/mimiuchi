@@ -10,21 +10,21 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, onUnmounted } from 'vue'
-import { useI18n } from 'vue-i18n'
-import { useRouter } from 'vue-router'
+import SystemBar from '@/components/appbars/SystemBar.vue'
+import is_electron from '@/helpers/is_electron'
+import { global_langs } from '@/plugins/i18n'
 import { useAppearanceStore } from '@/stores/appearance'
-import { useWordReplaceStore } from '@/stores/word_replace'
+import { useConnectionsStore } from '@/stores/connections'
+import { useOSCStore } from '@/stores/osc'
 import { useSettingsStore } from '@/stores/settings'
 import { useSpeechStore } from '@/stores/speech'
 import { useTranslationStore } from '@/stores/translation'
-import { useConnectionsStore } from '@/stores/connections'
-import { useOSCStore } from '@/stores/osc'
-import { global_langs } from '@/plugins/i18n'
+import { useWordReplaceStore } from '@/stores/word_replace'
+import { onMounted, onUnmounted } from 'vue'
 
-import is_electron from '@/helpers/is_electron'
+import { useI18n } from 'vue-i18n'
 
-import SystemBar from '@/components/appbars/SystemBar.vue'
+import { useRouter } from 'vue-router'
 
 const { locale } = useI18n()
 
@@ -79,12 +79,13 @@ onUnmounted(() => {
   if (is_electron())
     window.ipcRenderer.send('close-ws')
 })
+
 onMounted(() => {
   if (is_electron() && connectionsStore.ws.enabled)
     window.ipcRenderer.send('start-ws', connectionsStore.ws.port)
 
   locale.value = settingsStore.language
-  settingsStore.$subscribe((language, state) => {
+  settingsStore.$subscribe((_, state) => {
     locale.value = settingsStore.language
   })
 })

@@ -16,19 +16,18 @@
       </v-btn>
     </template>
   </v-snackbar>
-  <v-footer app class="d-flex flex-column pl-2" :height="$route.name === 'home' && appearanceStore.footer_size ? 200 : 55" permanent fixed>
+  <v-footer app class="d-flex flex-column pl-2" :height="route.name === 'home' && appearanceStore.footer_size ? 200 : 55" permanent fixed>
     <div class="d-flex w-100 align-center">
       <v-form
         class="d-flex w-100 align-center"
         @submit.prevent="onSubmit()"
       >
         <div class="d-flex w-100">
-
-          <v-textarea 
-            v-if="$route.name === 'home' && appearanceStore.footer_size"
+          <v-textarea
+            v-if="route.name === 'home' && appearanceStore.footer_size"
             v-model="input_text"
             variant="outlined"
-            :label="$t('general.type_message')"
+            :label="t('general.type_message')"
             append-inner-icon="mdi-chevron-right"
             class="mr-6 mt-1 fill-height"
             rows="6"
@@ -55,7 +54,7 @@
             v-model="input_text"
             density="compact"
             variant="outlined"
-            :label="$t('general.type_message')"
+            :label="t('general.type_message')"
             append-inner-icon="mdi-chevron-right"
             class="mr-6"
             single-line
@@ -103,11 +102,11 @@
             </v-badge>
             <v-divider height="50" class="mr-4" vertical />
             <v-btn
-              v-if="$route.name === 'home'" color="transparent"
+              v-if="route.name === 'home'" color="transparent"
               size="small"
               icon="mdi-cog"
               flat
-              @click="$router.push({ path: last_setting })"
+              @click="router.push({ path: last_setting })"
             />
             <v-btn
               v-else
@@ -115,7 +114,7 @@
               size="small"
               icon="mdi-home"
               flat
-              @click="$router.push({ path: '/' })"
+              @click="router.push({ path: '/' })"
             />
           </div>
         </div>
@@ -125,22 +124,25 @@
 </template>
 
 <script setup lang="ts">
-// import {ipcRenderer} from "electron"
-
-import { computed, onMounted, onUnmounted, onUpdated, ref, watch } from 'vue'
-import { useDisplay } from 'vuetify'
-import { useRouter } from 'vue-router'
-import { storeToRefs } from 'pinia'
-import is_electron from '@/helpers/is_electron'
-
-import { useSpeechStore } from '@/stores/speech'
 import type { Log } from '@/stores/logs'
-import { useLogsStore } from '@/stores/logs'
-import { useTranslationStore } from '@/stores/translation'
-import { useOSCStore } from '@/stores/osc'
-import { useDefaultStore } from '@/stores/default'
-import { useSettingsStore } from '@/stores/settings'
+import is_electron from '@/helpers/is_electron'
 import { useAppearanceStore } from '@/stores/appearance'
+import { useDefaultStore } from '@/stores/default'
+import { useLogsStore } from '@/stores/logs'
+import { useOSCStore } from '@/stores/osc'
+
+import { useSettingsStore } from '@/stores/settings'
+import { useSpeechStore } from '@/stores/speech'
+import { useTranslationStore } from '@/stores/translation'
+import { storeToRefs } from 'pinia'
+import { computed, onMounted, onUnmounted, onUpdated, ref, watch } from 'vue'
+import { useI18n } from 'vue-i18n'
+import { useRoute, useRouter } from 'vue-router'
+import { useDisplay } from 'vuetify'
+
+const { t } = useI18n()
+const router = useRouter()
+const route = useRoute()
 
 declare const window: any
 
@@ -154,7 +156,6 @@ const defaultStore = useDefaultStore()
 const settingsStore = useSettingsStore()
 const appearanceStore = useAppearanceStore()
 
-const router = useRouter()
 const input_text = ref('')
 const input_index = ref<any>(null)
 
@@ -211,15 +212,17 @@ onMounted(() => {
   onResize()
   reloadEvents()
 
-  if (is_electron())
+  if (is_electron()) {
     window.ipcRenderer.on('transformers-translate-render', (event: any, data: any) => {
       translationStore.onMessageReceived(data)
     })
+  }
 
   speechStore.initialize_speech(speechStore.stt.language)
 })
 
 function toggleListen() {
+  // Appel direct au store pour activer/désactiver le microphone
   speechStore.toggle_listen()
 }
 
@@ -228,13 +231,7 @@ function typing_event(event: boolean) {
 }
 
 function paramTrigger(input: string) {
-  // console.log(window.process.type)
   if (defaultStore.broadcasting && is_electron()) {
-    // if custom params
-    // potential addition:
-    // use https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/search
-    // to see which assign is the closest to the keyword found
-    // unless switch to nlp first.....
     if (oscStore.osc_profiles[oscStore.current_profile].length) {
       oscStore.osc_profiles[oscStore.current_profile].forEach((custom_param) => {
         let matchesKey: RegExpExecArray | null = null

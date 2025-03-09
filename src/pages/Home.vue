@@ -25,21 +25,21 @@
 </template>
 
 <script setup lang="ts">
-// import {ipcRenderer} from "electron"
-import { useDisplay, useTheme } from 'vuetify'
-
-import { computed, onMounted, ref } from 'vue'
-import is_electron from '@/helpers/is_electron'
-
 import WelcomeOverlay from '@/components/overlays/WelcomeOverlay.vue'
-
-import { useSettingsStore } from '@/stores/settings'
+import is_electron from '@/helpers/is_electron'
 import { useAppearanceStore } from '@/stores/appearance'
 import { useLogsStore } from '@/stores/logs'
+
+import { useSettingsStore } from '@/stores/settings'
+
 import { useTranslationStore } from '@/stores/translation'
+import { computed, onMounted, ref } from 'vue'
+import { useI18n } from 'vue-i18n'
+import { useDisplay, useTheme } from 'vuetify'
 
 declare const window: any
 
+const { t } = useI18n()
 const { height } = useDisplay()
 const theme = useTheme()
 

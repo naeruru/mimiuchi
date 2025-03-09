@@ -1,5 +1,5 @@
 <template>
-  <v-card :title="$t('settings.connections.title')" color="transparent" flat>
+  <v-card :title="t('settings.connections.title')" color="transparent" flat>
     <template #subtitle>
       <i18n-t keypath="settings.connections.description" tag="label" scope="global">
         <template #icon>
@@ -16,7 +16,7 @@
         <v-col :cols="12">
           <v-card flat>
             <v-card class="py-2" flat>
-              <v-list-item :title="$t('settings.connections.ws.name')" subtitle="websocket">
+              <v-list-item :title="t('settings.connections.ws.name')" subtitle="websocket">
                 <template #prepend>
                   <v-icon
                     icon="mdi-transit-connection-horizontal"
@@ -98,7 +98,9 @@ import ConnectionDialog from '@/components/settings/connections/dialogs/Connecti
 import is_electron from '@/helpers/is_electron'
 import type { ConnectionType } from '@/stores/connections'
 import { useConnectionsStore } from '@/stores/connections'
+import { useI18n } from 'vue-i18n'
 
+const { t } = useI18n()
 declare const window: any
 
 const connectionsStore = useConnectionsStore()
