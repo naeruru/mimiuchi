@@ -1,6 +1,6 @@
-import type { WebSpeech } from '@/modules/speech'
 import type { Log } from '@/stores/logs'
 import is_electron from '@/helpers/is_electron'
+import { WebSpeech } from '@/modules/speech'
 import { ref } from 'vue'
 
 export interface ListItem {
