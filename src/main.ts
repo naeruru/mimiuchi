@@ -10,9 +10,6 @@ import { createPinia } from 'pinia'
 
 import { createApp } from 'vue'
 
-// import { loadFonts } from './plugins/webfontloader'
-// loadFonts()
-
 import '@/assets/fonts/fonts.css'
 
 const pinia = createPinia()

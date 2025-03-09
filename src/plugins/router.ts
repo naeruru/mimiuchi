@@ -80,7 +80,17 @@ const routes = [
         name: 'oscparams',
         component: OSCParams,
       },
+      {
+        // Redirect /settings to /settings/general
+        path: '',
+        redirect: '/settings/general',
+      },
     ],
+  },
+  // Route de secours pour rediriger vers la page d'accueil
+  {
+    path: '/:pathMatch(.*)*',
+    redirect: '/',
   },
 ]
 

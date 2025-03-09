@@ -2,7 +2,7 @@
   <v-app-bar color="primary" app flat height="50">
     <v-app-bar-nav-icon
       variant="text"
-      @click.stop="settingsStore.drawer = !settingsStore.drawer"
+      @click.stop="settingsStore.toggleDrawer()"
     />
     <v-container class="mb-7 fill-height d-flex align-center">
       <v-icon
@@ -21,7 +21,7 @@
       <v-btn
         icon
         :color="route.fullPath.startsWith('/settings') ? 'secondary' : 'white'"
-        @click="router.push({ path: '/settings/general' })"
+        @click="goToSettings"
       >
         <v-icon>mdi-cog</v-icon>
       </v-btn>
@@ -45,6 +45,14 @@ const route = useRoute()
 const settingsStore = useSettingsStore()
 
 const APP_NAME = __APP_NAME__
+
+// Fonction améliorée pour naviguer vers les paramètres
+function goToSettings() {
+  // Force l'ouverture du drawer
+  settingsStore.openDrawer()
+  // Navigue vers la page des paramètres
+  router.push({ path: '/settings/general' })
+}
 
 function open_external(link: string) {
   window.open(link, '_blank')
