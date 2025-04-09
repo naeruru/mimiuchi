@@ -57,8 +57,9 @@ export default {
       pinned_languages: 'Lenguajes fijados',
       language: 'Selecciones un lenguaje de escucha',
       unsupported: {
-        text: 'Web Speech API (Voz a Texto) solo está disponible en {0}. (^・ω・^)',
+        text: 'Web Speech API (Voz a Texto) solo está disponible en {link}. {kaomoji}',
         link: 'la página web',
+        kaomoji: '(^・ω・^)',
       },
     },
     tts: {
@@ -70,8 +71,9 @@ export default {
       pitch: 'Pitch',
       language: 'Seleccione una voz de Texto a Voz',
       unsupported: {
-        text: 'Voz a Texto solo está disponible en {0}. (^・ω・^)',
+        text: 'Texto a Voz solo está disponible en {link}. {kaomoji}',
         link: 'la página web',
+        kaomoji: '(^・ω・^)',
       },
     },
     appearance: {
@@ -150,8 +152,9 @@ export default {
       ml_notice: '{0} es una biblioteca basada en ML que utiliza recursos locales (CPU) para generar traducciones en su dispositivo. En dispositivos de gama baja, es posible que no funcione bien.',
       speech_lang: 'Tu lenguaje para Voz a Texto es ',
       unsupported: {
-        text: 'Traducciones solo está disponible en {0}. (^・ω・^)',
+        text: 'Traducciones solo está disponible en {link}. {kaomoji}',
         link: 'Aplicación de Escritorio',
+        kaomoji: '(^・ω・^)',
       },
     },
     connections: {
@@ -180,9 +183,10 @@ export default {
         show_keyboard: 'Abrir teclado en VRChat al enviar texto',
         sfx: 'Reproduce un efecto de sonido después de enviar un texto.',
         unsupported: {
-          text: 'Para utilizar OSC, debe utilizar el {link}.Una vez instaladas, las versiones de sitio web y de escritorio se pueden utilizar junto con el {icon} botón. (  ᐡᴗ  ̫ ᴗᐡ)',
+          text: 'Para utilizar OSC, debe utilizar el {link}. Una vez instaladas, las versiones de sitio web y de escritorio se pueden utilizar junto con el {icon} botón. {kaomoji}',
           link: 'Aplicación de Escritorio',
           icon: 'mdi-broadcast',
+          kaomoji: '(  ᐡᴗ  ̫ ᴗᐡ)',
         },
       },
       params: {

@@ -60,8 +60,9 @@ export default {
       pinned_languages: 'Pinned languages',
       language: 'Select a speech detection language',
       unsupported: {
-        text: 'Web Speech API Speech-to-Text is only available on the {0}. (^・ω・^)',
+        text: 'Web Speech API Speech-to-Text is only available on the {link}. {kaomoji}',
         link: 'website version',
+        kaomoji: '(^・ω・^)',
       },
     },
     tts: {
@@ -73,8 +74,9 @@ export default {
       pitch: 'Pitch',
       language: 'Select a text-to-speech voice',
       unsupported: {
-        text: 'Speech-to-Text is only available on the {0}. (^・ω・^)',
+        text: 'Text-to-Speech is only available on the {link}. {kaomoji}',
         link: 'website version',
+        kaomoji: '(^・ω・^)',
       },
     },
     appearance: {
@@ -172,8 +174,9 @@ export default {
       ml_notice: '{0} is an ML-powered library that uses local compute resources (CPU) to generate translations on your device. On lower end computers, it might not run well.',
       speech_lang: 'Your Speech-to-text language is ',
       unsupported: {
-        text: 'Translations are currently only available on the {0}. (^・ω・^)',
+        text: 'Translations are currently only available on the {link}. {kaomoji}',
         link: 'desktop version',
+        kaomoji: '(^・ω・^)',
       },
     },
     connections: {
@@ -202,9 +205,10 @@ export default {
         show_keyboard: 'Open keyboard in VRChat when sending text',
         sfx: 'Play a sound effect after sending text',
         unsupported: {
-          text: 'To use OSC, you must use the {link}. Once installed, the website and desktop versions can be used together with the {icon} button. (  ᐡᴗ  ̫ ᴗᐡ)',
+          text: 'To use OSC, you must use the {link}. Once installed, the website and desktop versions can be used together with the {icon} button. {kaomoji}',
           link: 'desktop app',
           icon: 'mdi-broadcast',
+          kaomoji: '(  ᐡᴗ  ̫ ᴗᐡ)',
         },
       },
       params: {

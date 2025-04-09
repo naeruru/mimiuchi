@@ -5,7 +5,7 @@
   >
     <v-divider />
     <v-card-text>
-      <v-row v-if="is_electron()">
+      <v-row>
         <v-col :cols="12" :sm="6">
           <v-text-field v-model="oscStore.ip" :label="$t('settings.osc.general.osc_ip')" hide-details />
         </v-col>
@@ -82,26 +82,6 @@
               </template>
             </v-list-item>
           </v-card>
-        </v-col>
-      </v-row>
-      <v-row v-if="!is_electron()" class="justify-center">
-        <v-col :cols="12">
-          <v-alert variant="outlined" type="warning" prominent>
-            <v-alert-title>
-              <i18n-t keypath="settings.osc.general.unsupported.text" tag="label">
-                <template #link>
-                  <a class="text-primary pointer" @click="openURL('https://github.com/naeruru/mimiuchi/releases')">
-                    {{ $t('settings.osc.general.unsupported.link') }}
-                  </a>
-                </template>
-                <template #icon>
-                  <v-icon color="success" size="small">
-                    {{ $t('settings.osc.general.unsupported.icon') }}
-                  </v-icon>
-                </template>
-              </i18n-t>
-            </v-alert-title>
-          </v-alert>
         </v-col>
       </v-row>
     </v-card-text>

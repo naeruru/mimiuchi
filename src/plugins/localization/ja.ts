@@ -60,8 +60,9 @@ export default {
       pinned_languages: 'ピン留めされた言語',
       language: 'Speech-to-textの言語を選択',
       unsupported: {
-        text: 'Web Speech APIのSpeech-to-Textは{0}で利用できます。(^・ω・^)',
+        text: 'Web Speech APIのSpeech-to-Textは{link}で利用できます。{kaomoji}',
         link: 'ウェブサイト版',
+        kaomoji: '(^・ω・^)',
       },
     },
     tts: {
@@ -73,8 +74,9 @@ export default {
       pitch: 'ピッチ',
       language: 'Text-to-speechの音声を選択',
       unsupported: {
-        text: 'Text-to-Speechは{0}で利用できます。 (^・ω・^)',
+        text: 'Text-to-Speechは{link}で利用できます。{kaomoji}',
         link: 'ウェブサイト版',
+        kaomoji: '(^・ω・^)',
       },
     },
     appearance: {
@@ -172,8 +174,9 @@ export default {
       ml_notice: '{0}はCPUを使用して、デバイス上で翻訳を生成する機械学習を搭載したライブラリです。ローエンドのコンピュータでは、うまく動作しない場合があります。',
       speech_lang: 'Speech-to-text言語は',
       unsupported: {
-        text: '翻訳サービスは{0}で利用できます。 (^・ω・^)',
+        text: '翻訳サービスは{link}で利用できます。{kaomoji}',
         link: 'デスクトップアプリ版',
+        kaomoji: '(^・ω・^)',
       },
     },
     connections: {
@@ -202,9 +205,10 @@ export default {
         show_keyboard: 'テキスト送信時にVRChatでキーボードを開く',
         sfx: 'テキスト送信後に効果音を再生',
         unsupported: {
-          text: 'OSCの設定は{link}で利用できます。インストールすれば、{icon}ボタンでウェブサイト版とデスクトップ版を一緒に使うことができます（Speech-to-text▶︎OSC）(  ᐡᴗ  ̫ ᴗᐡ)',
+          text: 'OSCの設定は{link}で利用できます。インストールすれば、{icon}ボタンでウェブサイト版とデスクトップ版を一緒に使うことができます（Speech-to-text▶︎OSC）。{kaomoji}',
           link: 'デスクトップアプリ版',
           icon: 'mdi-broadcast',
+          kaomoji: '(  ᐡᴗ  ̫ ᴗᐡ)',
         },
       },
       params: {

@@ -60,8 +60,9 @@ export default {
         pinned_languages: '固定语言',
         language: '选择语音识别语言',
         unsupported: {
-          text: 'Web Speech API 的语音转文本功能仅在 {0} 上可用。(＾・ω・＾)',
+          text: 'Web Speech API 的语音转文本功能仅在 {link} 上可用。{kaomoji}',
           link: '网页版本',
+          kaomoji: '(＾・ω・＾)',
         },
       },
       tts: {
@@ -73,8 +74,9 @@ export default {
         pitch: '音调',
         language: '选择文本转语音语言',
         unsupported: {
-          text: '文本转语音功能仅在 {0} 上可用。(＾・ω・＾)',
+          text: '文本转语音功能仅在 {link} 上可用。{kaomoji}',
           link: '网页版本',
+          kaomoji: '(＾・ω・＾)',
         },
       },
       appearance: {
@@ -151,8 +153,9 @@ export default {
         ml_notice: '{0} 是一个基于机器学习的库，它会使用本地计算资源（CPU）在设备上生成翻译结果。在配置较低的计算机上，可能运行不畅。',
         speech_lang: '您的语音转文本语言为 ',
         unsupported: {
-          text: '翻译功能目前仅在 {0} 上可用。(＾・ω・＾)',
+          text: '翻译功能目前仅在 {link} 上可用。{kaomoji}',
           link: '桌面版本',
+          kaomoji: '(＾・ω・＾)',
         },
       },
       connections: {
@@ -181,9 +184,10 @@ export default {
           show_keyboard: '发送文本时在 VRChat 中显示键盘',
           sfx: '发送文本后播放音效',
           unsupported: {
-            text: '要使用 OSC，您需要使用 {link}。安装后，可以将网页版本和桌面版本与 {icon} 按钮配合使用。(ᐡᴗ ̫ ᴗᐡ)',
+            text: '要使用 OSC，您需要使用 {link}。安装后，可以将网页版本和桌面版本与 {icon} 按钮配合使用。{kaomoji}',
             link: '桌面应用',
             icon: 'mdi-broadcast',
+            kaomoji: '(ᐡᴗ ̫ ᴗᐡ)',
           },
         },
         params: {
