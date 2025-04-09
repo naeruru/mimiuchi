@@ -11,7 +11,7 @@
             {{ $t('settings.appearance.theme') }}
           </p>
         </v-col>
-        <v-col :cols="12" :md="8">
+        <v-col>
           <v-btn
             v-for="(theme_id, key) in theme.themes.value"
             :key="theme_id.colors.primary"
