@@ -6,7 +6,7 @@ interface WordReplacements {
 }
 
 export const useWordReplaceStore = defineStore('wordreplace', () => {
-  const enabled = ref(true)
+  const enabled = ref(false)
   const match_whole_word = ref(true)
   const match_case = ref(false)
 
