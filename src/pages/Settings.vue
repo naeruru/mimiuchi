@@ -42,7 +42,22 @@
       />
 
       <v-divider />
-      <v-list-subheader>{{ $t('settings.osc.title') }}</v-list-subheader>
+      <v-list-subheader>
+        {{ $t('settings.osc.title') }}
+        <v-tooltip
+          open-on-click
+          class="feature-tooltip"
+          :text="$t('settings.osc.title_tooltip')">
+          <template v-slot:activator="{ props }">
+            <v-icon
+              v-bind="props"
+              icon="mdi-broadcast"
+              color="success"
+              size="15"
+            />
+          </template>
+        </v-tooltip>
+      </v-list-subheader>
       <v-list-item
         v-for="(setting) in settings_osc"
         :key="setting.value"

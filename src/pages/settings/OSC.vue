@@ -15,7 +15,13 @@
         <v-divider />
         <v-col :cols="12">
           <v-card>
-            <v-list-item :title="$t('settings.osc.general.enabled')">
+            <v-list-item>
+              <v-list-item-title>
+                {{ $t('settings.osc.general.enabled') }}
+              </v-list-item-title>
+              <v-list-item-subtitle>
+                {{ $t('settings.osc.general.enabled_subtitle') }}
+              </v-list-item-subtitle>
               <template #append>
                 <v-switch
                   v-model="oscStore.osc_text"
@@ -28,35 +34,13 @@
           </v-card>
 
           <v-card class="mt-2">
-            <v-list-item :title="$t('settings.osc.general.typing_indicator')">
-              <template #append>
-                <v-switch
-                  v-model="oscStore.text_typing"
-                  :disabled="!oscStore.osc_text"
-                  color="primary"
-                  hide-details
-                  inset
-                />
-              </template>
-            </v-list-item>
-          </v-card>
-
-          <v-card class="mt-2">
-            <v-list-item :title="$t('settings.osc.general.speech_indicator')">
-              <template #append>
-                <v-switch
-                  v-model="oscStore.stt_typing"
-                  :disabled="!oscStore.osc_text"
-                  color="primary"
-                  hide-details
-                  inset
-                />
-              </template>
-            </v-list-item>
-          </v-card>
-
-          <v-card class="mt-2">
-            <v-list-item :title="$t('settings.osc.general.show_keyboard')">
+            <v-list-item>
+              <v-list-item-title>
+                {{ $t('settings.osc.general.show_keyboard') }}
+              </v-list-item-title>
+              <v-list-item-subtitle>
+                {{ $t('settings.osc.general.show_keyboard_subtitle') }}
+              </v-list-item-subtitle>
               <template #append>
                 <v-switch
                   v-model="oscStore.show_keyboard"
@@ -70,11 +54,66 @@
           </v-card>
 
           <v-card class="mt-2">
-            <v-list-item :title="$t('settings.osc.general.sfx')">
+            <v-list-item>
+              <v-list-item-title>
+                {{ $t('settings.osc.general.sfx') }}
+              </v-list-item-title>
+              <v-list-item-subtitle>
+                {{ $t('settings.osc.general.sfx_subtitle') }}
+              </v-list-item-subtitle>
               <template #append>
                 <v-switch
                   v-model="oscStore.sfx"
                   :disabled="!oscStore.osc_text || oscStore.show_keyboard"
+                  color="primary"
+                  hide-details
+                  inset
+                />
+              </template>
+            </v-list-item>
+          </v-card>
+
+          <v-card class="mt-2">
+            <v-list-item :title="$t('settings.osc.general.typing_indicator_speech')">
+              <v-list-item-subtitle>
+                <i18n-t keypath="settings.osc.general.typing_indicator_speech_subtitle">
+                  <template #typing_indicator_icon>
+                    <v-icon size="small">
+                      {{ $t('settings.osc.general.typing_indicator_icon') }}
+                    </v-icon>
+                  </template>
+                </i18n-t>
+              </v-list-item-subtitle>
+              <template #append>
+                <v-switch
+                  v-model="oscStore.stt_typing"
+                  :disabled="!oscStore.osc_text"
+                  color="primary"
+                  hide-details
+                  inset
+                />
+              </template>
+            </v-list-item>
+          </v-card>
+
+          <v-card class="mt-2">
+            <v-list-item>
+              <v-list-item-title>
+                {{ $t('settings.osc.general.typing_indicator_keyboard') }}
+              </v-list-item-title>
+              <v-list-item-subtitle>
+                <i18n-t keypath="settings.osc.general.typing_indicator_keyboard_subtitle">
+                  <template #typing_indicator_icon>
+                    <v-icon size="small">
+                      {{ $t('settings.osc.general.typing_indicator_icon') }}
+                    </v-icon>
+                  </template>
+                </i18n-t>
+              </v-list-item-subtitle>
+              <template #append>
+                <v-switch
+                  v-model="oscStore.text_typing"
+                  :disabled="!oscStore.osc_text || !oscStore.show_keyboard"
                   color="primary"
                   hide-details
                   inset
@@ -90,11 +129,6 @@
 
 <script setup lang="ts">
 import { useOSCStore } from '@/stores/osc'
-import is_electron from '@/helpers/is_electron'
 
 const oscStore = useOSCStore()
-
-function openURL(url: string) {
-  window.open(url, '_blank')
-}
 </script>
