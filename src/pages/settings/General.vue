@@ -48,8 +48,7 @@
           </v-card>
         </v-col>
       </v-row>
-      <v-row class="mt-12">
-      </v-row>
+      <v-row class="mt-12" />
       <v-row>
         <v-col :cols="12" class="pb-0">
           <v-card>

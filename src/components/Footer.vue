@@ -23,8 +23,7 @@
         @submit.prevent="onSubmit()"
       >
         <div class="d-flex w-100">
-
-          <v-textarea 
+          <v-textarea
             v-if="$route.name === 'home' && appearanceStore.footer_size"
             v-model="input_text"
             variant="outlined"

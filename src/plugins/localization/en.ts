@@ -89,13 +89,13 @@ export default {
         options: [
           {
             title: 'Small',
-            value: 0
+            value: 0,
           },
           {
             title: 'Large',
-            value: 1
-          }
-        ]
+            value: 1,
+          },
+        ],
       },
       text: {
         title: 'Text Settings',
@@ -105,7 +105,7 @@ export default {
         outline: {
           enabled: 'Text outline',
           size: 'Text outline size',
-          color: 'Text outline color'
+          color: 'Text outline color',
         },
         fade: 'Fade text',
         fade_after: 'Fade text after',

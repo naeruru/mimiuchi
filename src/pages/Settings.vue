@@ -10,10 +10,14 @@
         color="primary"
         @click="setting.unavailable_condition ? null : $router.push({ path: `/settings/${setting.value}` })"
       >
-        <template v-slot:prepend>
-          <v-icon :class="{ 'missing-feature': setting.unavailable_condition }">{{ setting.icon }}</v-icon>
+        <template #prepend>
+          <v-icon :class="{ 'missing-feature': setting.unavailable_condition }">
+            {{ setting.icon }}
+          </v-icon>
         </template>
-        <v-list-item-title :class="{ 'missing-feature': setting.unavailable_condition }">{{ setting.title }}</v-list-item-title>
+        <v-list-item-title :class="{ 'missing-feature': setting.unavailable_condition }">
+          {{ setting.title }}
+        </v-list-item-title>
         <v-tooltip
           v-if="setting.unavailable_condition && setting.unavailable_tooltip"
           activator="parent"
@@ -66,10 +70,14 @@
         color="primary"
         @click="setting.unavailable_condition ? null : $router.push({ path: `/settings/${setting.value}` })"
       >
-        <template v-slot:prepend>
-          <v-icon :class="{ 'missing-feature': setting.unavailable_condition }">{{ setting.icon }}</v-icon>
+        <template #prepend>
+          <v-icon :class="{ 'missing-feature': setting.unavailable_condition }">
+            {{ setting.icon }}
+          </v-icon>
         </template>
-        <v-list-item-title :class="{ 'missing-feature': setting.unavailable_condition }">{{ setting.title }}</v-list-item-title>
+        <v-list-item-title :class="{ 'missing-feature': setting.unavailable_condition }">
+          {{ setting.title }}
+        </v-list-item-title>
         <v-tooltip
           v-if="setting.unavailable_condition && setting.unavailable_tooltip"
           activator="parent"
@@ -202,17 +210,17 @@ const settings_osc = computed(() => {
       value: 'osc',
       icon: 'mdi-transit-connection-variant',
       unavailable_condition: !is_electron(),
-      unavailable_tooltip: OSCUnavailable
+      unavailable_tooltip: OSCUnavailable,
     },
     {
       title: t('settings.osc.params.title'),
       value: 'oscparams',
       icon: 'mdi-format-list-bulleted-square',
       unavailable_condition: !is_electron(),
-      unavailable_tooltip: OSCUnavailable
+      unavailable_tooltip: OSCUnavailable,
     },
   ]
-  
+
   return settings_osc
 })
 
