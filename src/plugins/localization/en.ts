@@ -36,6 +36,7 @@ export default {
       language: 'Select a UI language',
       transcript: 'Download session transcript',
       realtime_text: 'Instant textbox updates',
+      auto_open_web_app: 'Open web app on launch',
       reset: {
         button: 'Reset all settings',
         dialog: {

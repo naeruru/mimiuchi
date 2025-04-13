@@ -36,6 +36,7 @@ export default {
       language: 'UIの言語を選択',
       transcript: 'セッショントランスクリプトをダウンロードする',
       realtime_text: 'テキストボックスのテキストは継続的に送信する',
+      auto_open_web_app: 'アプリ起動時にウェブアプリを開く',
       reset: {
         button: 'アプリの設定をリセットする',
         dialog: {
