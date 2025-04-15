@@ -213,8 +213,8 @@ const settings_osc = computed(() => {
       unavailable_tooltip: OSCUnavailable,
     },
     {
-      title: t('settings.osc.params.title'),
-      value: 'oscparams',
+      title: t('settings.osc.triggers.title'),
+      value: 'osctriggers',
       icon: 'mdi-format-list-bulleted-square',
       unavailable_condition: !is_electron(),
       unavailable_tooltip: OSCUnavailable,

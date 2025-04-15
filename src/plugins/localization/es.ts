@@ -195,7 +195,7 @@ export default {
           kaomoji: '(  ᐡᴗ  ̫ ᴗᐡ)',
         },
       },
-      params: {
+      triggers: {
         title: 'Parámetros personalizados',
       },
     },

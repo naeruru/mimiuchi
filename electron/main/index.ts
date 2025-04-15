@@ -194,8 +194,8 @@ ipcMain.on('send-text-event', (event, args) => {
     empty_queue(text_queue, args.hide_ui, args.sfx)
 })
 
-// event for sending custom osc param
-ipcMain.on('send-param-event', (event, args) => {
+// event for sending osc messages
+ipcMain.on('send-osc-message', (event, args) => {
   emit_osc([args.route, args.value], args.ip, args.port)
 })
 

@@ -196,7 +196,7 @@ export default {
           kaomoji: '(ᐡᴗ ̫ ᴗᐡ)',
         },
       },
-      params: {
+      triggers: {
         title: '参数触发器',
         description: '添加参数触发器',
         button: {
@@ -219,7 +219,7 @@ export default {
             text: '您确定要删除此配置文件吗？',
           },
         },
-        param: {
+        trigger: {
           button: {
             edit: '编辑',
             delete: '删除',

@@ -1,7 +1,7 @@
 <template>
   <v-card color="transparent" flat class="pb-16">
     <template #title>
-      <span>{{ $t('settings.osc.params.title') }}</span>
+      <span>{{ $t('settings.osc.triggers.title') }}</span>
       <v-chip
         prepend-icon="mdi-alert-circle-outline"
         color="warning" class="ml-2"
@@ -12,7 +12,7 @@
       </v-chip>
     </template>
     <template #subtitle>
-      <span>{{ $t('settings.osc.params.description') }}</span>
+      <span>{{ $t('settings.osc.triggers.description') }}</span>
     </template>
 
     <v-divider />
@@ -23,7 +23,7 @@
         <v-col :cols="10" class="d-flex align-center">
           <v-select
             v-model="oscStore.current_profile"
-            :label="$t('settings.osc.params.profile.label')"
+            :label="$t('settings.osc.triggers.profile.label')"
             :items="sortedProfiles"
             variant="outlined"
             :menu-props="{ closeOnContentClick: true }"
@@ -70,25 +70,25 @@
         </v-card-actions>
       </v-row>
 
-      <!-- Parameter Triggers -->
+      <!-- Triggers -->
       <v-expansion-panels
         v-if="Object.keys(oscStore.osc_profiles[oscStore.current_profile]).length > 0"
-        v-model="param_panels"
+        v-model="trigger_panels"
         multiple
       >
         <v-expansion-panel
-          v-for="(param, i) in oscStore.osc_profiles[oscStore.current_profile]"
+          v-for="(trigger, i) in oscStore.osc_profiles[oscStore.current_profile]"
           class="mb-4"
         >
-          <v-expansion-panel-title ripple class="param d-flex align-center">
+          <v-expansion-panel-title ripple class="trigger-panel d-flex align-center">
             <v-text-field
-              v-model="param.route"
+              v-model="trigger.route"
               variant="plain"
               flat
               density="compact"
               hide-details
               readonly
-              class="param-route w-100"
+              class="trigger-route w-100"
             />
             <v-spacer />
             <v-btn
@@ -98,9 +98,9 @@
               size="small"
               color="primary"
               append-icon="mdi-pencil"
-              @click.stop="openEditParamDialog(i)"
+              @click.stop="openEditTriggerDialog(i)"
             >
-              {{ $t('settings.osc.params.param.button.edit') }}
+              {{ $t('settings.osc.triggers.trigger.button.edit') }}
             </v-btn>
             <v-btn
               class="ml-4 mr-4"
@@ -108,9 +108,9 @@
               size="small"
               color="error"
               append-icon="mdi-delete"
-              @click.stop="openDeleteParamDialog(i)"
+              @click.stop="openDeleteTriggerDialog(i)"
             >
-              {{ $t('settings.osc.params.param.button.delete') }}
+              {{ $t('settings.osc.triggers.trigger.button.delete') }}
             </v-btn>
           </v-expansion-panel-title>
           <v-expansion-panel-text>
@@ -119,7 +119,7 @@
                 <v-row>
                   <v-col :cols="12" :md="6">
                     <v-text-field
-                      v-model="param.ip"
+                      v-model="trigger.ip"
                       :label="$t('settings.osc.general.osc_ip')"
                       flat
                       variant="solo-filled"
@@ -129,7 +129,7 @@
                   </v-col>
                   <v-col>
                     <v-text-field
-                      v-model="param.port"
+                      v-model="trigger.port"
                       :label="$t('settings.osc.general.osc_port')"
                       flat
                       variant="solo-filled"
@@ -139,11 +139,11 @@
                   </v-col>
 
                   <v-col :cols="12">
-                    <strong>{{ $t('settings.osc.params.param.trigger_phrases') }}</strong>
+                    <strong>{{ $t('settings.osc.triggers.trigger.trigger_phrases') }}</strong>
                   </v-col>
                   <v-col :cols="12">
                     <v-chip
-                      v-for="(keyword) in param.keywords"
+                      v-for="(keyword) in trigger.keywords"
                       v-model="keyword.enabled"
                       class="mx-1 mb-2"
                       label
@@ -154,10 +154,10 @@
                     </v-chip>
                   </v-col>
                   <v-col :cols="12">
-                    <strong>{{ $t('settings.osc.params.param.assign.phrases') }}</strong>
+                    <strong>{{ $t('settings.osc.triggers.trigger.assign.phrases') }}</strong>
                     <v-list density="compact">
                       <v-list-item
-                        v-for="(assign) in param.assigns"
+                        v-for="(assign) in trigger.assigns"
                         :value="assign"
                         :title="assign.keyword"
                         :subtitle="displayAssignSubtitle(assign)"
@@ -172,7 +172,7 @@
         </v-expansion-panel>
       </v-expansion-panels>
       <p v-else>
-        <i18n-t keypath="settings.osc.params.empty" tag="label" scope="global">
+        <i18n-t keypath="settings.osc.triggers.empty" tag="label" scope="global">
           <template #icon>
             <v-icon
               color="primary"
@@ -190,7 +190,7 @@
             variant="outlined"
             size="small"
             icon="mdi-plus"
-            @click="openAddParamDialog"
+            @click="openAddTriggerDialog"
           />
         </v-card-actions>
       </v-card>
@@ -209,45 +209,45 @@
     <v-row justify="center">
       <v-dialog v-model="profile_delete_dialog" width="50vw">
         <v-card>
-          <v-card-title>{{ $t('settings.osc.params.profile.delete_dialog.title') }}</v-card-title>
+          <v-card-title>{{ $t('settings.osc.triggers.profile.delete_dialog.title') }}</v-card-title>
           <v-card-text>{{ `${profile_delete_target}` }}</v-card-text>
-          <v-card-text>{{ $t('settings.osc.params.profile.delete_dialog.text') }}</v-card-text>
+          <v-card-text>{{ $t('settings.osc.triggers.profile.delete_dialog.text') }}</v-card-text>
           <v-card-actions>
             <v-spacer />
             <v-btn @click="profile_delete_dialog = false">
-              {{ $t('settings.osc.params.button.cancel') }}
+              {{ $t('settings.osc.triggers.button.cancel') }}
             </v-btn>
             <v-btn color="primary" @click="confirmDeleteProfileDialog">
-              {{ $t('settings.osc.params.button.delete') }}
+              {{ $t('settings.osc.triggers.button.delete') }}
             </v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
     </v-row>
 
-    <!-- Param Trigger Dialog -->
+    <!-- Trigger Dialog -->
     <v-row justify="center">
-      <ParameterTrigger
-        v-model="param_dialog"
-        :mode="param_dialog_mode"
-        :editing-index="param_editing_index"
+      <Trigger
+        v-model="trigger_dialog"
+        :mode="trigger_dialog_mode"
+        :editing-index="trigger_editing_index"
       />
     </v-row>
 
-    <!-- Param Trigger Delete Dialog -->
+    <!-- Trigger Delete Dialog -->
     <v-row justify="center">
-      <v-dialog v-model="param_delete_dialog" width="50vw">
+      <v-dialog v-model="trigger_delete_dialog" width="50vw">
         <v-card>
-          <v-card-title>{{ $t('settings.osc.params.param.delete_dialog.title') }}</v-card-title>
-          <v-card-text>{{ `${param_delete_target_display}` }}</v-card-text>
-          <v-card-text>{{ $t('settings.osc.params.param.delete_dialog.text') }}</v-card-text>
+          <v-card-title>{{ $t('settings.osc.triggers.trigger.delete_dialog.title') }}</v-card-title>
+          <v-card-text>{{ `${trigger_delete_target_display}` }}</v-card-text>
+          <v-card-text>{{ $t('settings.osc.triggers.trigger.delete_dialog.text') }}</v-card-text>
           <v-card-actions>
             <v-spacer />
-            <v-btn @click="param_delete_dialog = false">
-              {{ $t('settings.osc.params.button.cancel') }}
+            <v-btn @click="trigger_delete_dialog = false">
+              {{ $t('settings.osc.triggers.button.cancel') }}
             </v-btn>
-            <v-btn color="primary" @click="confirmDeleteParamDialog">
-              {{ $t('settings.osc.params.button.delete') }}
+            <v-btn color="primary" @click="confirmDeleteTriggerDialog">
+              {{ $t('settings.osc.triggers.button.delete') }}
             </v-btn>
           </v-card-actions>
         </v-card>
@@ -259,8 +259,8 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import { useOSCStore } from '@/stores/osc'
-import Profile from '@/components/settings/oscparams/dialogs/Profile.vue'
-import ParameterTrigger from '@/components/settings/oscparams/dialogs/ParameterTrigger.vue'
+import Profile from '@/components/settings/osctriggers/dialogs/Profile.vue'
+import Trigger from '@/components/settings/osctriggers/dialogs/Trigger.vue'
 
 const oscStore = useOSCStore()
 
@@ -271,16 +271,16 @@ const profile_dialog_new_name = ref('')
 const profile_delete_dialog = ref(false)
 const profile_delete_target = ref('')
 
-const param_panels = ref([])
+const trigger_panels = ref([])
 
-const param_dialog = ref(false)
-const param_dialog_mode = ref('') // "add", "edit"
+const trigger_dialog = ref(false)
+const trigger_dialog_mode = ref('') // "add", "edit"
 
-const param_editing_index = ref(Number.NaN)
+const trigger_editing_index = ref(Number.NaN)
 
-const param_delete_dialog = ref(false)
-const param_delete_target = ref(Number.NaN)
-const param_delete_target_display = ref('')
+const trigger_delete_dialog = ref(false)
+const trigger_delete_target = ref(Number.NaN)
+const trigger_delete_target_display = ref('')
 
 const sortedProfiles = computed(() => {
   return Object.keys(oscStore.osc_profiles).sort((a, b) => {
@@ -336,7 +336,7 @@ function confirmDeleteProfileDialog() {
 function setProfile(selected_profile: string) {
   oscStore.current_profile = selected_profile
 
-  param_panels.value = [] // Collapse all parameter trigger expansion panels.
+  trigger_panels.value = [] // Collapse all trigger expansion panels.
 }
 
 function displayAssignSubtitle(assign_object: any) {
@@ -348,32 +348,32 @@ function displayAssignSubtitle(assign_object: any) {
   return subtitle
 }
 
-function openAddParamDialog() {
-  param_dialog_mode.value = 'add'
-  param_dialog.value = true
+function openAddTriggerDialog() {
+  trigger_dialog_mode.value = 'add'
+  trigger_dialog.value = true
 }
 
-function openEditParamDialog(i: number) {
-  param_dialog_mode.value = 'edit'
-  param_editing_index.value = i
-  param_dialog.value = true
+function openEditTriggerDialog(i: number) {
+  trigger_dialog_mode.value = 'edit'
+  trigger_editing_index.value = i
+  trigger_dialog.value = true
 }
 
-function openDeleteParamDialog(i: number) {
-  const current_profile_params = oscStore.osc_profiles[oscStore.current_profile]
+function openDeleteTriggerDialog(i: number) {
+  const current_profile_triggers = oscStore.osc_profiles[oscStore.current_profile]
 
-  param_delete_target.value = i
-  param_delete_target_display.value = current_profile_params[i].route
+  trigger_delete_target.value = i
+  trigger_delete_target_display.value = current_profile_triggers[i].route
 
-  param_delete_dialog.value = true
+  trigger_delete_dialog.value = true
 }
 
-function confirmDeleteParamDialog() {
-  const current_profile_params = oscStore.osc_profiles[oscStore.current_profile]
+function confirmDeleteTriggerDialog() {
+  const current_profile_triggers = oscStore.osc_profiles[oscStore.current_profile]
 
-  current_profile_params.splice(param_delete_target.value, 1)
+  current_profile_triggers.splice(trigger_delete_target.value, 1)
 
-  param_delete_dialog.value = false
+  trigger_delete_dialog.value = false
 }
 </script>
 
@@ -390,19 +390,19 @@ function confirmDeleteParamDialog() {
   background-color: initial !important;
 }
 
-.param:hover {
+.trigger-panel:hover {
   background-color: rgba(255, 255, 255, 0.05);
 }
 
-.param-route {
-  /* This typography imitates Vuetify's class text-button. In the corresponding v-text-field, this class works, but Vuetify's class does not work. */
+.trigger-panel-route {
+  /* This typography imitates Vuetify's class text-button. In the corresponding v-text-field, this class works, but Vuetify's class does not work */
   font-size: 0.875rem !important;
   font-weight: 500;
   line-height: 2.25rem;
   letter-spacing: 0.0892857143em !important;
 }
 
-.param-route input {
+.trigger-panel-route input {
   padding: 0 !important;
   cursor: pointer;
 }

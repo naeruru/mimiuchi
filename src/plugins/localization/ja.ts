@@ -219,9 +219,9 @@ export default {
           kaomoji: '(  ᐡᴗ  ̫ ᴗᐡ)',
         },
       },
-      params: {
-        title: 'パラメータトリガー',
-        description: 'カスタムパラメータトリガーを追加',
+      triggers: {
+        title: 'トリガー',
+        description: 'トリガーフレーズを入力したり話したりしてOSCメッセージを送信する',
         button: {
           cancel: 'キャンセル',
           confirm: 'OK',
@@ -242,16 +242,16 @@ export default {
             text: 'このプロファイルを削除してもよろしいですか？',
           },
         },
-        param: {
+        trigger: {
           button: {
             edit: '編集',
             delete: '削除',
           },
           dialog_title: {
-            add: 'パラメータトリガーを追加',
-            edit: 'パラメータトリガーを編集',
+            add: 'トリガーを追加',
+            edit: 'トリガーを編集',
           },
-          address: 'パラメータアドレス',
+          address: 'アドレス',
           empty: '無し (；ω；)',
           trigger_phrases: 'トリガーフレーズ：',
           trigger_phrases_add: 'トリガーフレーズを追加',
@@ -268,8 +268,8 @@ export default {
             },
           },
           delete_dialog: {
-            title: 'パラメータを削除',
-            text: 'このパラメータを削除してもよろしいですか？',
+            title: 'トリガーを削除',
+            text: 'このトリガーを削除してもよろしいですか？',
           },
         },
         empty: 'トリガーを追加するには{icon}ボタンを使用してください！',

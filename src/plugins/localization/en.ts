@@ -219,9 +219,9 @@ export default {
           kaomoji: '(  ᐡᴗ  ̫ ᴗᐡ)',
         },
       },
-      params: {
-        title: 'Parameter Triggers',
-        description: 'Add parameter triggers',
+      triggers: {
+        title: 'Triggers',
+        description: 'Send OSC messages when sending/speaking trigger phrases',
         button: {
           cancel: 'CANCEL',
           confirm: 'CONFIRM',
@@ -242,16 +242,16 @@ export default {
             text: 'Are you sure that you want to delete this profile?',
           },
         },
-        param: {
+        trigger: {
           button: {
             edit: 'EDIT',
             delete: 'DELETE',
           },
           dialog_title: {
-            add: 'Add parameter trigger',
-            edit: 'Edit parameter trigger',
+            add: 'Add trigger',
+            edit: 'Edit trigger',
           },
-          address: 'Parameter address',
+          address: 'Address',
           empty: 'none :c',
           trigger_phrases: 'Trigger phrases:',
           trigger_phrases_add: 'Add trigger word/phrase',
@@ -268,8 +268,8 @@ export default {
             },
           },
           delete_dialog: {
-            title: 'Delete parameter',
-            text: 'Are you sure that you want to delete this parameter?',
+            title: 'Delete trigger',
+            text: 'Are you sure that you want to delete this trigger?',
           },
         },
         empty: 'Use the {icon} button to add a new trigger!',
