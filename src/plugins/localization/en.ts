@@ -31,7 +31,7 @@ export default {
   settings: {
     title: 'Settings',
     general: {
-      title: 'General Settings',
+      title: 'General',
       description: 'General application settings',
       language: 'Select a UI language',
       transcript: 'Download session transcript',
