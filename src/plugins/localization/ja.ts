@@ -22,8 +22,10 @@ export default {
   },
   alerts: {
     no_speech: 'このブラウザはWeb Speech APIをサポートしていません（Speech-to-text）',
-    mic_error: 'マイクのアクセスに失敗しました。許可する必要があります。',
-    device_in_use: 'Error: デバイスが別のブラウザタブで使用中です',
+    speech_recognition_error_event: {
+      aborted: 'Error: デバイスが別のブラウザタブで使用中です',
+      not_allowed: 'マイクのアクセスに失敗しました。許可する必要があります。',
+    },
     broadcast_error: 'ブロードキャストに失敗しました. デスクトップアプリが起動していることを確認してください。',
     websocket_error: 'ウェブソケットのURLが無効です',
     version_mismatch: 'デスクトップ版とウェブアプリ版は別物です。壊れるかもしれないので、アップデートを検討してください。',

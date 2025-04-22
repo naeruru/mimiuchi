@@ -20,8 +20,10 @@ export default {
   },
   alerts: {
     no_speech: 'Tu navegador no es compatible con Web Speech API (Voz a Texto).',
-    mic_error: 'Error al habilitar el micrófono. Debes dar permiso para usarlo.',
-    device_in_use: 'Error: El micrófono está siendo usado por otra pestaña',
+    speech_recognition_error_event: {
+      aborted: 'Error: El micrófono está siendo usado por otra pestaña',
+      not_allowed: 'Error al habilitar el micrófono. Debes dar permiso para usarlo.',
+    },
     broadcast_error: 'Error al habilitar la transmisión. Asegúrese de que la aplicación de escritorio se esté ejecutando.',
     websocket_error: 'URL de websocket no válida.',
     version_mismatch: 'La aplicación de escritorio tiene una versión diferente a la versión web. Considere la posibilidad de actualizar, ya que la aplicación puede fallar.',

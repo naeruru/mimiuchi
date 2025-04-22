@@ -22,8 +22,10 @@ export default {
     },
     alerts: {
       no_speech: '您的浏览器不支持 Web Speech API（语音转文本）。',
-      mic_error: '启用麦克风时发生错误。您需要授予权限。',
-      device_in_use: '错误：设备被另一个标签页使用中。',
+      speech_recognition_error_event: {
+        aborted: '错误：设备被另一个标签页使用中。',
+        not_allowed: '启用麦克风时发生错误。您需要授予权限。',
+      },
       broadcast_error: '启用广播时发生错误。请确保桌面应用正在运行。',
       websocket_error: '无效的 WebSocket URL。',
       version_mismatch: '桌面应用的版本与网页版本不同。建议更新，否则可能会出问题。',

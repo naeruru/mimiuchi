@@ -22,8 +22,16 @@ export default {
   },
   alerts: {
     no_speech: 'Your browser does not support Web Speech API (Speech-to-text).',
-    mic_error: 'Error enabling microphone. You must give permission to use it.',
-    device_in_use: 'Error: device in use by another tab.',
+    speech_recognition_error_event: {
+      aborted: 'Error: Device in use.',
+      audio_capture: 'Error: Audio capture failed.',
+      network: 'Error: Network communication required for completing the recognition failed.',
+      not_allowed: 'Error: You must give permission to use the microphone.',
+      service_not_allowed: 'Error: The speech recognition service cannot be started due to settings or policies.',
+      bad_grammar: 'Error: There was a problem with the SpeechGrammarList.',
+      language_not_supported: 'Error: The speech recognition language is not supported by the browser.',
+      unknown: "Error: An unknown error occurred.",
+    },
     broadcast_error: 'Error enabling broadcast. Make sure the desktop app is running.',
     websocket_error: 'Invalid websocket URL',
     version_mismatch: 'The desktop app has a different version than the web version. Consider updating, as things might break.',
