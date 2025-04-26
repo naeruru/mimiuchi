@@ -21,13 +21,16 @@ class WebSpeech {
 
   talking: boolean = false
   listening: boolean = false
-  listening_error: boolean = false
 
   speechStore = useSpeechStore()
 
-  onresult: Function = () => {}
   onend: Function = () => {}
   onerror: Function = () => {}
+  onresult: Function = () => {}
+  onstart: Function = () => {}
+
+  last_error: string | undefined
+  try_restart_interval: ReturnType<typeof setTimeout> | undefined
 
   constructor(lang: string = 'en-US') {
     this.recognition = (this.SpeechRecognition) ? new this.SpeechRecognition() : null
@@ -104,6 +107,7 @@ class WebSpeech {
     }
     this.recognition.onend = () => this.onend()
     this.recognition.onerror = (event: any) => this.onerror(event)
+    this.recognition.onstart = () => this.onstart()
   }
 
   stop() {

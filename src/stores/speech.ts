@@ -56,47 +56,98 @@ export const useSpeechStore = defineStore('speech', () => {
     // recognition not supported
     if (!defaultStore.speech.recognition) {
       // listening = false
-      defaultStore.speech.listening_error = true
       defaultStore.show_snackbar('error', i18n.t('alerts.no_speech'))
       return
     }
 
     defaultStore.speech.listening = !defaultStore.speech.listening
-    if (defaultStore.speech.listening) {
-      defaultStore.speech.start()
-      defaultStore.speech.onresult = (transcript: string, isFinal: boolean) => {
-        const { logs } = useLogsStore()
-        const log = {
-          transcript,
-          isFinal,
-          isTranslationFinal: false,
-          translate: false,
-          hide: 0, // 1 = fade, 2 = hide
+
+    defaultStore.speech.onend = () => {
+      // restart if auto stopped
+      if (defaultStore.speech.listening) {
+        if (defaultStore.speech.last_error === 'network') {
+          defaultStore.speech.try_restart_interval = setTimeout(() => {
+            defaultStore.speech.start()
+          }, 2000)
+
+          return
         }
-        on_submit(log, logs.length - 1)
-      }
-      defaultStore.speech.onend = () => {
-        // restart if auto stopped
-        if (defaultStore.speech.listening)
-          defaultStore.speech.start()
-      }
-      defaultStore.speech.onerror = (event: any) => {
-        let desc = ''
-        if (event.error === 'no-speech')
-          return // web-speech: no sound detected
-        if (event.error === 'not-allowed')
-          desc = i18n.t('alerts.mic_error')
-        if (event.error === 'aborted')
-          desc = i18n.t('alerts.device_in_use')
-        defaultStore.speech.listening = false
-        defaultStore.speech.listening_error = true
-        defaultStore.show_snackbar('error', desc)
-        defaultStore.speech.stop()
+
+        defaultStore.speech.start()
       }
     }
-    else {
+
+    defaultStore.speech.onerror = (event: any) => {
+      let desc = ''
+
+      defaultStore.speech.last_error = event.error
+
+      switch (event.error) {
+        case 'no-speech': // No speech was detected
+          return
+        case 'aborted':
+          desc = i18n.t('alerts.speech_recognition_error_event.aborted')
+          defaultStore.speech.listening = false
+          defaultStore.speech.stop()
+          break
+        case 'audio-capture':
+          desc = i18n.t('alerts.speech_recognition_error_event.network')
+          defaultStore.speech.listening = false
+          defaultStore.speech.stop()
+          break
+        case 'network':
+          desc = i18n.t('alerts.speech_recognition_error_event.network')
+          defaultStore.speech.stop()
+          break
+        case 'not-allowed':
+          desc = i18n.t('alerts.speech_recognition_error_event.not_allowed')
+          defaultStore.speech.listening = false
+          defaultStore.speech.stop()
+          break
+        case 'service-not-allowed':
+          desc = i18n.t('alerts.speech_recognition_error_event.service_not_allowed')
+          defaultStore.speech.listening = false
+          defaultStore.speech.stop()
+          break
+        case 'bad-grammar':
+          desc = i18n.t('alerts.speech_recognition_error_event.bad_grammar')
+          defaultStore.speech.listening = false
+          defaultStore.speech.stop()
+          break
+        case 'language-not-supported':
+          desc = i18n.t('alerts.speech_recognition_error_event.language_not_supported')
+          break
+        default:
+          desc = i18n.t('alerts.speech_recognition_error_event.unknown')
+          break
+      }
+
+      defaultStore.show_snackbar('error', desc)
+    }
+
+    defaultStore.speech.onresult = (transcript: string, isFinal: boolean) => {
+      const { logs } = useLogsStore()
+      const log = {
+        transcript,
+        isFinal,
+        isTranslationFinal: false,
+        translate: false,
+        hide: 0, // 1 = fade, 2 = hide
+      }
+      on_submit(log, logs.length - 1)
+    }
+
+    defaultStore.speech.onstart = () => {
+      if (defaultStore.speech.last_error === 'network')
+      {
+        clearTimeout(defaultStore.speech.try_restart_interval)
+      }
+    }
+
+    if (defaultStore.speech.listening)
+      defaultStore.speech.start()
+    else
       defaultStore.speech.stop()
-    }
   }
 
   function submit_text(input_text: string, input_index: number, isFinal: boolean) {
