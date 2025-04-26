@@ -2,9 +2,9 @@ import { defineStore } from 'pinia'
 import { ref } from 'vue'
 
 interface Profile {
-  [name: string]: Param[]
+  [name: string]: Trigger[]
 }
-interface Param {
+interface Trigger {
   ip: string
   port: string
   route: string

@@ -48,8 +48,27 @@
           </v-card>
         </v-col>
       </v-row>
-      <v-row class="mt-12">
+      <v-row v-if="is_electron()">
+        <v-col :cols="12" :md="12" class="pb-0">
+          <v-card>
+            <v-list-item>
+              <v-list-item-title>
+                {{ $t('settings.general.auto_open_web_app') }}
+              </v-list-item-title>
+              <template #append>
+                <v-switch
+                  v-model="auto_open_web_app_on_launch"
+                  color="primary"
+                  hide-details
+                  inset
+                  @change="set_auto_open_web_app_on_launch()"
+                />
+              </template>
+            </v-list-item>
+          </v-card>
+        </v-col>
       </v-row>
+      <v-row class="mt-12" />
       <v-row>
         <v-col :cols="12" class="pb-0">
           <v-card>
@@ -122,9 +141,10 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
+import is_electron from '@/helpers/is_electron'
 
 import { useAppearanceStore } from '@/stores/appearance'
 import { useWordReplaceStore } from '@/stores/word_replace'
@@ -160,6 +180,21 @@ const translationStore = useTranslationStore()
 const oscStore = useOSCStore()
 
 const router = useRouter()
+const auto_open_web_app_on_launch = ref(false) // Stores the display value for UI. The source of truth is in the Electron store
+
+onMounted(() => {
+  if (is_electron())
+    sync_auto_open_web_app_on_launch()
+})
+
+async function sync_auto_open_web_app_on_launch() {
+  const value = await window.ipcRenderer.invoke('get-auto-open-web-app-on-launch')
+  auto_open_web_app_on_launch.value = value
+}
+
+function set_auto_open_web_app_on_launch() {
+  window.ipcRenderer.send('set-auto-open-web-app-on-launch', auto_open_web_app_on_launch.value)
+}
 
 function reset_settings() {
   if (appearance.value)

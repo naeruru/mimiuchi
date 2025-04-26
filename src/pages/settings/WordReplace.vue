@@ -68,7 +68,16 @@
         </v-row>
       </div>
       <p v-else class="mt-6">
-        {{ $t('settings.word_replace.info') }}
+        <i18n-t keypath="settings.word_replace.info" tag="label" scope="global">
+          <template #icon>
+            <v-icon
+              color="primary"
+              size="small"
+            >
+              mdi-plus-circle-outline
+            </v-icon>
+          </template>
+        </i18n-t>
       </p>
       <v-card class="mt-4" color="transparent" flat>
         <v-card-actions>

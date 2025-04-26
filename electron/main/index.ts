@@ -116,7 +116,13 @@ async function createWindow() {
 // const transformersPath = `file://${path.join(process.env.APP_ROOT, 'node_modules', '@xenova', 'transformers', 'src', 'transformers.js').replace('app.asar', 'app.asar.unpacked')}`
 // transformersWorker.postMessage({ type: 'transformers-init', data: transformersPath })
 
-app.whenReady().then(createWindow)
+app.whenReady().then(() => {
+  if (store.get('auto-open-web-app-on-launch')) {
+    shell.openExternal('https://mimiuchi.com/')
+  }
+
+  createWindow()
+})
 
 app.on('window-all-closed', () => {
   win = null
@@ -188,8 +194,8 @@ ipcMain.on('send-text-event', (event, args) => {
     empty_queue(text_queue, args.hide_ui, args.sfx)
 })
 
-// event for sending custom osc param
-ipcMain.on('send-param-event', (event, args) => {
+// event for sending osc messages
+ipcMain.on('send-osc-message', (event, args) => {
   emit_osc([args.route, args.value], args.ip, args.port)
 })
 
@@ -213,6 +219,15 @@ ipcMain.on('close-ws', () => {
 ipcMain.on('update-check', async () => {
   const latest = await check_update()
   win.webContents.send('update-check', latest)
+})
+
+// Setting: Open web app on app launch
+ipcMain.handle('get-auto-open-web-app-on-launch', () => {
+  return store.get('auto-open-web-app-on-launch', false)
+})
+
+ipcMain.on('set-auto-open-web-app-on-launch', (event, newValue) => {
+  store.set('auto-open-web-app-on-launch', newValue)
 })
 
 // Translations

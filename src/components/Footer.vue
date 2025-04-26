@@ -23,8 +23,7 @@
         @submit.prevent="onSubmit()"
       >
         <div class="d-flex w-100">
-
-          <v-textarea 
+          <v-textarea
             v-if="$route.name === 'home' && appearanceStore.footer_size"
             v-model="input_text"
             variant="outlined"
@@ -227,19 +226,18 @@ function typing_event(event: boolean) {
   speechStore.typing_event(event)
 }
 
-function paramTrigger(input: string) {
+function match_osc_trigger(input: string) {
   // console.log(window.process.type)
   if (defaultStore.broadcasting && is_electron()) {
-    // if custom params
     // potential addition:
     // use https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/search
     // to see which assign is the closest to the keyword found
     // unless switch to nlp first.....
     if (oscStore.osc_profiles[oscStore.current_profile].length) {
-      oscStore.osc_profiles[oscStore.current_profile].forEach((custom_param) => {
+      oscStore.osc_profiles[oscStore.current_profile].forEach((trigger) => {
         let matchesKey: RegExpExecArray | null = null
 
-        custom_param.keywords.forEach((keyword) => {
+        trigger.keywords.forEach((keyword) => {
           if (matchesKey)
             return
 
@@ -249,12 +247,12 @@ function paramTrigger(input: string) {
         })
 
         if (matchesKey) {
-          custom_param.assigns.forEach((assign) => {
+          trigger.assigns.forEach((assign) => {
             const assign_check = `(^|\\s)(${assign.keyword})($|[^a-zA-Z\\d])`
             const reAssign = new RegExp(assign_check, 'gi')
             const matchesAssign = reAssign.exec(input)
             if (matchesAssign) {
-              show_snackbar('secondary', `<code>${custom_param.route} = ${assign.set1}</code>`)
+              show_snackbar('secondary', `<code>${trigger.route} = ${assign.set1}</code>`)
 
               let newValue: number | boolean | null = null
 
@@ -275,17 +273,17 @@ function paramTrigger(input: string) {
                   break
               }
 
-              window.ipcRenderer.send('send-param-event', {
-                ip: custom_param.ip,
-                port: custom_param.port,
-                route: custom_param.route,
+              window.ipcRenderer.send('send-osc-message', {
+                ip: trigger.ip,
+                port: trigger.port,
+                route: trigger.route,
                 value: newValue,
               })
 
               if (assign.activation === 'pulse') {
                 // The value should reset after some time.
                 setTimeout(() => {
-                  show_snackbar('secondary', `<code>${custom_param.route} = ${assign.set2}</code>`)
+                  show_snackbar('secondary', `<code>${trigger.route} = ${assign.set2}</code>`)
 
                   switch (assign.type) {
                     case 'int':
@@ -304,10 +302,10 @@ function paramTrigger(input: string) {
                       break
                   }
 
-                  window.ipcRenderer.send('send-param-event', {
-                    ip: custom_param.ip,
-                    port: custom_param.port,
-                    route: custom_param.route,
+                  window.ipcRenderer.send('send-osc-message', {
+                    ip: trigger.ip,
+                    port: trigger.port,
+                    route: trigger.route,
                     value: newValue,
                   })
                 }, assign.pulse_duration)
@@ -333,8 +331,10 @@ async function onSubmit(log: Log | null = null) {
       hide: 0, // 1 = fade, 2 = hide
     }
   }
+
   if (log && log.isFinal)
-    paramTrigger(log.transcript)
+    match_osc_trigger(log.transcript)
+
   speechStore.on_submit(log, input_index.value ?? Math.max(logsStore.logs.length - 1, 0))
 
   // clear chatbox
