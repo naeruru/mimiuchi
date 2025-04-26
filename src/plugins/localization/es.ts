@@ -57,8 +57,9 @@ export default {
       pinned_languages: 'Lenguajes fijados',
       language: 'Selecciones un lenguaje de escucha',
       unsupported: {
-        text: 'Web Speech API (Voz a Texto) solo está disponible en {0}. (^・ω・^)',
+        text: 'Web Speech API (Voz a Texto) solo está disponible en {link}. {kaomoji}',
         link: 'la página web',
+        kaomoji: '(^・ω・^)',
       },
     },
     tts: {
@@ -70,8 +71,9 @@ export default {
       pitch: 'Pitch',
       language: 'Seleccione una voz de Texto a Voz',
       unsupported: {
-        text: 'Voz a Texto solo está disponible en {0}. (^・ω・^)',
+        text: 'Texto a Voz solo está disponible en {link}. {kaomoji}',
         link: 'la página web',
+        kaomoji: '(^・ω・^)',
       },
     },
     appearance: {
@@ -134,7 +136,7 @@ export default {
       enabled: 'Permitir reemplazar palabras o frases',
       match_whole_word: 'Sólo palabras completas',
       match_case: 'Coincidir mayúsculas/minúsculas',
-      info: 'Utilice el botón + para agregar un nuevo reemplazo.',
+      info: 'Utilice el botón {icon} para agregar un nuevo reemplazo.',
       replacing: 'Reemplazando ',
       replacement: 'Reemplazo',
     },
@@ -150,8 +152,9 @@ export default {
       ml_notice: '{0} es una biblioteca basada en ML que utiliza recursos locales (CPU) para generar traducciones en su dispositivo. En dispositivos de gama baja, es posible que no funcione bien.',
       speech_lang: 'Tu lenguaje para Voz a Texto es ',
       unsupported: {
-        text: 'Traducciones solo está disponible en {0}. (^・ω・^)',
+        text: 'Traducciones solo está disponible en {link}. {kaomoji}',
         link: 'Aplicación de Escritorio',
+        kaomoji: '(^・ω・^)',
       },
     },
     connections: {
@@ -175,17 +178,24 @@ export default {
         osc_ip: 'IP OSC predeterminada',
         osc_port: 'Puerto OSC predeterminado',
         enabled: 'Enviar todo el texto con OSC (al transmitir)',
-        typing_indicator: 'Habilitar el indicador de escritura al escribir',
-        speech_indicator: 'Habilitar indicador de escritura para Voz a Texto',
+        enabled_subtitle: '',
         show_keyboard: 'Abrir teclado en VRChat al enviar texto',
+        show_keyboard_subtitle: '',
         sfx: 'Reproduce un efecto de sonido después de enviar un texto.',
+        sfx_subtitle: '',
+        typing_indicator_speech: 'Habilitar indicador de escritura para Voz a Texto',
+        typing_indicator_speech_subtitle: '',
+        typing_indicator_keyboard: 'Habilitar el indicador de escritura al escribir',
+        typing_indicator_keyboard_subtitle: '',
+        typing_indicator_icon: '',
         unsupported: {
-          text: 'Para utilizar OSC, debe utilizar el {link}.Una vez instaladas, las versiones de sitio web y de escritorio se pueden utilizar junto con el {icon} botón. (  ᐡᴗ  ̫ ᴗᐡ)',
+          text: 'Para utilizar OSC, debe utilizar el {link}. Una vez instaladas, las versiones de sitio web y de escritorio se pueden utilizar junto con el {icon} botón. {kaomoji}',
           link: 'Aplicación de Escritorio',
           icon: 'mdi-broadcast',
+          kaomoji: '(  ᐡᴗ  ̫ ᴗᐡ)',
         },
       },
-      params: {
+      triggers: {
         title: 'Parámetros personalizados',
       },
     },

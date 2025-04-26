@@ -6,7 +6,7 @@ interface WordReplacements {
 }
 
 export const useWordReplaceStore = defineStore('wordreplace', () => {
-  const enabled = ref(true)
+  const enabled = ref(false)
   const match_whole_word = ref(true)
   const match_case = ref(false)
 
@@ -27,15 +27,12 @@ export const useWordReplaceStore = defineStore('wordreplace', () => {
       return input
 
     let joined_keys: string[] = []
-    let input_interpretation: string
 
     // Interpret depending on the "Match case" option
     if (!match_case.value) {
-      input_interpretation = input.toLowerCase()
       joined_keys = Object.keys(word_replacements_lowercase.value)
     }
     else {
-      input_interpretation = input
       joined_keys = Object.keys(word_replacements.value)
     }
 

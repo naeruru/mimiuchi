@@ -15,7 +15,7 @@
         </v-col>
       </v-row>
 
-      <v-row v-if="speechStore.stt.type.value === 'webspeech' && !is_electron()">
+      <v-row v-if="speechStore.stt.type.value === 'webspeech'">
         <v-col :cols="12">
           <v-slider
             v-model="speechStore.stt.sensitivity"
@@ -124,20 +124,6 @@
         </v-col>
         <v-divider />
       </v-row>
-      <v-card-text v-else>
-        <v-alert variant="outlined" type="warning" prominent>
-          <v-alert-title>
-            <i18n-t keypath="settings.stt.unsupported.text" tag="label" for="link" scope="global">
-              <a
-                class="text-primary pointer"
-                @click="openURL('https://mimiuchi.com/')"
-              >
-                {{ $t('settings.stt.unsupported.link') }}
-              </a>
-            </i18n-t>
-          </v-alert-title>
-        </v-alert>
-      </v-card-text>
     </v-card-text>
   </v-card>
 </template>

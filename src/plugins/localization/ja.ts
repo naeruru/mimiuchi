@@ -36,6 +36,7 @@ export default {
       language: 'UIの言語を選択',
       transcript: 'セッショントランスクリプトをダウンロードする',
       realtime_text: 'テキストボックスのテキストは継続的に送信する',
+      auto_open_web_app: 'アプリ起動時にウェブアプリを開く',
       reset: {
         button: 'アプリの設定をリセットする',
         dialog: {
@@ -60,8 +61,9 @@ export default {
       pinned_languages: 'ピン留めされた言語',
       language: 'Speech-to-textの言語を選択',
       unsupported: {
-        text: 'Web Speech APIのSpeech-to-Textは{0}で利用できます。(^・ω・^)',
+        text: 'Web Speech APIのSpeech-to-Textは{link}で利用できます。{kaomoji}',
         link: 'ウェブサイト版',
+        kaomoji: '(^・ω・^)',
       },
     },
     tts: {
@@ -73,8 +75,9 @@ export default {
       pitch: 'ピッチ',
       language: 'Text-to-speechの音声を選択',
       unsupported: {
-        text: 'Text-to-Speechは{0}で利用できます。 (^・ω・^)',
+        text: 'Text-to-Speechは{link}で利用できます。{kaomoji}',
         link: 'ウェブサイト版',
+        kaomoji: '(^・ω・^)',
       },
     },
     appearance: {
@@ -87,13 +90,13 @@ export default {
         options: [
           {
             title: '小さい',
-            value: 0
+            value: 0,
           },
           {
             title: '大きい',
-            value: 1
-          }
-        ]
+            value: 1,
+          },
+        ],
       },
       text: {
         title: '文字設定',
@@ -103,7 +106,7 @@ export default {
         outline: {
           enabled: 'テキスト輪郭',
           size: 'テキスト輪郭の大きさ',
-          color: 'テキスト輪郭色'
+          color: 'テキスト輪郭色',
         },
         fade: 'フェード',
         fade_after: '〇〇秒後にフェード',
@@ -156,7 +159,7 @@ export default {
       enabled: 'テキストリプレース',
       match_whole_word: '単語単位',
       match_case: '大文字/小文字を区別',
-      info: '新しい置き換えを追加する場合は「＋」バタンを使用してください',
+      info: '新しい置き換えを追加する場合は{icon}バタンを使用してください',
       replacing: 'リプレース',
       replacement: 'リプレースメント',
     },
@@ -172,8 +175,9 @@ export default {
       ml_notice: '{0}はCPUを使用して、デバイス上で翻訳を生成する機械学習を搭載したライブラリです。ローエンドのコンピュータでは、うまく動作しない場合があります。',
       speech_lang: 'Speech-to-text言語は',
       unsupported: {
-        text: '翻訳サービスは{0}で利用できます。 (^・ω・^)',
+        text: '翻訳サービスは{link}で利用できます。{kaomoji}',
         link: 'デスクトップアプリ版',
+        kaomoji: '(^・ω・^)',
       },
     },
     connections: {
@@ -191,25 +195,33 @@ export default {
     },
     osc: {
       title: 'VRChat',
+      title_tooltip: 'ブロードキャストを有効にする必要があります。',
       general: {
         title: 'OSC設定',
         description: 'OSC接続の設定',
         osc_ip: 'OSC IP',
         osc_port: 'OSC Port',
         enabled: 'OSCで全文送信（ブロードキャスト中）',
-        typing_indicator: 'タイピング時にタイピングインジケーターを有効',
-        speech_indicator: 'Speech-to-text時のタイピングインジケーターを有効',
+        enabled_subtitle: '',
         show_keyboard: 'テキスト送信時にVRChatでキーボードを開く',
+        show_keyboard_subtitle: '',
         sfx: 'テキスト送信後に効果音を再生',
+        sfx_subtitle: '',
+        typing_indicator_speech: 'Speech-to-text時のタイピングインジケーターを有効',
+        typing_indicator_speech_subtitle: '',
+        typing_indicator_keyboard: 'タイピング時にタイピングインジケーターを有効',
+        typing_indicator_keyboard_subtitle: '',
+        typing_indicator_icon: '',
         unsupported: {
-          text: 'OSCの設定は{link}で利用できます。インストールすれば、{icon}ボタンでウェブサイト版とデスクトップ版を一緒に使うことができます（Speech-to-text▶︎OSC）(  ᐡᴗ  ̫ ᴗᐡ)',
+          text: 'OSCの設定は{link}で利用できます。インストールすれば、{icon}ボタンでウェブサイト版とデスクトップ版を一緒に使うことができます（Speech-to-text▶︎OSC）。{kaomoji}',
           link: 'デスクトップアプリ版',
           icon: 'mdi-broadcast',
+          kaomoji: '(  ᐡᴗ  ̫ ᴗᐡ)',
         },
       },
-      params: {
-        title: 'パラメータトリガー',
-        description: 'カスタムパラメータトリガーを追加',
+      triggers: {
+        title: 'トリガー',
+        description: 'トリガーフレーズを入力したり話したりしてOSCメッセージを送信する',
         button: {
           cancel: 'キャンセル',
           confirm: 'OK',
@@ -230,16 +242,16 @@ export default {
             text: 'このプロファイルを削除してもよろしいですか？',
           },
         },
-        param: {
+        trigger: {
           button: {
             edit: '編集',
             delete: '削除',
           },
           dialog_title: {
-            add: 'パラメータトリガーを追加',
-            edit: 'パラメータトリガーを編集',
+            add: 'トリガーを追加',
+            edit: 'トリガーを編集',
           },
-          address: 'パラメータアドレス',
+          address: 'アドレス',
           empty: '無し (；ω；)',
           trigger_phrases: 'トリガーフレーズ：',
           trigger_phrases_add: 'トリガーフレーズを追加',
@@ -256,11 +268,11 @@ export default {
             },
           },
           delete_dialog: {
-            title: 'パラメータを削除',
-            text: 'このパラメータを削除してもよろしいですか？',
+            title: 'トリガーを削除',
+            text: 'このトリガーを削除してもよろしいですか？',
           },
         },
-        empty: 'カスタムパラメータトリガーを追加するには＋ボタンを使用してください！',
+        empty: 'トリガーを追加するには{icon}ボタンを使用してください！',
       },
     },
   },

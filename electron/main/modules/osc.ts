@@ -3,7 +3,7 @@ import { Bundle, Client } from 'node-osc'
 /* emit_osc()
  *  emits an osc value to specified ip:port
  *
- * value (array): osc bundle containing parameter route and arguments
+ * value (array): osc bundle containing route and arguments
  * ip (string): ip to send bundle to
  * port (number): port to send bundle to
 */

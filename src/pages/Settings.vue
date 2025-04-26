@@ -5,13 +5,32 @@
       <v-list-item
         v-for="(setting) in settings_general"
         :key="setting.value"
-        :prepend-icon="setting.icon"
-        :title="setting.title"
         :value="setting.value"
         :active="setting.value === $route.name"
         color="primary"
-        @click="$router.push({ path: `/settings/${setting.value}` })"
-      />
+        @click="setting.unavailable_condition ? null : $router.push({ path: `/settings/${setting.value}` })"
+      >
+        <template #prepend>
+          <v-icon :class="{ 'missing-feature': setting.unavailable_condition }">
+            {{ setting.icon }}
+          </v-icon>
+        </template>
+        <v-list-item-title :class="{ 'missing-feature': setting.unavailable_condition }">
+          {{ setting.title }}
+        </v-list-item-title>
+        <v-tooltip
+          v-if="setting.unavailable_condition && setting.unavailable_tooltip"
+          activator="parent"
+          open-on-click
+          class="feature-tooltip"
+          :close-delay="tooltip_close_delay"
+          :max-width="tooltip_max_width"
+          :offset="tooltip_offset"
+          :scroll-strategy="tooltip_scroll_strategy"
+        >
+          <component :is="setting.unavailable_tooltip" />
+        </v-tooltip>
+      </v-list-item>
 
       <v-divider />
       <v-list-subheader>{{ $t('settings.connections.title') }}</v-list-subheader>
@@ -27,17 +46,51 @@
       />
 
       <v-divider />
-      <v-list-subheader>{{ $t('settings.osc.title') }}</v-list-subheader>
+      <v-list-subheader>
+        {{ $t('settings.osc.title') }}
+        <v-tooltip
+          open-on-click
+          class="feature-tooltip"
+          :text="$t('settings.osc.title_tooltip')">
+          <template v-slot:activator="{ props }">
+            <v-icon
+              v-bind="props"
+              icon="mdi-broadcast"
+              color="success"
+              size="15"
+            />
+          </template>
+        </v-tooltip>
+      </v-list-subheader>
       <v-list-item
         v-for="(setting) in settings_osc"
         :key="setting.value"
-        :prepend-icon="setting.icon"
-        :title="setting.title"
         :value="setting.value"
         :active="setting.value === $route.name"
         color="primary"
-        @click="$router.push({ path: `/settings/${setting.value}` })"
-      />
+        @click="setting.unavailable_condition ? null : $router.push({ path: `/settings/${setting.value}` })"
+      >
+        <template #prepend>
+          <v-icon :class="{ 'missing-feature': setting.unavailable_condition }">
+            {{ setting.icon }}
+          </v-icon>
+        </template>
+        <v-list-item-title :class="{ 'missing-feature': setting.unavailable_condition }">
+          {{ setting.title }}
+        </v-list-item-title>
+        <v-tooltip
+          v-if="setting.unavailable_condition && setting.unavailable_tooltip"
+          activator="parent"
+          open-on-click
+          class="feature-tooltip"
+          :close-delay="tooltip_close_delay"
+          :max-width="tooltip_max_width"
+          :offset="tooltip_offset"
+          :scroll-strategy="tooltip_scroll_strategy"
+        >
+          <component :is="setting.unavailable_tooltip" />
+        </v-tooltip>
+      </v-list-item>
       <v-divider />
     </v-list>
 
@@ -84,6 +137,10 @@ import { useI18n } from 'vue-i18n'
 import is_electron from '@/helpers/is_electron'
 import { useSettingsStore } from '@/stores/settings'
 
+import OSCUnavailable from '@/pages/tooltips/OSCUnavailable.vue'
+import STTUnavailable from '@/pages/tooltips/STTUnavailable.vue'
+import TranslationUnavailable from '@/pages/tooltips/TranslationUnavailable.vue'
+
 declare const window: any
 
 const settingsStore = useSettingsStore()
@@ -96,6 +153,7 @@ const APP_VERSION = ref(__APP_VERSION__)
 const update_available = ref(false)
 
 const outer_size = computed(() => is_electron() ? '140px' : '105px')
+
 const settings_general = computed(() => {
   return [
     {
@@ -112,6 +170,8 @@ const settings_general = computed(() => {
       title: t('settings.stt.title'),
       value: 'stt',
       icon: 'mdi-microphone-outline',
+      unavailable_condition: is_electron(),
+      unavailable_tooltip: STTUnavailable,
     },
     {
       title: t('settings.tts.title'),
@@ -127,6 +187,8 @@ const settings_general = computed(() => {
       title: t('settings.translation.title'),
       value: 'translation',
       icon: 'mdi-translate',
+      unavailable_condition: !is_electron(),
+      unavailable_tooltip: TranslationUnavailable,
     },
   ]
 })
@@ -147,17 +209,25 @@ const settings_osc = computed(() => {
       title: t('settings.osc.general.title'),
       value: 'osc',
       icon: 'mdi-transit-connection-variant',
+      unavailable_condition: !is_electron(),
+      unavailable_tooltip: OSCUnavailable,
     },
     {
-      title: t('settings.osc.params.title'),
-      value: 'oscparams',
+      title: t('settings.osc.triggers.title'),
+      value: 'osctriggers',
       icon: 'mdi-format-list-bulleted-square',
+      unavailable_condition: !is_electron(),
+      unavailable_tooltip: OSCUnavailable,
     },
   ]
-  if (is_electron())
-    return settings_osc
-  else return settings_osc.slice(0, 1)
+
+  return settings_osc
 })
+
+const tooltip_close_delay = 200 // ms
+const tooltip_max_width = '256px'
+const tooltip_offset = 20
+const tooltip_scroll_strategy = 'close'
 
 onMounted(() => {
   if (is_electron()) {
@@ -188,6 +258,10 @@ function handleKeyDown(event: KeyboardEvent) {
 </script>
 
 <style>
+.v-navigation-drawer {
+  user-select: none;
+}
+
 .settings {
   overflow-y: auto;
   max-height: calc(100svh - v-bind(outer_size));
@@ -209,5 +283,18 @@ function handleKeyDown(event: KeyboardEvent) {
 .slide-up-leave-to {
   opacity: 0;
   transform: translateY(-20px);
+}
+
+.feature-tooltip > .v-overlay__content {
+  background: rgb(var(--v-theme-surface));
+  color: rgb(var(--v-theme-on-surface));
+  outline-style: solid;
+  outline-color: rgb(var(--v-theme-on-surface-variant));
+  outline-width: 1px;
+  pointer-events: auto; /* The tooltip will persist on pointer hover */
+}
+
+.missing-feature {
+  opacity: var(--v-disabled-opacity) !important;
 }
 </style>

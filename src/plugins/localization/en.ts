@@ -31,11 +31,12 @@ export default {
   settings: {
     title: 'Settings',
     general: {
-      title: 'General Settings',
+      title: 'General',
       description: 'General application settings',
       language: 'Select a UI language',
       transcript: 'Download session transcript',
       realtime_text: 'Instant textbox updates',
+      auto_open_web_app: 'Open web app on launch',
       reset: {
         button: 'Reset all settings',
         dialog: {
@@ -60,8 +61,9 @@ export default {
       pinned_languages: 'Pinned languages',
       language: 'Select a speech detection language',
       unsupported: {
-        text: 'Web Speech API Speech-to-Text is only available on the {0}. (^・ω・^)',
+        text: 'Web Speech API Speech-to-Text is only available on the {link}. {kaomoji}',
         link: 'website version',
+        kaomoji: '(^・ω・^)',
       },
     },
     tts: {
@@ -73,8 +75,9 @@ export default {
       pitch: 'Pitch',
       language: 'Select a text-to-speech voice',
       unsupported: {
-        text: 'Speech-to-Text is only available on the {0}. (^・ω・^)',
+        text: 'Text-to-Speech is only available on the {link}. {kaomoji}',
         link: 'website version',
+        kaomoji: '(^・ω・^)',
       },
     },
     appearance: {
@@ -87,13 +90,13 @@ export default {
         options: [
           {
             title: 'Small',
-            value: 0
+            value: 0,
           },
           {
             title: 'Large',
-            value: 1
-          }
-        ]
+            value: 1,
+          },
+        ],
       },
       text: {
         title: 'Text Settings',
@@ -103,7 +106,7 @@ export default {
         outline: {
           enabled: 'Text outline',
           size: 'Text outline size',
-          color: 'Text outline color'
+          color: 'Text outline color',
         },
         fade: 'Fade text',
         fade_after: 'Fade text after',
@@ -156,7 +159,7 @@ export default {
       enabled: 'Enable replacing words or phrases',
       match_whole_word: 'Match whole word only',
       match_case: 'Match case',
-      info: 'Use the + button to add a new replacement!',
+      info: 'Use the {icon} button to add a new replacement!',
       replacing: 'Replacing',
       replacement: 'Replacement',
     },
@@ -172,8 +175,9 @@ export default {
       ml_notice: '{0} is an ML-powered library that uses local compute resources (CPU) to generate translations on your device. On lower end computers, it might not run well.',
       speech_lang: 'Your Speech-to-text language is ',
       unsupported: {
-        text: 'Translations are currently only available on the {0}. (^・ω・^)',
+        text: 'Translations are currently only available on the {link}. {kaomoji}',
         link: 'desktop version',
+        kaomoji: '(^・ω・^)',
       },
     },
     connections: {
@@ -191,25 +195,33 @@ export default {
     },
     osc: {
       title: 'VRChat',
+      title_tooltip: 'Broadcasting is required.',
       general: {
         title: 'General',
         description: 'Settings for customizing OSC connection',
         osc_ip: 'OSC IP',
         osc_port: 'OSC Port',
-        enabled: 'Send all text with OSC (when broadcasting)',
-        typing_indicator: 'Enable typing indicator when typing',
-        speech_indicator: 'Enable typing indicator for speech-to-text',
-        show_keyboard: 'Open keyboard in VRChat when sending text',
-        sfx: 'Play a sound effect after sending text',
+        enabled: 'Send text to the VRChat chatbox',
+        enabled_subtitle: 'Send text to the VRChat chatbox via OSC.',
+        show_keyboard: 'Send text to the VRChat keyboard',
+        show_keyboard_subtitle: 'Open the VRChat keyboard for chatbox input and populate it with text.',
+        sfx: 'VRChat Notification SFX',
+        sfx_subtitle: 'Trigger the VRChat notification sound effect for other players when sending text.',
+        typing_indicator_speech: 'Typing indicator for speech-to-text',
+        typing_indicator_speech_subtitle: 'Show the VRChat typing indicator {typing_indicator_icon} for other players when using speech-to-text.',
+        typing_indicator_keyboard: 'Typing indicator for VRChat keyboard',
+        typing_indicator_keyboard_subtitle: 'Show the VRChat typing indicator {typing_indicator_icon} for other players when using the VRChat keyboard.',
+        typing_indicator_icon: 'mdi-message-processing',
         unsupported: {
-          text: 'To use OSC, you must use the {link}. Once installed, the website and desktop versions can be used together with the {icon} button. (  ᐡᴗ  ̫ ᴗᐡ)',
+          text: 'To use OSC, you must use the {link}. Once installed, the website and desktop versions can be used together with the {icon} button. {kaomoji}',
           link: 'desktop app',
           icon: 'mdi-broadcast',
+          kaomoji: '(  ᐡᴗ  ̫ ᴗᐡ)',
         },
       },
-      params: {
-        title: 'Parameter Triggers',
-        description: 'Add parameter triggers',
+      triggers: {
+        title: 'Triggers',
+        description: 'Send OSC messages when sending/speaking trigger phrases',
         button: {
           cancel: 'CANCEL',
           confirm: 'CONFIRM',
@@ -230,16 +242,16 @@ export default {
             text: 'Are you sure that you want to delete this profile?',
           },
         },
-        param: {
+        trigger: {
           button: {
             edit: 'EDIT',
             delete: 'DELETE',
           },
           dialog_title: {
-            add: 'Add parameter trigger',
-            edit: 'Edit parameter trigger',
+            add: 'Add trigger',
+            edit: 'Edit trigger',
           },
-          address: 'Parameter address',
+          address: 'Address',
           empty: 'none :c',
           trigger_phrases: 'Trigger phrases:',
           trigger_phrases_add: 'Add trigger word/phrase',
@@ -256,11 +268,11 @@ export default {
             },
           },
           delete_dialog: {
-            title: 'Delete parameter',
-            text: 'Are you sure that you want to delete this parameter?',
+            title: 'Delete trigger',
+            text: 'Are you sure that you want to delete this trigger?',
           },
         },
-        empty: 'Use the + button to add a new custom parameter trigger!',
+        empty: 'Use the {icon} button to add a new trigger!',
       },
     },
   },
