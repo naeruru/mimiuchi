@@ -53,7 +53,7 @@
           class="feature-tooltip"
           :text="t('settings.osc.title_tooltip')"
         >
-          <template v-slot:activator="{ props }">
+          <template #activator="{ props }">
             <v-icon
               v-bind="props"
               icon="mdi-broadcast"

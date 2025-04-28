@@ -90,8 +90,8 @@
 
 <script setup lang="ts">
 import { onMounted, onUnmounted, ref } from 'vue'
-import { useWordReplaceStore } from '@/stores/word_replace'
 import { useI18n } from 'vue-i18n'
+import { useWordReplaceStore } from '@/stores/word_replace'
 
 const { t } = useI18n()
 const wordReplaceStore = useWordReplaceStore()

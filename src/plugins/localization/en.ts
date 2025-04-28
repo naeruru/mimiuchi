@@ -30,7 +30,7 @@ export default {
       service_not_allowed: 'Error: The speech recognition service cannot be started due to settings or policies.',
       bad_grammar: 'Error: There was a problem with the SpeechGrammarList.',
       language_not_supported: 'Error: The speech recognition language is not supported by the browser.',
-      unknown: "Error: An unknown error occurred.",
+      unknown: 'Error: An unknown error occurred.',
     },
     broadcast_error: 'Error enabling broadcast. Make sure the desktop app is running.',
     websocket_error: 'Invalid websocket URL',

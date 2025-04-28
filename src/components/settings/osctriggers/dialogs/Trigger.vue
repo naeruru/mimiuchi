@@ -211,8 +211,13 @@
 
 <script setup lang="ts">
 import { ref, watch } from 'vue'
-import { useOSCStore } from '@/stores/osc'
 import { useI18n } from 'vue-i18n'
+import { useOSCStore } from '@/stores/osc'
+
+const props = defineProps<{ mode: string, editingIndex: number }>()
+
+const emit = defineEmits(['update:modelValue'])
+
 const { t } = useI18n()
 
 interface Keyword {
@@ -229,8 +234,6 @@ interface Assign {
   pulse_duration: number
 }
 
-const props = defineProps<{ mode: string, editingIndex: number }>()
-const emit = defineEmits(['update:modelValue'])
 const model = defineModel<boolean>()
 
 const oscStore = useOSCStore()
