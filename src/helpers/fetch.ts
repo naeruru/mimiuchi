@@ -1,4 +1,4 @@
-export async function post(url: string, body: any) {
+async function post(url: string, body: any) {
   return new Promise((resolve, reject) => {
     fetch(url, {
       method: 'POST',

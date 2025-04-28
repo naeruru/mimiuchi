@@ -1,4 +1,4 @@
-export async function post(url: string, body: any) {
+async function post(url: string, body: any) {
   return fetch(url, {
     method: 'POST',
     mode: 'no-cors',
