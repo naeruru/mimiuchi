@@ -13,15 +13,15 @@
         {{ APP_NAME }}
       </v-app-bar-title>
       <v-btn
-        icon :color="$route.name === 'home' ? 'secondary' : 'white'"
-        @click="$router.push({ path: '/' })"
+        icon :color="route.name === 'home' ? 'secondary' : 'white'"
+        @click="router.push({ path: '/' })"
       >
         <v-icon>mdi-home</v-icon>
       </v-btn>
       <v-btn
         icon
-        :color="$route.fullPath.startsWith('/settings') ? 'secondary' : 'white'"
-        @click="$router.push({ path: '/settings/general' })"
+        :color="route.fullPath.startsWith('/settings') ? 'secondary' : 'white'"
+        @click="router.push({ path: '/settings/general' })"
       >
         <v-icon>mdi-cog</v-icon>
       </v-btn>
@@ -37,8 +37,11 @@
 </template>
 
 <script setup lang='ts'>
+import { useRoute, useRouter } from 'vue-router'
 import { useSettingsStore } from '@/stores/settings'
 
+const router = useRouter()
+const route = useRoute()
 const settingsStore = useSettingsStore()
 
 const APP_NAME = __APP_NAME__

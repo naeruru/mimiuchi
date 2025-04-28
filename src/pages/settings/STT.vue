@@ -1,12 +1,12 @@
 <template>
-  <v-card :title="$t('settings.stt.title')" :subtitle="$t('settings.stt.description')" color="transparent" flat>
+  <v-card :title="t('settings.stt.title')" :subtitle="t('settings.stt.description')" color="transparent" flat>
     <v-divider />
     <v-card-text>
       <v-row>
         <v-col :cols="12">
           <v-select
             v-model="speechStore.stt.type"
-            :label="$t('settings.stt.type')"
+            :label="t('settings.stt.type')"
             :items="stt_options"
             item-title="title"
             item-value="value"
@@ -19,7 +19,7 @@
         <v-col :cols="12">
           <v-slider
             v-model="speechStore.stt.sensitivity"
-            :label="$t('settings.stt.sensitivity')"
+            :label="t('settings.stt.sensitivity')"
             max="1"
             color="orange"
             track-color="green"
@@ -46,13 +46,13 @@
                   :loading="loading_media"
                   @click="test_sensitivity()"
                 >
-                  {{ stream ? $t('settings.stt.sensitivity_stop') : $t('settings.stt.sensitivity_start') }}
+                  {{ stream ? t('settings.stt.sensitivity_stop') : t('settings.stt.sensitivity_start') }}
                 </v-btn>
               </template>
             </v-slider>
             <div v-if="active_device" class="text-caption d-flex flex-row-reverse mr-2">
               <p class="text-glow">
-                {{ $t('settings.stt.device') }}{{ active_device }}
+                {{ t('settings.stt.device') }}{{ active_device }}
               </p>
               <v-icon class="fa fa-circle text-glow blink mr-1">
                 mdi-circle
@@ -64,7 +64,7 @@
         <v-col :cols="12">
           <v-radio-group
             v-if="Object.keys(speechStore.pinned_languages).length > 0" v-model="speechStore.stt.language"
-            :label="$t('settings.stt.pinned_languages')"
+            :label="t('settings.stt.pinned_languages')"
           >
             <v-card
               v-for="language in speechStore.pinned_languages" class="language-card pa-2 mb-2"
@@ -91,7 +91,7 @@
               </v-radio>
             </v-card>
           </v-radio-group>
-          <v-radio-group v-model="speechStore.stt.language" :label="$t('settings.stt.language')">
+          <v-radio-group v-model="speechStore.stt.language" :label="t('settings.stt.language')">
             <v-text-field
               v-model="search_lang" class="mb-2" label="Search" variant="outlined" single-line
               hide-details
@@ -132,6 +132,8 @@
 import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
 import { ListItem, useSpeechStore} from '@/stores/speech'
 import { WebSpeechLangs } from '@/modules/speech'
+import { useI18n } from 'vue-i18n'
+const { t } = useI18n()
 
 import is_electron from '@/helpers/is_electron'
 

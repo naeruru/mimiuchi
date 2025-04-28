@@ -3,7 +3,7 @@
     <v-card>
       <v-form v-model="form" @submit.prevent>
         <v-card-title>
-          <span class="text-subtitle-1">{{ $t('settings.connections.update') }}</span>
+          <span class="text-subtitle-1">{{ t('settings.connections.update') }}</span>
         </v-card-title>
         <v-divider class="pb-2" />
         <v-card-text>
@@ -22,13 +22,13 @@
                 v-if="connection?.type === 'ws'"
                 class="text-subtitle-1"
               >
-                {{ $t('settings.connections.ws.description') }}
+                {{ t('settings.connections.ws.description') }}
               </label>
               <label
                 v-if="connection?.type === 'wh'"
                 class="text-subtitle-1"
               >
-                {{ $t('settings.connections.wh.description') }}
+                {{ t('settings.connections.wh.description') }}
                 <v-col>
                   <code>=> { transcript: 'text here' }</code>
                 </v-col>
@@ -57,12 +57,14 @@
 
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 import WebSocketOptions from '@/components/settings/connections/dialogs/WebSocketOptions.vue'
 import WebHookOptions from '@/components/settings/connections/dialogs/WebHookOptions.vue'
 import is_electron from '@/helpers/is_electron'
 import type { Connection, ConnectionType } from '@/stores/connections'
 import { useConnectionsStore } from '@/stores/connections'
 
+const { t } = useI18n()
 const props = defineProps<{ modelValue: boolean, connection: ConnectionType }>()
 
 const emit = defineEmits(['update:modelValue'])

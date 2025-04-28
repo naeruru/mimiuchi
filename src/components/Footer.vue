@@ -16,7 +16,7 @@
       </v-btn>
     </template>
   </v-snackbar>
-  <v-footer app class="d-flex flex-column pl-2" :height="$route.name === 'home' && appearanceStore.footer_size ? 200 : 55" permanent fixed>
+  <v-footer app class="d-flex flex-column pl-2" :height="route.name === 'home' && appearanceStore.footer_size ? 200 : 55" permanent fixed>
     <div class="d-flex w-100 align-center">
       <v-form
         class="d-flex w-100 align-center"
@@ -24,10 +24,10 @@
       >
         <div class="d-flex w-100">
           <v-textarea
-            v-if="$route.name === 'home' && appearanceStore.footer_size"
+            v-if="route.name === 'home' && appearanceStore.footer_size"
             v-model="input_text"
             variant="outlined"
-            :label="$t('general.type_message')"
+            :label="t('general.type_message')"
             append-inner-icon="mdi-chevron-right"
             class="mr-6 mt-1 fill-height"
             rows="6"
@@ -54,7 +54,7 @@
             v-model="input_text"
             density="compact"
             variant="outlined"
-            :label="$t('general.type_message')"
+            :label="t('general.type_message')"
             append-inner-icon="mdi-chevron-right"
             class="mr-6"
             single-line
@@ -102,11 +102,11 @@
             </v-badge>
             <v-divider height="50" class="mr-4" vertical />
             <v-btn
-              v-if="$route.name === 'home'" color="transparent"
+              v-if="route.name === 'home'" color="transparent"
               size="small"
               icon="mdi-cog"
               flat
-              @click="$router.push({ path: last_setting })"
+              @click="router.push({ path: last_setting })"
             />
             <v-btn
               v-else
@@ -114,7 +114,7 @@
               size="small"
               icon="mdi-home"
               flat
-              @click="$router.push({ path: '/' })"
+              @click="router.push({ path: '/' })"
             />
           </div>
         </div>
@@ -128,8 +128,9 @@
 
 import { computed, onMounted, onUnmounted, onUpdated, ref, watch } from 'vue'
 import { useDisplay } from 'vuetify'
-import { useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { storeToRefs } from 'pinia'
+import { useI18n } from 'vue-i18n'
 import is_electron from '@/helpers/is_electron'
 
 import { useSpeechStore } from '@/stores/speech'
@@ -140,6 +141,10 @@ import { useOSCStore } from '@/stores/osc'
 import { useDefaultStore } from '@/stores/default'
 import { useSettingsStore } from '@/stores/settings'
 import { useAppearanceStore } from '@/stores/appearance'
+
+const { t } = useI18n()
+const router = useRouter()
+const route = useRoute()
 
 declare const window: any
 
@@ -153,7 +158,6 @@ const defaultStore = useDefaultStore()
 const settingsStore = useSettingsStore()
 const appearanceStore = useAppearanceStore()
 
-const router = useRouter()
 const input_text = ref('')
 const input_index = ref<any>(null)
 
@@ -210,10 +214,11 @@ onMounted(() => {
   onResize()
   reloadEvents()
 
-  if (is_electron())
+  if (is_electron()) {
     window.ipcRenderer.on('transformers-translate-render', (event: any, data: any) => {
       translationStore.onMessageReceived(data)
     })
+  }
 
   speechStore.initialize_speech(speechStore.stt.language)
 })

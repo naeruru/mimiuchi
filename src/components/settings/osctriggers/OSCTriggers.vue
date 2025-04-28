@@ -1,18 +1,18 @@
 <template>
   <v-card color="transparent" flat class="pb-16">
     <template #title>
-      <span>{{ $t('settings.osc.triggers.title') }}</span>
+      <span>{{ t('settings.osc.triggers.title') }}</span>
       <v-chip
         prepend-icon="mdi-alert-circle-outline"
         color="warning" class="ml-2"
         variant="elevated"
         size="small"
       >
-        {{ $t('general.subject_to_change') }}
+        {{ t('general.subject_to_change') }}
       </v-chip>
     </template>
     <template #subtitle>
-      <span>{{ $t('settings.osc.triggers.description') }}</span>
+      <span>{{ t('settings.osc.triggers.description') }}</span>
     </template>
 
     <v-divider />
@@ -23,7 +23,7 @@
         <v-col :cols="10" class="d-flex align-center">
           <v-select
             v-model="oscStore.current_profile"
-            :label="$t('settings.osc.triggers.profile.label')"
+            :label="t('settings.osc.triggers.profile.label')"
             :items="sortedProfiles"
             variant="outlined"
             :menu-props="{ closeOnContentClick: true }"
@@ -100,7 +100,7 @@
               append-icon="mdi-pencil"
               @click.stop="openEditTriggerDialog(i)"
             >
-              {{ $t('settings.osc.triggers.trigger.button.edit') }}
+              {{ t('settings.osc.triggers.trigger.button.edit') }}
             </v-btn>
             <v-btn
               class="ml-4 mr-4"
@@ -110,7 +110,7 @@
               append-icon="mdi-delete"
               @click.stop="openDeleteTriggerDialog(i)"
             >
-              {{ $t('settings.osc.triggers.trigger.button.delete') }}
+              {{ t('settings.osc.triggers.trigger.button.delete') }}
             </v-btn>
           </v-expansion-panel-title>
           <v-expansion-panel-text>
@@ -120,7 +120,7 @@
                   <v-col :cols="12" :md="6">
                     <v-text-field
                       v-model="trigger.ip"
-                      :label="$t('settings.osc.general.osc_ip')"
+                      :label="t('settings.osc.general.osc_ip')"
                       flat
                       variant="solo-filled"
                       hide-details
@@ -130,7 +130,7 @@
                   <v-col>
                     <v-text-field
                       v-model="trigger.port"
-                      :label="$t('settings.osc.general.osc_port')"
+                      :label="t('settings.osc.general.osc_port')"
                       flat
                       variant="solo-filled"
                       hide-details
@@ -139,7 +139,7 @@
                   </v-col>
 
                   <v-col :cols="12">
-                    <strong>{{ $t('settings.osc.triggers.trigger.trigger_phrases') }}</strong>
+                    <strong>{{ t('settings.osc.triggers.trigger.trigger_phrases') }}</strong>
                   </v-col>
                   <v-col :cols="12">
                     <v-chip
@@ -154,7 +154,7 @@
                     </v-chip>
                   </v-col>
                   <v-col :cols="12">
-                    <strong>{{ $t('settings.osc.triggers.trigger.assign.phrases') }}</strong>
+                    <strong>{{ t('settings.osc.triggers.trigger.assign.phrases') }}</strong>
                     <v-list density="compact">
                       <v-list-item
                         v-for="(assign) in trigger.assigns"
@@ -209,16 +209,16 @@
     <v-row justify="center">
       <v-dialog v-model="profile_delete_dialog" width="50vw">
         <v-card>
-          <v-card-title>{{ $t('settings.osc.triggers.profile.delete_dialog.title') }}</v-card-title>
+          <v-card-title>{{ t('settings.osc.triggers.profile.delete_dialog.title') }}</v-card-title>
           <v-card-text>{{ `${profile_delete_target}` }}</v-card-text>
-          <v-card-text>{{ $t('settings.osc.triggers.profile.delete_dialog.text') }}</v-card-text>
+          <v-card-text>{{ t('settings.osc.triggers.profile.delete_dialog.text') }}</v-card-text>
           <v-card-actions>
             <v-spacer />
             <v-btn @click="profile_delete_dialog = false">
-              {{ $t('settings.osc.triggers.button.cancel') }}
+              {{ t('settings.osc.triggers.button.cancel') }}
             </v-btn>
             <v-btn color="primary" @click="confirmDeleteProfileDialog">
-              {{ $t('settings.osc.triggers.button.delete') }}
+              {{ t('settings.osc.triggers.button.delete') }}
             </v-btn>
           </v-card-actions>
         </v-card>
@@ -238,16 +238,16 @@
     <v-row justify="center">
       <v-dialog v-model="trigger_delete_dialog" width="50vw">
         <v-card>
-          <v-card-title>{{ $t('settings.osc.triggers.trigger.delete_dialog.title') }}</v-card-title>
+          <v-card-title>{{ t('settings.osc.triggers.trigger.delete_dialog.title') }}</v-card-title>
           <v-card-text>{{ `${trigger_delete_target_display}` }}</v-card-text>
-          <v-card-text>{{ $t('settings.osc.triggers.trigger.delete_dialog.text') }}</v-card-text>
+          <v-card-text>{{ t('settings.osc.triggers.trigger.delete_dialog.text') }}</v-card-text>
           <v-card-actions>
             <v-spacer />
             <v-btn @click="trigger_delete_dialog = false">
-              {{ $t('settings.osc.triggers.button.cancel') }}
+              {{ t('settings.osc.triggers.button.cancel') }}
             </v-btn>
             <v-btn color="primary" @click="confirmDeleteTriggerDialog">
-              {{ $t('settings.osc.triggers.button.delete') }}
+              {{ t('settings.osc.triggers.button.delete') }}
             </v-btn>
           </v-card-actions>
         </v-card>
@@ -261,7 +261,9 @@ import { computed, ref } from 'vue'
 import { useOSCStore } from '@/stores/osc'
 import Profile from '@/components/settings/osctriggers/dialogs/Profile.vue'
 import Trigger from '@/components/settings/osctriggers/dialogs/Trigger.vue'
+import { useI18n } from 'vue-i18n'
 
+const { t } = useI18n()
 const oscStore = useOSCStore()
 
 const profile_dialog = ref(false)

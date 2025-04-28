@@ -4,7 +4,7 @@
 
     <span class="font-weight-medium">{{ APP_NAME }}</span>
     <v-chip class="ml-2" size="x-small" label>
-      {{ $t('general.beta') }}
+      {{ t('general.beta') }}
     </v-chip>
 
     <v-spacer />
@@ -37,8 +37,10 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-
+import { useI18n } from 'vue-i18n'
 import is_electron from '@/helpers/is_electron'
+
+const { t } = useI18n()
 
 declare const window: any
 
