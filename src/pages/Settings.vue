@@ -35,7 +35,7 @@
       <v-divider />
       <v-list-subheader>{{ $t('settings.connections.title') }}</v-list-subheader>
       <v-list-item
-        v-for="(setting) in connections"
+        v-for="(setting) in settings_connections"
         :key="setting.value"
         :prepend-icon="setting.icon"
         :title="setting.title"
@@ -51,8 +51,9 @@
         <v-tooltip
           open-on-click
           class="feature-tooltip"
-          :text="$t('settings.osc.title_tooltip')">
-          <template v-slot:activator="{ props }">
+          :text="$t('settings.osc.title_tooltip')"
+        >
+          <template #activator="{ props }">
             <v-icon
               v-bind="props"
               icon="mdi-broadcast"
@@ -193,7 +194,7 @@ const settings_general = computed(() => {
   ]
 })
 
-const connections = computed(() => {
+const settings_connections = computed(() => {
   return [
     {
       title: t('settings.connections.title'),
@@ -204,7 +205,7 @@ const connections = computed(() => {
 })
 
 const settings_osc = computed(() => {
-  const settings_osc = [
+  return [
     {
       title: t('settings.osc.general.title'),
       value: 'osc',
@@ -220,8 +221,6 @@ const settings_osc = computed(() => {
       unavailable_tooltip: OSCUnavailable,
     },
   ]
-
-  return settings_osc
 })
 
 const tooltip_close_delay = 200 // ms
