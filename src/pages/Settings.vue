@@ -22,11 +22,12 @@
           v-if="setting.unavailable_condition && setting.unavailable_tooltip"
           activator="parent"
           open-on-click
-          class="feature-tooltip"
-          :close-delay="tooltip_close_delay"
-          :max-width="tooltip_max_width"
-          :offset="tooltip_offset"
-          :scroll-strategy="tooltip_scroll_strategy"
+          class="feature-tooltip feature-tooltip-persistent"
+          :open-delay="unavailableTooltip.openDelay"
+          :close-on-back="true"
+          :max-width="unavailableTooltip.maxWidth"
+          :offset="unavailableTooltip.offset"
+          scroll-strategy="close"
         >
           <component :is="setting.unavailable_tooltip" />
         </v-tooltip>
@@ -83,11 +84,12 @@
           v-if="setting.unavailable_condition && setting.unavailable_tooltip"
           activator="parent"
           open-on-click
-          class="feature-tooltip"
-          :close-delay="tooltip_close_delay"
-          :max-width="tooltip_max_width"
-          :offset="tooltip_offset"
-          :scroll-strategy="tooltip_scroll_strategy"
+          class="feature-tooltip feature-tooltip-persistent"
+          :open-delay="unavailableTooltip.openDelay"
+          :close-on-back="true"
+          :max-width="unavailableTooltip.maxWidth"
+          :offset="unavailableTooltip.offset"
+          scroll-strategy="close"
         >
           <component :is="setting.unavailable_tooltip" />
         </v-tooltip>
@@ -223,10 +225,16 @@ const settings_osc = computed(() => {
   ]
 })
 
-const tooltip_close_delay = 200 // ms
-const tooltip_max_width = '256px'
-const tooltip_offset = 20
-const tooltip_scroll_strategy = 'close'
+const unavailableTooltip = {
+  // openDelay is deliberately set to an absurdly high number
+  // This forces the user to click the activator to open it within a reasonable amount of time
+  // Essentially, the tooltip becomes an exclusively open-on-click tooltip while retaining all the features provided by open-on-hover
+  // If the attribute open-on-hover is set to false, various features are lost
+  openDelay: 60000, // ms
+  maxWidth: '256px',
+  offset: -20, // px
+  scrollStrategy: 'close',
+}
 
 onMounted(() => {
   if (is_electron()) {
@@ -290,6 +298,9 @@ function handleKeyDown(event: KeyboardEvent) {
   outline-style: solid;
   outline-color: rgb(var(--v-theme-on-surface-variant));
   outline-width: 1px;
+}
+
+.feature-tooltip-persistent > .v-overlay__content {
   pointer-events: auto; /* The tooltip will persist on pointer hover */
 }
 
