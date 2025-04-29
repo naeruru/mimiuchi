@@ -11,11 +11,11 @@
         @click="setting.unavailable_condition ? null : $router.push({ path: `/settings/${setting.value}` })"
       >
         <template #prepend>
-          <v-icon :class="{ 'missing-feature': setting.unavailable_condition }">
+          <v-icon :class="{ 'unavailable-feature': setting.unavailable_condition }">
             {{ setting.icon }}
           </v-icon>
         </template>
-        <v-list-item-title :class="{ 'missing-feature': setting.unavailable_condition }">
+        <v-list-item-title :class="{ 'unavailable-feature': setting.unavailable_condition }">
           {{ setting.title }}
         </v-list-item-title>
         <v-tooltip
@@ -72,11 +72,11 @@
         @click="setting.unavailable_condition ? null : $router.push({ path: `/settings/${setting.value}` })"
       >
         <template #prepend>
-          <v-icon :class="{ 'missing-feature': setting.unavailable_condition }">
+          <v-icon :class="{ 'unavailable-feature': setting.unavailable_condition }">
             {{ setting.icon }}
           </v-icon>
         </template>
-        <v-list-item-title :class="{ 'missing-feature': setting.unavailable_condition }">
+        <v-list-item-title :class="{ 'unavailable-feature': setting.unavailable_condition }">
           {{ setting.title }}
         </v-list-item-title>
         <v-tooltip
@@ -293,7 +293,7 @@ function handleKeyDown(event: KeyboardEvent) {
   pointer-events: auto; /* The tooltip will persist on pointer hover */
 }
 
-.missing-feature {
+.unavailable-feature {
   opacity: var(--v-disabled-opacity) !important;
 }
 </style>
