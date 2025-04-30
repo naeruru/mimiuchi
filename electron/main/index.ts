@@ -230,6 +230,10 @@ ipcMain.on('set-auto-open-web-app-on-launch', (event, newValue) => {
   store.set('auto-open-web-app-on-launch', newValue)
 })
 
+ipcMain.on('delete-auto-open-web-app-on-launch', () => {
+  store.delete('auto-open-web-app-on-launch')
+})
+
 // Translations
 //
 // Footer (user submission)
