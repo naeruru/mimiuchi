@@ -4,10 +4,10 @@ import { fileURLToPath } from 'node:url'
 import os from 'node:os'
 import { BrowserWindow, app, ipcMain, shell } from 'electron'
 
-import { WebSocketServer } from 'ws'
+import { WebSocket, WebSocketServer } from 'ws'
 import Store from 'electron-store'
 import { emit_osc, empty_queue } from './modules/osc'
-import { initialize_ws } from './modules/ws'
+import { initialize_wsserver } from './modules/wsserver'
 import { check_update } from './modules/check_update'
 
 import { TranslationPipeline } from './modules/transformers'
@@ -199,21 +199,37 @@ ipcMain.on('send-osc-message', (event, args) => {
   emit_osc([args.route, args.value], args.ip, args.port)
 })
 
-let wss: WebSocketServer = null
+let wsserver: WebSocketServer = null
 // websocket events
-ipcMain.on('start-ws', (event, args) => {
-  wss = new WebSocketServer({ port: args })
-  initialize_ws(win, wss, args)
+ipcMain.on('start-mimiuchi-websocketserver', (event, args) => {
+  wsserver = new WebSocketServer({ port: args })
+
+  initialize_wsserver(win, wsserver)
     .then(() => {
-      win.webContents.send('websocket-started', true)
+      win.webContents.send('mimiuchi-websocketserver-started')
     })
-    .catch(() => {
-      win.webContents.send('websocket-error', true)
+    .catch((error) => {
+      win.webContents.send('mimiuchi-websocketserver-error', error)
     })
 })
 
-ipcMain.on('close-ws', () => {
-  wss.close()
+ipcMain.on('close-mimiuchi-websocketserver', () => {
+  if (!wsserver) return
+
+  win.webContents.send('mimiuchi-websocketserver-close')
+
+  wsserver.clients.forEach((client) => {
+    if (client.readyState === WebSocket.OPEN)
+      client.close(1001, 'mimiuchi WebSocket server shut down.')
+  })
+
+  wsserver.close(() => {
+    win.webContents.send('mimiuchi-websocketserver-closed')
+  })
+
+  wsserver.removeAllListeners()
+
+  wsserver = null
 })
 
 ipcMain.on('update-check', async () => {

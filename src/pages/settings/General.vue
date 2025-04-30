@@ -154,6 +154,7 @@ import { useConnectionsStore } from '@/stores/connections'
 import { useLogsStore } from '@/stores/logs'
 import { useTranslationStore } from '@/stores/translation'
 import { useOSCStore } from '@/stores/osc'
+import { useDefaultStore } from '@/stores/default'
 
 const { t } = useI18n()
 
@@ -175,6 +176,7 @@ const wordReplaceStore = useWordReplaceStore()
 const settingsStore = useSettingsStore()
 const speechStore = useSpeechStore()
 const connectionsStore = useConnectionsStore()
+const defaultStore = useDefaultStore()
 const logsStore = useLogsStore()
 const translationStore = useTranslationStore()
 const oscStore = useOSCStore()
@@ -197,23 +199,37 @@ function set_auto_open_web_app_on_launch() {
 }
 
 function reset_settings() {
+  function reset(store: any) {
+    // The universal store $reset() function:
+    // - will always reset reactive states containing primitives
+    // - may fail to reset reactive states containing objects and may fail to update localStorage
+    // A unique store reset() function:
+    // - will exclusively handle the resetting of reactive states containing objects
+    // - will always reset reactive states containing objects
+    store.$reset()
+    if (typeof store.reset === 'function') store.reset() // If the store has a reset() method
+  }
+
+  if (defaultStore.broadcasting) connectionsStore.toggle_broadcast()
+
   if (is_electron())
     window.ipcRenderer.send('delete-auto-open-web-app-on-launch')
 
-  if (appearance.value)
-    appearanceStore.$reset()
-  if (word_replace.value)
-    wordReplaceStore.$reset()
-  if (settings.value)
-    settingsStore.$reset()
-  if (speech.value)
-    speechStore.$reset()
-  if (connection.value)
-    connectionsStore.$reset()
-  if (translation.value)
-    translationStore.$reset()
-  if (osc.value)
-    oscStore.$reset()
+  if (appearance.value) reset(appearanceStore)
+  if (word_replace.value) reset(wordReplaceStore)
+  if (settings.value) reset(settingsStore)
+  if (speech.value) reset(speechStore)
+  if (connection.value) {
+    reset(connectionsStore)
+
+    if (is_electron()) {
+      connectionsStore.disconnect_mimiuchi_websocketserver()
+      connectionsStore.connect_mimiuchi_websocketserver()
+    }
+  }
+  if (translation.value) reset(translationStore)
+  if (osc.value) reset(oscStore)
+
   reset_dialog.value = false
   snackbar_text.value = t('settings.general.reset.snackbar.title')
   snackbar.value = true

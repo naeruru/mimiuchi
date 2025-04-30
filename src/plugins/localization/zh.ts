@@ -20,15 +20,13 @@ export default {
     update: '更新',
     subject_to_change: '内容可能会更改',
   },
-  alerts: {
+  snackbar: {
+    version_mismatch: '桌面应用的版本与网页版本不同。建议更新，否则可能会出问题。',
     no_speech: '您的浏览器不支持 Web Speech API（语音转文本）。',
     speech_recognition_error_event: {
       aborted: '错误：设备被另一个标签页使用中。',
       not_allowed: '启用麦克风时发生错误。您需要授予权限。',
     },
-    broadcast_error: '启用广播时发生错误。请确保桌面应用正在运行。',
-    websocket_error: '无效的 WebSocket URL。',
-    version_mismatch: '桌面应用的版本与网页版本不同。建议更新，否则可能会出问题。',
   },
   settings: {
     title: '设置',
@@ -163,14 +161,14 @@ export default {
     connections: {
       title: '连接',
       description: '通过 {icon} 向其他应用发送数据',
-      update: '更新连接',
-      ws: {
-        name: '桌面连接',
-        port: 'WebSocket 端口',
-        description: '通过 WebSocket 实时发送文本更新',
-      },
-      wh: {
-        description: '通过 Webhook POST 请求发送文本更新',
+      dialog: {
+        title: {
+          edit: '更新连接',
+        },
+        description: {
+          websocket: '通过 WebSocket 实时发送文本更新',
+          webhook: '通过 Webhook POST 请求发送文本更新',
+        },
       },
     },
     osc: {

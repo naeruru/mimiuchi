@@ -42,7 +42,7 @@ class WebSpeech {
       this.recognition.maxAlternatives = 1
     }
     else {
-      // throw i18n.t('alerts.no_speech')
+      // throw i18n.t('snackbar.no_speech')
     }
   }
 
