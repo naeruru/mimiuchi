@@ -1,14 +1,14 @@
 <template>
   <v-navigation-drawer v-model="settingsStore.drawer" :permanent="!smAndDown">
     <v-list density="compact" nav>
-      <v-list-subheader>{{ $t('settings.title') }}</v-list-subheader>
+      <v-list-subheader>{{ t('settings.title') }}</v-list-subheader>
       <v-list-item
         v-for="(setting) in settings_general"
         :key="setting.value"
         :value="setting.value"
-        :active="setting.value === $route.name"
+        :active="setting.value === route.name"
         color="primary"
-        @click="setting.unavailable_condition ? null : $router.push({ path: `/settings/${setting.value}` })"
+        @click="setting.unavailable_condition ? null : router.push({ path: `/settings/${setting.value}` })"
       >
         <template #prepend>
           <v-icon :class="{ 'unavailable-feature': setting.unavailable_condition }">
@@ -34,25 +34,25 @@
       </v-list-item>
 
       <v-divider />
-      <v-list-subheader>{{ $t('settings.connections.title') }}</v-list-subheader>
+      <v-list-subheader>{{ t('settings.connections.title') }}</v-list-subheader>
       <v-list-item
         v-for="(setting) in settings_connections"
         :key="setting.value"
         :prepend-icon="setting.icon"
         :title="setting.title"
         :value="setting.value"
-        :active="setting.value === $route.name"
+        :active="setting.value === route.name"
         color="primary"
-        @click="$router.push({ path: `/settings/${setting.value}` })"
+        @click="router.push({ path: `/settings/${setting.value}` })"
       />
 
       <v-divider />
       <v-list-subheader>
-        {{ $t('settings.osc.title') }}
+        {{ t('settings.osc.title') }}
         <v-tooltip
           open-on-click
           class="feature-tooltip"
-          :text="$t('settings.osc.title_tooltip')"
+          :text="t('settings.osc.title_tooltip')"
         >
           <template #activator="{ props }">
             <v-icon
@@ -68,9 +68,9 @@
         v-for="(setting) in settings_osc"
         :key="setting.value"
         :value="setting.value"
-        :active="setting.value === $route.name"
+        :active="setting.value === route.name"
         color="primary"
-        @click="setting.unavailable_condition ? null : $router.push({ path: `/settings/${setting.value}` })"
+        @click="setting.unavailable_condition ? null : router.push({ path: `/settings/${setting.value}` })"
       >
         <template #prepend>
           <v-icon :class="{ 'unavailable-feature': setting.unavailable_condition }">
@@ -107,7 +107,7 @@
           <template #prepend>
             <v-icon color="success" size="large" />
           </template>
-          {{ $t('general.update') }}
+          {{ t('general.update') }}
         </v-btn>
         <v-spacer />
         <v-btn
@@ -135,7 +135,7 @@
 import { computed, onMounted, onUnmounted, ref } from 'vue'
 
 import { useDisplay } from 'vuetify'
-import { useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import is_electron from '@/helpers/is_electron'
 import { useSettingsStore } from '@/stores/settings'
@@ -150,6 +150,8 @@ const settingsStore = useSettingsStore()
 const { smAndDown } = useDisplay()
 
 const { t } = useI18n()
+const router = useRouter()
+const route = useRoute()
 
 settingsStore.drawer = !smAndDown.value
 const APP_VERSION = ref(__APP_VERSION__)
@@ -256,7 +258,6 @@ onUnmounted(() => {
 function open_external(link: string) {
   window.open(link, '_blank')
 }
-const router = useRouter()
 
 function handleKeyDown(event: KeyboardEvent) {
   if (event.key === 'Escape')

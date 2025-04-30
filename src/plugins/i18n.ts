@@ -6,8 +6,8 @@ import ja from '@/plugins/localization/ja'
 import zh from '@/plugins/localization/zh'
 
 interface Language {
-  title: string,
-  value: string,
+  title: string
+  value: string
 }
 
 const messages = {

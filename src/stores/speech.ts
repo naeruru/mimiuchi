@@ -8,7 +8,7 @@ import { useTranslationStore } from '@/stores/translation'
 import { useConnectionsStore } from '@/stores/connections'
 import { useWordReplaceStore } from '@/stores/word_replace'
 import webhook from '@/helpers/webhook'
-import { post } from '@/helpers/fetch'
+import fetch from '@/helpers/fetch'
 import is_electron from '@/helpers/is_electron'
 import { i18n } from '@/plugins/i18n'
 import { WebSpeech } from '@/modules/speech'
@@ -138,8 +138,7 @@ export const useSpeechStore = defineStore('speech', () => {
     }
 
     defaultStore.speech.onstart = () => {
-      if (defaultStore.speech.last_error === 'network')
-      {
+      if (defaultStore.speech.last_error === 'network') {
         clearTimeout(defaultStore.speech.try_restart_interval)
       }
     }
@@ -156,12 +155,13 @@ export const useSpeechStore = defineStore('speech', () => {
     const logsStore = useLogsStore()
 
     if (connectionsStore.wh.enabled && defaultStore.broadcasting)
-      webhook.post(connectionsStore.wh.url, { transcript: input_text, isFinal: isFinal })
+      webhook.post(connectionsStore.wh.url, { transcript: input_text, isFinal })
 
     if (input_text) {
       if (input_index === logsStore.logs.length - 1) {
         logsStore.logs[input_index].transcript = input_text
-      } else {
+      }
+      else {
         const log = {
           transcript: input_text,
           isFinal: false,
@@ -175,7 +175,8 @@ export const useSpeechStore = defineStore('speech', () => {
       if (defaultStore.ws1) {
         defaultStore.ws1.send(`{"type": "text", "data": ${JSON.stringify(logsStore.logs[input_index])}}`)
       }
-    } else {
+    }
+    else {
       if (input_index === logsStore.logs.length - 1) {
         logsStore.logs[input_index].transcript = input_text
       }
@@ -202,11 +203,11 @@ export const useSpeechStore = defineStore('speech', () => {
           voice: tiktok.voices.find(voice => voice.name === tts.value.voice)?.lang,
         }
         try {
-          response = await post(tiktok.api, body)
+          response = await fetch.post(tiktok.api, body)
         }
         catch (e) {
           console.error(e)
-          response = await post(tiktok.api, body)
+          response = await fetch.post(tiktok.api, body)
         }
         if (!defaultStore.audio.src || defaultStore.audio.ended) {
           defaultStore.audio.src = `data:audio/mpeg;base64,${response.data}`

@@ -1,9 +1,9 @@
 <template>
-  <v-card :title="$t('settings.word_replace.title')" :subtitle="$t('settings.word_replace.description')" color="transparent" flat>
+  <v-card :title="t('settings.word_replace.title')" :subtitle="t('settings.word_replace.description')" color="transparent" flat>
     <v-divider />
     <v-card-text>
       <v-card flat>
-        <v-list-item :title="$t('settings.word_replace.enabled')">
+        <v-list-item :title="t('settings.word_replace.enabled')">
           <template #append>
             <v-switch
               v-model="wordReplaceStore.enabled"
@@ -17,7 +17,7 @@
       <v-row class="mt-6">
         <v-col :cols="12" :sm="6">
           <v-card flat>
-            <v-list-item :title="$t('settings.word_replace.match_whole_word')">
+            <v-list-item :title="t('settings.word_replace.match_whole_word')">
               <template #append>
                 <v-switch
                   v-model="wordReplaceStore.match_whole_word"
@@ -31,7 +31,7 @@
         </v-col>
         <v-col :cols="12" :sm="6">
           <v-card flat>
-            <v-list-item :title="$t('settings.word_replace.match_case')">
+            <v-list-item :title="t('settings.word_replace.match_case')">
               <template #append>
                 <v-switch
                   v-model="wordReplaceStore.match_case"
@@ -49,7 +49,7 @@
           <v-col :cols="12" :sm="6" class="pt-1 pb-0">
             <v-text-field
               v-model="replacement.replacing"
-              :label="$t('settings.word_replace.replacing')"
+              :label="t('settings.word_replace.replacing')"
               :rules="[exists]"
               append-icon="mdi-arrow-right-bold"
             />
@@ -57,7 +57,7 @@
           <v-col :cols="10" :sm="6" class="pt-1 pb-0">
             <v-text-field
               v-model="replacement.replacement"
-              :label="$t('settings.word_replace.replacement')"
+              :label="t('settings.word_replace.replacement')"
               hide-details
             >
               <template #append>
@@ -90,8 +90,10 @@
 
 <script setup lang="ts">
 import { onMounted, onUnmounted, ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { useWordReplaceStore } from '@/stores/word_replace'
 
+const { t } = useI18n()
 const wordReplaceStore = useWordReplaceStore()
 
 const replacements = ref<{ replacing: string, replacement: string }[]>([])

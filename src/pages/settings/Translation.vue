@@ -1,6 +1,6 @@
 <template>
   <v-card
-    :title="$t('settings.translation.title')" :subtitle="$t('settings.translation.description')"
+    :title="t('settings.translation.title')" :subtitle="t('settings.translation.description')"
     color="transparent" flat
   >
     <v-divider />
@@ -9,12 +9,12 @@
         <v-col>
           <v-chip variant="outlined" label color="error" size="large">
             <v-icon start icon="mdi-alert" />
-            {{ $t('settings.translation.warning') }}
+            {{ t('settings.translation.warning') }}
           </v-chip>
         </v-col>
         <v-col :cols="12">
           <v-card flat>
-            <v-list-item :title="$t('settings.translation.enabled')">
+            <v-list-item :title="t('settings.translation.enabled')">
               <template #append>
                 <v-switch
                   v-model="translationStore.enabled"
@@ -29,7 +29,7 @@
         <v-col :cols="12">
           <v-select
             v-model="translationStore.type"
-            :label="$t('settings.translation.type')"
+            :label="t('settings.translation.type')"
             :items="translation_types"
             item-title="title"
             item-value="value"
@@ -57,19 +57,19 @@
         <v-col :cols="12" :sm="6">
           <v-autocomplete
             v-model="translationStore.source"
-            :label="$t('settings.translation.source')"
+            :label="t('settings.translation.source')"
             :items="translation_options"
             item-title="title"
             item-value="value"
             auto-select-first
-            :hint="`${$t('settings.translation.speech_lang')}${stt_language}`"
+            :hint="`${t('settings.translation.speech_lang')}${stt_language}`"
             persistent-hint
           />
         </v-col>
         <v-col :cols="12" :sm="6">
           <v-autocomplete
             v-model="translationStore.target"
-            :label="$t('settings.translation.target')"
+            :label="t('settings.translation.target')"
             :items="translation_options"
             item-title="title"
             item-value="value"
@@ -79,7 +79,7 @@
         </v-col>
         <v-col :cols="12">
           <v-card flat>
-            <v-list-item :title="$t('settings.translation.show_original')">
+            <v-list-item :title="t('settings.translation.show_original')">
               <template #append>
                 <v-switch
                   v-model="translationStore.show_original"
@@ -97,10 +97,13 @@
 </template>
 
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n'
 import { ref } from 'vue'
 import { useTranslationStore } from '@/stores/translation'
 import { useSpeechStore } from '@/stores/speech'
 import translation_options from '@/constants/translation_options'
+
+const { t } = useI18n()
 
 const translationStore = useTranslationStore()
 const speechStore = useSpeechStore()

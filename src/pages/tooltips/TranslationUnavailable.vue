@@ -5,16 +5,20 @@
         class="text-primary pointer"
         @click="open_external('https://github.com/naeruru/mimiuchi/releases')"
       >
-        {{ $t('settings.translation.unsupported.link') }}
+        {{ t('settings.translation.unsupported.link') }}
       </a>
     </template>
     <template #kaomoji>
-      <span class="no-wrap">{{ $t('settings.translation.unsupported.kaomoji') }}</span>
+      <span class="no-wrap">{{ t('settings.translation.unsupported.kaomoji') }}</span>
     </template>
   </i18n-t>
 </template>
 
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
+
 function open_external(url: string) {
   window.open(url, '_blank')
 }
