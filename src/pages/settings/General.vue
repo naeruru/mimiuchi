@@ -197,7 +197,8 @@ function set_auto_open_web_app_on_launch() {
 }
 
 function reset_settings() {
-  window.ipcRenderer.send('delete-auto-open-web-app-on-launch')
+  if (is_electron())
+    window.ipcRenderer.send('delete-auto-open-web-app-on-launch')
 
   if (appearance.value)
     appearanceStore.$reset()
