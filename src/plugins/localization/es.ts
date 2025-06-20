@@ -18,15 +18,13 @@ export default {
     beta: 'BETA',
     update: 'Actualizar',
   },
-  alerts: {
+  snackbar: {
+    version_mismatch: 'La aplicación de escritorio tiene una versión diferente a la versión web. Considere la posibilidad de actualizar, ya que la aplicación puede fallar.',
     no_speech: 'Tu navegador no es compatible con Web Speech API (Voz a Texto).',
     speech_recognition_error_event: {
       aborted: 'Error: El micrófono está siendo usado por otra pestaña',
       not_allowed: 'Error al habilitar el micrófono. Debes dar permiso para usarlo.',
     },
-    broadcast_error: 'Error al habilitar la transmisión. Asegúrese de que la aplicación de escritorio se esté ejecutando.',
-    websocket_error: 'URL de websocket no válida.',
-    version_mismatch: 'La aplicación de escritorio tiene una versión diferente a la versión web. Considere la posibilidad de actualizar, ya que la aplicación puede fallar.',
   },
   settings: {
     title: 'Ajustes',
@@ -162,14 +160,14 @@ export default {
     connections: {
       title: 'Conexiones',
       description: 'Enviar datos a otras aplicaciones cuando se utiliza {icon}',
-      update: 'Actualizar conexión',
-      ws: {
-        name: 'Conexión de escritorio',
-        port: 'Puerto websocket',
-        description: 'Envia actualizaciones de texto en tiempo real a través de un websocket',
-      },
-      wh: {
-        description: 'Enviar actualizaciones de texto a través de una solicitud POST de Webhook',
+      dialog: {
+        title: {
+          edit: 'Actualizar conexión',
+        },
+        description: {
+          websocket: 'Envia actualizaciones de texto en tiempo real a través de un websocket',
+          webhook: 'Enviar actualizaciones de texto a través de una solicitud POST de Webhook',
+        },
       },
     },
     osc: {

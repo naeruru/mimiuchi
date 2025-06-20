@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
+import { useSettingsStore } from './settings'
 import { useDefaultStore } from '@/stores/default'
 import { useLogsStore } from '@/stores/logs'
 import { useAppearanceStore } from '@/stores/appearance'
@@ -7,13 +8,13 @@ import { useOSCStore } from '@/stores/osc'
 import { useTranslationStore } from '@/stores/translation'
 import { useConnectionsStore } from '@/stores/connections'
 import { useWordReplaceStore } from '@/stores/word_replace'
-import webhook from '@/helpers/webhook'
 import fetch from '@/helpers/fetch'
 import is_electron from '@/helpers/is_electron'
 import { i18n } from '@/plugins/i18n'
 import { WebSpeech } from '@/modules/speech'
 import yukumo from '@/constants/voices/yukumo'
 import tiktok from '@/constants/voices/tiktok'
+import webhook from '@/helpers/webhook'
 
 export interface ListItem {
   title: string
@@ -27,7 +28,7 @@ interface PinnedLanguages {
 declare const window: any
 
 export const useSpeechStore = defineStore('speech', () => {
-  const stt = ref({
+  const stt_init = {
     type: {
       title: 'Web Speech API',
       value: 'webspeech',
@@ -35,15 +36,27 @@ export const useSpeechStore = defineStore('speech', () => {
     language: 'en-US',
     confidence: 0.9,
     sensitivity: 0.0,
-  })
-  const tts = ref({
+  }
+
+  const stt = ref(structuredClone(stt_init))
+
+  const tts_init = {
     enabled: false,
     type: 'tiktok',
     voice: '',
     rate: 1,
     pitch: 1,
-  })
+  }
+
+  const tts = ref(structuredClone(tts_init))
+
   const pinned_languages = ref<PinnedLanguages>({})
+
+  function reset() {
+    stt.value = structuredClone(stt_init)
+    tts.value = structuredClone(tts_init)
+    pinned_languages.value = {}
+  }
 
   function initialize_speech(language: string) {
     const defaultStore = useDefaultStore()
@@ -56,7 +69,7 @@ export const useSpeechStore = defineStore('speech', () => {
     // recognition not supported
     if (!defaultStore.speech.recognition) {
       // listening = false
-      defaultStore.show_snackbar('error', i18n.t('alerts.no_speech'))
+      defaultStore.show_snackbar('error', i18n.t('snackbar.no_speech'))
       return
     }
 
@@ -86,39 +99,39 @@ export const useSpeechStore = defineStore('speech', () => {
         case 'no-speech': // No speech was detected
           return
         case 'aborted':
-          desc = i18n.t('alerts.speech_recognition_error_event.aborted')
+          desc = i18n.t('snackbar.speech_recognition_error_event.aborted')
           defaultStore.speech.listening = false
           defaultStore.speech.stop()
           break
         case 'audio-capture':
-          desc = i18n.t('alerts.speech_recognition_error_event.network')
+          desc = i18n.t('snackbar.speech_recognition_error_event.network')
           defaultStore.speech.listening = false
           defaultStore.speech.stop()
           break
         case 'network':
-          desc = i18n.t('alerts.speech_recognition_error_event.network')
+          desc = i18n.t('snackbar.speech_recognition_error_event.network')
           defaultStore.speech.stop()
           break
         case 'not-allowed':
-          desc = i18n.t('alerts.speech_recognition_error_event.not_allowed')
+          desc = i18n.t('snackbar.speech_recognition_error_event.not_allowed')
           defaultStore.speech.listening = false
           defaultStore.speech.stop()
           break
         case 'service-not-allowed':
-          desc = i18n.t('alerts.speech_recognition_error_event.service_not_allowed')
+          desc = i18n.t('snackbar.speech_recognition_error_event.service_not_allowed')
           defaultStore.speech.listening = false
           defaultStore.speech.stop()
           break
         case 'bad-grammar':
-          desc = i18n.t('alerts.speech_recognition_error_event.bad_grammar')
+          desc = i18n.t('snackbar.speech_recognition_error_event.bad_grammar')
           defaultStore.speech.listening = false
           defaultStore.speech.stop()
           break
         case 'language-not-supported':
-          desc = i18n.t('alerts.speech_recognition_error_event.language_not_supported')
+          desc = i18n.t('snackbar.speech_recognition_error_event.language_not_supported')
           break
         default:
-          desc = i18n.t('alerts.speech_recognition_error_event.unknown')
+          desc = i18n.t('snackbar.speech_recognition_error_event.unknown')
           break
       }
 
@@ -150,12 +163,10 @@ export const useSpeechStore = defineStore('speech', () => {
   }
 
   function submit_text(input_text: string, input_index: number, isFinal: boolean) {
-    const defaultStore = useDefaultStore()
     const connectionsStore = useConnectionsStore()
     const logsStore = useLogsStore()
 
-    if (connectionsStore.wh.enabled && defaultStore.broadcasting)
-      webhook.post(connectionsStore.wh.url, { transcript: input_text, isFinal })
+    post_to_user_webhooks(input_text, isFinal)
 
     if (input_text) {
       if (input_index === logsStore.logs.length - 1) {
@@ -172,14 +183,24 @@ export const useSpeechStore = defineStore('speech', () => {
         logsStore.logs.push(log)
       }
 
-      if (defaultStore.ws1) {
-        defaultStore.ws1.send(`{"type": "text", "data": ${JSON.stringify(logsStore.logs[input_index])}}`)
+      const wsPayload = JSON.stringify(logsStore.logs[input_index])
+      const rendered_payload = `{"type": "text", "data": ${wsPayload}}`
+
+      if (connectionsStore.open.mimiuchi_websocket)
+        connectionsStore.open.mimiuchi_websocket.send(rendered_payload)
+
+      if (connectionsStore.open.obs_websocket) {
+        (async () => {
+          await connectionsStore.obs_set_text(logsStore.logs[input_index].transcript)
+        })()
+      }
+
+      for (const openConnection of connectionsStore.open.user_websockets) {
+        if (openConnection) openConnection.send(rendered_payload)
       }
     }
-    else {
-      if (input_index === logsStore.logs.length - 1) {
-        logsStore.logs[input_index].transcript = input_text
-      }
+    else if (input_index === logsStore.logs.length - 1) {
+      logsStore.logs[input_index].transcript = input_text
     }
   }
 
@@ -247,12 +268,13 @@ export const useSpeechStore = defineStore('speech', () => {
     if (!log.transcript.trim()) // If the submitted input is only whitespace, do nothing. This may occur if the user only submitted whitespace.
       return
 
-    const logsStore = useLogsStore()
     const { text } = useAppearanceStore()
-    const oscStore = useOSCStore()
-    const translationStore = useTranslationStore()
     const connectionsStore = useConnectionsStore()
     const defaultStore = useDefaultStore()
+    const logsStore = useLogsStore()
+    const oscStore = useOSCStore()
+    const settingsStore = useSettingsStore()
+    const translationStore = useTranslationStore()
     const { replace_words } = useWordReplaceStore()
 
     logsStore.loading_result = true
@@ -330,34 +352,47 @@ export const useSpeechStore = defineStore('speech', () => {
           }
         }, text.hide_after * 1000)
       }
-
-      // webhook
-      if (connectionsStore.wh.enabled && defaultStore.broadcasting)
-        webhook.post(connectionsStore.wh.url, { transcript: log.transcript, isFinal: true })
     }
 
     // send text via osc
-    if (is_electron() && (oscStore.osc_text) && defaultStore.broadcasting) {
-      if (log.isTranslationFinal && log.translation) {
-        const transcript = (translationStore.show_original) ? `${log.transcript} (${log.translation})` : log.translation
-        const data = {
-          transcript,
-          hide_ui: !oscStore.show_keyboard,
-          sfx: oscStore.sfx,
+    if (defaultStore.broadcasting) {
+      if (is_electron() && oscStore.osc_text) {
+        if (log.isTranslationFinal && log.translation) {
+          const transcript = (translationStore.show_original) ? `${log.transcript} (${log.translation})` : log.translation
+          const data = {
+            transcript,
+            hide_ui: !oscStore.show_keyboard,
+            sfx: oscStore.sfx,
+          }
+          window.ipcRenderer.send('send-text-event', JSON.stringify(data))
         }
-        window.ipcRenderer.send('send-text-event', JSON.stringify(data))
-      }
-      else if (log.isFinal && !log.translate) {
-        const data = {
-          transcript: log.transcript,
-          hide_ui: !oscStore.show_keyboard,
-          sfx: oscStore.sfx,
+        else if (log.isFinal && !log.translate) {
+          const data = {
+            transcript: log.transcript,
+            hide_ui: !oscStore.show_keyboard,
+            sfx: oscStore.sfx,
+          }
+          window.ipcRenderer.send('send-text-event', JSON.stringify(data))
         }
-        window.ipcRenderer.send('send-text-event', JSON.stringify(data))
       }
-    }
-    else if (defaultStore.ws1) {
-      defaultStore.ws1.send(`{"type": "text", "data": ${JSON.stringify(log)}}`)
+      else if (!settingsStore.realtime_text) {
+        const wsPayload = JSON.stringify(log)
+
+        // Send to mimiuchi desktop application
+        if (connectionsStore.open.mimiuchi_websocket)
+          connectionsStore.open.mimiuchi_websocket.send(`{"type": "text", "data": ${wsPayload}}`)
+
+        // Send to Open Broadcaster Software (OBS) WebSocket
+        await connectionsStore.obs_set_text(log.transcript)
+
+        // Send to user WebSockets
+        for (const openConnection of connectionsStore.open.user_websockets) {
+          if (openConnection) openConnection.send(`{"type": "text", "data": ${wsPayload}}`)
+        }
+
+        // Post to user webhooks
+        post_to_user_webhooks(log.transcript, true)
+      }
     }
   }
 
@@ -419,10 +454,22 @@ export const useSpeechStore = defineStore('speech', () => {
     return pins.value.hasOwnProperty(selected_language.title)
   }
 
+  function post_to_user_webhooks(text: any, is_final: boolean) {
+    const connectionsStore = useConnectionsStore()
+
+    for (const wh of connectionsStore.user_webhooks) {
+      if (wh.enabled) {
+        console.log(`Webhook (${wh.title}) is posting to ${wh.webhook!.address_full}.`)
+        webhook.post(wh.webhook!.address_full, { transcript: text, isFinal: is_final })
+      }
+    }
+  }
+
   return {
     stt,
     tts,
     pinned_languages,
+    reset,
     initialize_speech,
     toggle_listen,
     submit_text,

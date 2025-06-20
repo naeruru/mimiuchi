@@ -20,15 +20,13 @@ export default {
     update: 'アップデート',
     subject_to_change: '変更の可能性があります',
   },
-  alerts: {
+  snackbar: {
+    version_mismatch: 'デスクトップ版とウェブアプリ版は別物です。壊れるかもしれないので、アップデートを検討してください。',
     no_speech: 'このブラウザはWeb Speech APIをサポートしていません（Speech-to-text）',
     speech_recognition_error_event: {
       aborted: 'Error: デバイスが別のブラウザタブで使用中です',
       not_allowed: 'マイクのアクセスに失敗しました。許可する必要があります。',
     },
-    broadcast_error: 'ブロードキャストに失敗しました. デスクトップアプリが起動していることを確認してください。',
-    websocket_error: 'ウェブソケットのURLが無効です',
-    version_mismatch: 'デスクトップ版とウェブアプリ版は別物です。壊れるかもしれないので、アップデートを検討してください。',
   },
   settings: {
     title: 'ユーザー設定',
@@ -161,7 +159,7 @@ export default {
       enabled: 'テキストリプレース',
       match_whole_word: '単語単位',
       match_case: '大文字/小文字を区別',
-      info: '新しい置き換えを追加する場合は{icon}バタンを使用してください',
+      info: '新しい置き換えを追加する場合は{icon}バタンを使用してください。',
       replacing: 'リプレース',
       replacement: 'リプレースメント',
     },
@@ -185,14 +183,33 @@ export default {
     connections: {
       title: '接続',
       description: '{icon}使用時に他のアプリにデータを送信',
-      update: 'アップデート接続',
-      ws: {
-        name: 'デスクトップアプリの接続',
-        port: 'ウェブソケットポート',
-        description: 'ウェブソケットでテキスト更新を即座に送信できます',
+      action: {
+        add: '接続を追加するには{icon}ボタンを使用してください。',
       },
-      wh: {
-        description: 'テキスト更新をWebhookのPOSTリクエストで送信できます',
+      dialog: {
+        title: {
+          add: '接続の追加',
+          edit: '接続の編集',
+        },
+        description: {
+          websocket: 'ウェブソケットでテキスト更新を即座に送信できます',
+          webhook: 'テキスト更新をWebhookのPOSTリクエストで送信できます',
+        },
+        field: {
+          title: '接続名',
+          type: '接続型',
+          address: 'アドレス',
+          port: 'ポート',
+          password: 'パスワード',
+          password_placeholder: '認証が無効な場合は入力不要です',
+          text_source_name: 'テキストソース名',
+          full_address: 'フルアドレス',
+        },
+        action: {
+          cancel: 'キャンセル',
+          confirm: 'OK',
+          delete: '削除',
+        },
       },
     },
     osc: {
@@ -269,7 +286,7 @@ export default {
             text: 'このトリガーを削除してもよろしいですか？',
           },
         },
-        empty: 'トリガーを追加するには{icon}ボタンを使用してください！',
+        empty: 'トリガーを追加するには{icon}ボタンを使用してください。',
       },
     },
   },

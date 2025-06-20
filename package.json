@@ -48,6 +48,7 @@
     "electron": "^30.0.4",
     "electron-builder": "^24.13.3",
     "eslint": "^8.57.0",
+    "obs-websocket-js": "^5.0.6",
     "typescript": "^5.4.5",
     "vite": "^5.2.11",
     "vite-plugin-electron": "^0.28.7",

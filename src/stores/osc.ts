@@ -25,11 +25,6 @@ interface Assign {
 }
 
 export const useOSCStore = defineStore('osc', () => {
-  const ws = ref({
-    ip: '127.0.0.1',
-    port: '8999',
-  })
-
   const ip = ref('127.0.0.1')
   const port = ref('9000')
   const osc_text = ref(true)

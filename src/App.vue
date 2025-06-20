@@ -77,11 +77,11 @@ settingsStore.languages = global_langs
 
 onUnmounted(() => {
   if (is_electron())
-    window.ipcRenderer.send('close-ws')
+    connectionsStore.disconnect_mimiuchi_websocketserver()
 })
 onMounted(() => {
-  if (is_electron() && connectionsStore.ws.enabled)
-    window.ipcRenderer.send('start-ws', connectionsStore.ws.port)
+  if (is_electron() && connectionsStore.core_mimiuchi_websocketserver.enabled)
+    connectionsStore.connect_mimiuchi_websocketserver()
 
   locale.value = settingsStore.language
   settingsStore.$subscribe((language, state) => {
