@@ -87,17 +87,15 @@
               @click="toggleListen"
             />
             <v-badge
-              :model-value="!!defaultStore.connections"
-              :content="defaultStore.connections ? defaultStore.connections : undefined" color="success"
+              :model-value="!!defaultStore.connections_count"
+              :content="defaultStore.connections_count ? defaultStore.connections_count : undefined" color="success"
               class="mr-4"
             >
               <v-btn
-                :loading="defaultStore.loading_websocket"
-                :disabled="defaultStore.loading_websocket"
                 :color="(defaultStore.broadcasting) ? 'success' : 'error'" size="small"
                 :icon="!defaultStore.broadcasting ? 'mdi-broadcast-off' : 'mdi-broadcast'"
                 variant="outlined"
-                @click="toggleBroadcast"
+                @click="connectionsStore.toggle_broadcast()"
               />
             </v-badge>
             <v-divider height="50" class="mr-4" vertical />
@@ -133,14 +131,15 @@ import { storeToRefs } from 'pinia'
 import { useI18n } from 'vue-i18n'
 import is_electron from '@/helpers/is_electron'
 
-import { useSpeechStore } from '@/stores/speech'
+import { useAppearanceStore } from '@/stores/appearance'
+import { useConnectionsStore } from '@/stores/connections'
+import { useDefaultStore } from '@/stores/default'
 import type { Log } from '@/stores/logs'
 import { useLogsStore } from '@/stores/logs'
-import { useTranslationStore } from '@/stores/translation'
-import { useOSCStore } from '@/stores/osc'
-import { useDefaultStore } from '@/stores/default'
 import { useSettingsStore } from '@/stores/settings'
-import { useAppearanceStore } from '@/stores/appearance'
+import { useOSCStore } from '@/stores/osc'
+import { useSpeechStore } from '@/stores/speech'
+import { useTranslationStore } from '@/stores/translation'
 
 const { t } = useI18n()
 const router = useRouter()
@@ -150,13 +149,14 @@ declare const window: any
 
 const last_route = ref<any>(null)
 const { smAndDown } = useDisplay()
-const speechStore = useSpeechStore()
-const logsStore = useLogsStore()
-const translationStore = useTranslationStore()
-const oscStore = useOSCStore()
-const defaultStore = useDefaultStore()
-const settingsStore = useSettingsStore()
 const appearanceStore = useAppearanceStore()
+const connectionsStore = useConnectionsStore()
+const defaultStore = useDefaultStore()
+const logsStore = useLogsStore()
+const oscStore = useOSCStore()
+const settingsStore = useSettingsStore()
+const speechStore = useSpeechStore()
+const translationStore = useTranslationStore()
 
 const input_text = ref('')
 const input_index = ref<any>(null)
@@ -193,13 +193,64 @@ watch(
   { deep: true },
 )
 
+onMounted(() => {
+  onResize()
+  reloadEvents()
+
+  if (is_electron()) {
+    // Connections
+    window.ipcRenderer.on('mimiuchi-websocketserver-started', () => {
+      console.log(`Starting mimiuchi WebSocket server... (Listening on port ${connectionsStore.core_mimiuchi_websocketserver.websocketserver?.port})`)
+    })
+
+    window.ipcRenderer.on('mimiuchi-websocketserver-close', () => {
+      console.log('Closing mimiuchi WebSocket server...')
+    })
+
+    window.ipcRenderer.on('mimiuchi-websocketserver-closed', () => {
+      console.log('Closed mimiuchi WebSocket server.')
+    })
+
+    window.ipcRenderer.on('mimiuchi-websocketserver-error', (event: any, data: any) => {
+      console.error(data)
+    })
+
+    window.ipcRenderer.on('mimiuchi-websocketserver-client-connected', (event: any, arg1: any, arg2: any) => {
+      defaultStore.broadcasting = arg1
+      console.log(`A WebSocket client connected. (${arg2})`)
+    })
+
+    window.ipcRenderer.on('mimiuchi-websocketserver-client-disconnected', (event: any, arg1: any, arg2: any) => {
+      defaultStore.broadcasting = arg1
+      console.log(`A WebSocket client disconnected. (${arg2.ip})`)
+      console.log(`Code: ${arg2.code}. Reason: ${arg2.reason}`)
+    })
+
+    // Speech
+    window.ipcRenderer.on('transformers-translate-render', (event: any, data: any) => {
+      translationStore.onMessageReceived(data)
+    })
+  }
+
+  speechStore.initialize_speech(speechStore.stt.language)
+})
+
 onUnmounted(() => {
   if (defaultStore.speech.listening)
     toggleListen()
+
   if (defaultStore.broadcasting)
-    toggleBroadcast()
+    connectionsStore.toggle_broadcast()
+
   if (is_electron()) {
-    window.ipcRenderer.removeListener('websocket-connect')
+    // Connections
+    window.ipcRenderer.removeListener('mimiuchi-websocketserver-started')
+    window.ipcRenderer.removeListener('mimiuchi-websocketserver-closed')
+    window.ipcRenderer.removeListener('mimiuchi-websocketserver-error')
+    window.ipcRenderer.removeListener('mimiuchi-websocketserver-client-connected')
+    window.ipcRenderer.removeListener('mimiuchi-websocketserver-client-disconnected')
+
+    // Speech
     window.ipcRenderer.removeListener('receive-text-event')
     window.ipcRenderer.removeListener('transformers-translate-render')
   }
@@ -208,19 +259,6 @@ onUnmounted(() => {
 onUpdated(() => {
   reloadEvents()
   last_route.value = router.options.history.state.back
-})
-
-onMounted(() => {
-  onResize()
-  reloadEvents()
-
-  if (is_electron()) {
-    window.ipcRenderer.on('transformers-translate-render', (event: any, data: any) => {
-      translationStore.onMessageReceived(data)
-    })
-  }
-
-  speechStore.initialize_speech(speechStore.stt.language)
 })
 
 function toggleListen() {
@@ -347,10 +385,6 @@ async function onSubmit(log: Log | null = null) {
   input_index.value = null
 }
 
-function toggleBroadcast() {
-  defaultStore.toggle_broadcast()
-}
-
 function show_snackbar(type: string, desc: string) {
   defaultStore.snackbar.desc = desc
   defaultStore.snackbar.type = type
@@ -365,9 +399,6 @@ function reloadEvents() {
   if (is_electron()) {
     window.ipcRenderer.removeListener('websocket-connect')
     window.ipcRenderer.removeListener('receive-text-event')
-    window.ipcRenderer.on('websocket-connect', (event: any, data: any) => {
-      defaultStore.broadcasting = data
-    })
     window.ipcRenderer.on('receive-text-event', (event: any, data: any) => {
       const parsedData = JSON.parse(data)
       onSubmit(parsedData)

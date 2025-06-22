@@ -20,21 +20,34 @@ export default {
     update: 'Update',
     subject_to_change: 'Subject to change',
   },
-  alerts: {
+  snackbar: {
+    version_mismatch: 'The desktop app has a different version than the web version. Consider updating, as things might break.',
     no_speech: 'Your browser does not support Web Speech API (Speech-to-text).',
     speech_recognition_error_event: {
-      aborted: 'Error: Device in use.',
-      audio_capture: 'Error: Audio capture failed.',
-      network: 'Error: Network communication required for completing the recognition failed.',
-      not_allowed: 'Error: You must give permission to use the microphone.',
-      service_not_allowed: 'Error: The speech recognition service cannot be started due to settings or policies.',
-      bad_grammar: 'Error: There was a problem with the SpeechGrammarList.',
-      language_not_supported: 'Error: The speech recognition language is not supported by the browser.',
-      unknown: 'Error: An unknown error occurred.',
+      aborted: 'Audio device in use.',
+      audio_capture: 'Audio capture failed.',
+      network: 'Network communication required for completing the recognition failed.',
+      not_allowed: 'You must give permission to use the microphone.',
+      service_not_allowed: 'The speech recognition service cannot be started due to settings or policies.',
+      bad_grammar: 'There was a problem with the SpeechGrammarList.',
+      language_not_supported: 'The speech recognition language is not supported by the browser.',
+      unknown: 'An unknown speech recognition error occurred.',
     },
-    broadcast_error: 'Error enabling broadcast. Make sure the desktop app is running.',
-    websocket_error: 'Invalid websocket URL',
-    version_mismatch: 'The desktop app has a different version than the web version. Consider updating, as things might break.',
+    connections: {
+      websocket: {
+        opened: 'WebSocket opened.',
+        closed: 'WebSocket closed.',
+      },
+      websocket_obs: {
+        connecting: 'Connecting to OBS WebSocket server...',
+        failed: 'OBS WebSocket failed to connect to server. Please verify settings.',
+        opened: 'OBS WebSocket connected to server.',
+        closed: 'OBS WebSocket disconnected from server.',
+        error: {
+          text_source: 'OBS WebSocket: The text source does not exist in the OBS instance. Please verify settings.',
+        },
+      },
+    },
   },
   settings: {
     title: 'Settings',
@@ -191,14 +204,33 @@ export default {
     connections: {
       title: 'Connections',
       description: 'Send data to other applications when using {icon}',
-      update: 'Update Connection',
-      ws: {
-        name: 'Desktop connection',
-        port: 'Websocket Port',
-        description: 'Send real-time text updates over a websocket',
+      action: {
+        add: 'Use the {icon} button to add a new connection',
       },
-      wh: {
-        description: 'Send text updates over a webhook POST request',
+      dialog: {
+        title: {
+          add: 'Add connection',
+          edit: 'Edit connection',
+        },
+        description: {
+          websocket: 'Send text updates over a websocket',
+          webhook: 'Send text updates over a webhook POST request',
+        },
+        field: {
+          title: 'Title',
+          type: 'Type',
+          address: 'Address',
+          port: 'Port',
+          password: 'Password',
+          password_placeholder: 'If server authentication is disabled, leave this field empty.',
+          text_source_name: 'Text source name',
+          full_address: 'Full address',
+        },
+        action: {
+          cancel: 'Cancel',
+          confirm: 'Confirm',
+          delete: 'Delete',
+        },
       },
     },
     osc: {
