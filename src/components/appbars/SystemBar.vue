@@ -1,9 +1,12 @@
 <template>
   <v-system-bar height="35" class="systembar pr-0" color="background" window>
+
     <div v-if="platform.includes('mac')" :style="{ 'min-width': '75px' }"></div>
+
     <v-icon class="me-2" icon="mdi-weather-night" />
 
     <span class="font-weight-medium">{{ APP_NAME }}</span>
+    
     <v-chip class="ml-2" size="x-small" label>
       {{ t('general.beta') }}
     </v-chip>
@@ -12,7 +15,7 @@
 
     <div v-if="!platform.includes('mac')">
       <v-btn class="systembar-button" variant="text" height="35" size="x-small" @click="minimize">
-      <v-icon icon="mdi-minus" />
+        <v-icon icon="mdi-minus" />
       </v-btn>
 
       <v-btn variant="text" class="systembar-button ms-2" height="35" size="x-small" @click="toggle_maximize">
@@ -50,14 +53,6 @@ declare const window: any
 const APP_NAME = __APP_NAME__
 const maximized = ref(false)
 const platform = ref(window.navigator.platform.toLowerCase())
-
-// onMounted(() => {
-//   if (is_electron()) {
-//     window.ipcRenderer.on('maximized_state', (event: any, data: any) => {
-//       maximized.value = event
-//     })
-//   }
-// })
 
 function close_app() {
   if (is_electron())
