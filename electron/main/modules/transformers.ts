@@ -13,62 +13,32 @@ export class TranslationPipeline {
 
     return this.instance
   }
-
-  async translate(win: any, data: any) {
-    // call translator. downloads and caches model if first load
-    const translator = await TranslationPipeline.getInstance((x: any) => {
-      // self.postMessage(x)
-      win.webContents.send('transformers-translate-render', x)
-    })
-
-    // console.log(data)
-    const output = await translator(data.text, {
-      tgt_lang: data.tgt_lang,
-      src_lang: data.src_lang,
-
-      // partial outputs
-      callback_function: (x: any) => {
-        win.webContents.send('transformers-translate-render', {
-          status: 'update',
-          output: translator.tokenizer.decode(x[0].output_token_ids, { skip_special_tokens: true }),
-          index: data.index,
-        })
-      },
-    })
-
-    // send back to main thread
-    win.webContents.send('transformers-translate-render', {
-      status: 'complete',
-      output,
-      index: data.index,
-    })
-  }
 }
 
-// self.addEventListener('message', async (event) => {
-//   // call translator. downloads and caches model if first load
-//   const translator = await TranslationPipeline.getInstance((x: any) => {
-//     self.postMessage(x)
-//   })
+self.addEventListener('message', async (event) => {
+  // call translator. downloads and caches model if first load
+  const translator = await TranslationPipeline.getInstance((x: any) => {
+    self.postMessage(x)
+  })
 
-//   const output = await translator(event.data.text, {
-//     tgt_lang: event.data.tgt_lang,
-//     src_lang: event.data.src_lang,
+  const output = await translator(event.data.text, {
+    tgt_lang: event.data.tgt_lang,
+    src_lang: event.data.src_lang,
 
-//     // partial outputs
-//     callback_function: (x: any) => {
-//       self.postMessage({
-//         status: 'update',
-//         output: translator.tokenizer.decode(x[0].output_token_ids, { skip_special_tokens: true }),
-//         index: event.data.index,
-//       })
-//     },
-//   })
+    // partial outputs
+    callback_function: (x: any) => {
+      self.postMessage({
+        status: 'update',
+        output: translator.tokenizer.decode(x[0].output_token_ids, { skip_special_tokens: true }),
+        index: event.data.index,
+      })
+    },
+  })
 
-//   // send back to main thread
-//   self.postMessage({
-//     status: 'complete',
-//     output,
-//     index: event.data.index,
-//   })
-// })
+  // send back to main thread
+  self.postMessage({
+    status: 'complete',
+    output,
+    index: event.data.index,
+  })
+})
