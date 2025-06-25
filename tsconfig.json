@@ -1,24 +1,8 @@
 {
-  "compilerOptions": {
-    "target": "ESNext",
-    "jsx": "preserve",
-    "lib": ["ESNext", "DOM"],
-    "useDefineForClassFields": true,
-    "baseUrl": ".",
-    "module": "ESNext",
-    "moduleResolution": "Node",
-    "paths": {
-      "@/*": ["src/*"]
-    },
-    "resolveJsonModule": true,
-    "strict": true,
-    "noEmit": true,
-    "esModuleInterop": true,
-    "isolatedModules": true,
-    "skipLibCheck": true
-  },
+  "files": [],
   "references": [
-    { "path": "./tsconfig.node.json" }
-  ],
-  "include": ["src"]
+    { "path": "./tsconfig.app.json" },      // Vue.js
+    { "path": "./tsconfig.electron.json" }, // Electron
+    { "path": "./tsconfig.node.json" }      // Tools
+  ]
 }

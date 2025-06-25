@@ -1,24 +1,33 @@
-import path from 'node:path'
 import { createRequire } from 'node:module'
+import * as os from 'node:os'
+import * as path from 'node:path'
 import { fileURLToPath } from 'node:url'
-import os from 'node:os'
 import { Worker } from 'node:worker_threads'
-import { BrowserWindow, app, ipcMain, shell } from 'electron'
+import { app, BrowserWindow, ipcMain, shell } from 'electron'
 
-import { WebSocket, WebSocketServer } from 'ws'
 import Store from 'electron-store'
-import { emit_osc, empty_queue } from './modules/osc'
-import { initialize_wsserver } from './modules/wsserver'
-import { check_update } from './modules/check_update'
-
-import { TranslationPipeline } from './modules/transformers'
+import { WebSocket, WebSocketServer } from 'ws'
+import { check_update } from './modules/check_update.js'
+import { emit_osc, empty_queue } from './modules/osc.js'
+import { initialize_wsserver } from './modules/wsserver.js'
 
 interface Schema {
   'win_bounds': object
   'auto-open-web-app-on-launch': boolean
 }
 
-const store = new Store<Schema>()
+const store = new Store<Schema>({
+  schema: {
+    'win_bounds': {
+      type: 'object',
+      default: {},
+    },
+    'auto-open-web-app-on-launch': {
+      type: 'boolean',
+      default: false,
+    },
+  },
+})
 
 const require = createRequire(import.meta.url)
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
@@ -116,7 +125,7 @@ async function createWindow() {
   })
 }
 
-const transformersWorkerPath = `file://${path.join(process.env.APP_ROOT, 'src', 'worker.mjs').replace('app.asar', 'app.asar.unpacked')}`
+const transformersWorkerPath = `file://${path.join(__dirname, 'worker', 'translation.js').replace('app.asar', 'app.asar.unpacked')}`
 const transformersWorker = new Worker(new URL(transformersWorkerPath, import.meta.url))
 
 transformersWorker.on('message', (x) => {

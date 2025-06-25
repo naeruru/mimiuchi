@@ -1,5 +1,5 @@
 import { Buffer } from 'node:buffer'
-import { emit_osc } from './osc'
+import { emit_osc } from './osc.js'
 
 // Attach listeners to WebSocket server and handle WebSocket clients
 function initialize_wsserver(win: any, websocketserver: any) {
