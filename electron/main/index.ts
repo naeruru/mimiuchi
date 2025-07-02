@@ -29,6 +29,10 @@ const store = new Store<Schema>({
   },
 })
 
+// import { nativeImage } from 'electron'
+// const image = nativeImage.createFromPath(`${app.getAppPath()}/public/logo-256x256.png`)
+// app.dock?.setIcon(image)
+
 const require = createRequire(import.meta.url)
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
@@ -75,6 +79,8 @@ const window_config: any = {
   height: 700,
   icon: path.join(process.env.VITE_PUBLIC, 'favicon.ico'),
   frame: false,
+  titleBarStyle: 'hidden',
+  trafficLightPosition: { x: 10, y: 10 },
   webPreferences: {
     preload,
     // Warning: Enable nodeIntegration and disable contextIsolation is not secure in production
@@ -116,8 +122,9 @@ async function createWindow() {
   win.on('maximize', () => win.webContents.send('maximized_state', true))
   win.on('unmaximize', () => win.webContents.send('maximized_state', false))
   win.on('close', () => {
-    Object.assign(window_config, { isMaximized: win.isMaximized() }, win.getNormalBounds())
-    store.set('win_bounds', window_config)
+    const update_obj = {}
+    Object.assign(update_obj, { isMaximized: win.isMaximized() }, win.getNormalBounds())
+    store.set('win_bounds', update_obj)
   })
   win.webContents.once('dom-ready', () => {
     if (window_config.isMaximized)
