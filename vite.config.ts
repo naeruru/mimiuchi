@@ -44,7 +44,6 @@ export default defineConfig(({ command }) => {
                 external: Object.keys('dependencies' in pkg ? pkg.dependencies : {}),
                 input: {
                   'index': 'electron/main/index.ts',
-                  'worker/translation': 'electron/main/worker/translation.ts',
                 },
                 output: {
                   entryFileNames: '[name].js',
@@ -74,12 +73,15 @@ export default defineConfig(({ command }) => {
         '@': fileURLToPath(new URL('./src', import.meta.url)),
       },
     },
-    server: process.env.VSCODE_DEBUG && (() => {
-      const url = new URL(pkg.debug.env.VITE_DEV_SERVER_URL)
-      return {
-        host: url.hostname,
-        port: +url.port,
+    server: (() => {
+      if (process.env.VSCODE_DEBUG) {
+        const url = new URL(pkg.debug.env.VITE_DEV_SERVER_URL)
+        return {
+          host: url.hostname,
+          port: +url.port,
+        }
       }
+      return undefined
     })(),
     clearScreen: false,
   }
