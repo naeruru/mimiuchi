@@ -1,8 +1,8 @@
 import { defineStore } from 'pinia'
-
 import { ref } from 'vue'
 import { useLogsStore } from '@/stores/logs'
 import { useSpeechStore } from '@/stores/speech'
+import TranslationWorker from '@/workers/translation.worker.ts?worker'
 
 export const useTranslationStore = defineStore('translation', () => {
   const enabled = ref(false)
@@ -11,6 +11,27 @@ export const useTranslationStore = defineStore('translation', () => {
   const target = ref('jpn_Jpan')
   const download = ref(-1) // percent downloaded 0-100. -1 = done
   const show_original = ref(true)
+  const worker = ref<Worker | null>(null)
+
+  function getWorker(): Worker {
+    if (!worker.value) {
+      worker.value = new TranslationWorker()
+      worker.value.onmessage = (event) => {
+        onMessageReceived(event.data)
+      }
+    }
+    return worker.value
+  }
+
+  function translate(text: string, index: number) {
+    getWorker().postMessage({
+      type: 'transformers-translate',
+      text,
+      tgt_lang: target.value,
+      src_lang: source.value,
+      index,
+    })
+  }
 
   function onMessageReceived(data: any) {
     const logsStore = useLogsStore()
@@ -38,6 +59,7 @@ export const useTranslationStore = defineStore('translation', () => {
       }
     }
   }
+
   return {
     enabled,
     type,
@@ -46,5 +68,6 @@ export const useTranslationStore = defineStore('translation', () => {
     download,
     show_original,
     onMessageReceived,
+    translate,
   }
 })
