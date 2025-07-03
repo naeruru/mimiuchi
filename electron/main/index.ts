@@ -127,8 +127,9 @@ async function createWindow() {
     store.set('win_bounds', update_obj)
   })
   win.webContents.once('dom-ready', () => {
-    if (window_config.isMaximized)
-      win.webContents.send('maximized_state', true)
+    // the window is never maximized on load
+    // if (window_config.isMaximized)
+    //   win.webContents.send('maximized_state', true)
   })
 }
 

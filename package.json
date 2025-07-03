@@ -36,7 +36,7 @@
     "roboto-fontface": "^0.10.0",
     "vue-i18n": "^11.1.7",
     "vue-router": "^4.5.1",
-    "vuetify": "^3.8.11",
+    "vuetify": "^3.8.12",
     "webfontloader": "^1.6.28",
     "ws": "^8.18.2"
   },

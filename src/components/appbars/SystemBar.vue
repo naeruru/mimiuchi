@@ -15,11 +15,11 @@
 
     <div v-if="!platform.includes('mac')">
       <v-btn class="systembar-button" variant="text" height="35" size="x-small" @click="minimize">
-        <v-icon icon="mdi-minus" />
+        <v-icon icon="mdi-minus" size="medium" />
       </v-btn>
 
-      <v-btn variant="text" class="systembar-button ms-2" height="35" size="x-small" @click="toggle_maximize">
-        <v-icon :icon=" maximized ? 'mdi-checkbox-multiple-blank-outline' : 'mdi-checkbox-blank-outline'" />
+      <v-btn variant="text" class="systembar-button ms-1 pt-1" height="35" size="x-small" @click="toggle_maximize">
+        <v-icon :icon=" maximized ? 'mdi-checkbox-multiple-blank-outline' : 'mdi-checkbox-blank-outline'"  />
       </v-btn>
 
       <v-hover>
@@ -28,12 +28,12 @@
             v-bind="props"
             :color="isHovering ? 'red' : undefined"
             :variant="isHovering ? `flat` : `text`"
-            class="systembar-button ms-2"
+            class="systembar-button ms-1"
             height="35"
             size="x-small"
             @click="close_app"
           >
-            <v-icon icon="mdi-close" />
+            <v-icon size="medium" icon="mdi-window-close" />
           </v-btn>
         </template>
       </v-hover>
@@ -42,9 +42,10 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import is_electron from '@/helpers/is_electron'
+import { IpcRendererEvent } from 'electron'
 
 const { t } = useI18n()
 
@@ -66,6 +67,13 @@ function minimize() {
   if (is_electron())
     window.ipcRenderer.send('minimize')
 }
+
+onMounted(() => {
+  if (is_electron())
+    window.ipcRenderer.on('maximized_state', (_event: IpcRendererEvent, arg: boolean) => {
+      maximized.value = arg
+    })
+})
 </script>
 
 <style scoped>
