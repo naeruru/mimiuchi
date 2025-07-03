@@ -15,6 +15,9 @@ import { gold_dark } from '@/plugins/themes/gold_dark'
 import { forest_light } from '@/plugins/themes/forest_light'
 import { forest_dark } from '@/plugins/themes/forest_dark'
 
+// additional components
+import { VIconBtn } from 'vuetify/labs/VIconBtn'
+
 export default createVuetify({
   theme: {
     defaultTheme: 'midnight_purple',
@@ -28,5 +31,8 @@ export default createVuetify({
       forest_light,
       forest_dark,
     },
+  },
+  components: {
+    VIconBtn,
   },
 })

@@ -78,12 +78,17 @@
           <v-spacer v-if="!smAndDown" />
 
           <div class="d-flex justify-right">
-            <v-btn
+            <v-icon-btn
               v-if="!is_electron()" class="mr-4"
-              :color="(defaultStore.speech.listening) ? 'success' : 'error'"
-              size="small"
-              :icon="!defaultStore.speech.listening ? 'mdi-microphone-off' : 'mdi-microphone'"
-              variant="outlined"
+              :active="defaultStore.speech.listening"
+              active-color="success"
+              color="error"
+              active-icon="mdi-microphone"
+              icon="mdi-microphone-off"
+              active-variant="outlined"
+              base-variant="outlined"
+              icon-size="20"
+              v-ripple
               @click="toggleListen"
             />
             <v-badge
@@ -91,28 +96,30 @@
               :content="defaultStore.connections_count ? defaultStore.connections_count : undefined" color="success"
               class="mr-4"
             >
-              <v-btn
-                :color="(defaultStore.broadcasting) ? 'success' : 'error'" size="small"
-                :icon="!defaultStore.broadcasting ? 'mdi-broadcast-off' : 'mdi-broadcast'"
-                variant="outlined"
+              <v-icon-btn
+                :active="defaultStore.broadcasting"
+                active-color="success"
+                color="error"
+                active-icon="mdi-broadcast"
+                icon="mdi-broadcast-off"
+                active-variant="outlined"
+                base-variant="outlined"
+                icon-size="20"
+                v-ripple
                 @click="connectionsStore.toggle_broadcast()"
               />
             </v-badge>
             <v-divider height="50" class="mr-4" vertical />
-            <v-btn
-              v-if="route.name === 'home'" color="transparent"
-              size="small"
-              icon="mdi-cog"
-              flat
-              @click="router.push({ path: last_setting })"
-            />
-            <v-btn
-              v-else
-              color="transparent"
-              size="small"
+            <v-icon-btn
+              :active="route.name === 'home'"
+              active-color=""
+              active-icon="mdi-cog"
               icon="mdi-home"
-              flat
-              @click="router.push({ path: '/' })"
+              active-variant="text"
+              base-variant="text"
+              icon-size="20"
+              v-ripple
+              @click="router.push({ path: (route.name === 'home') ? last_setting : '/' })"
             />
           </div>
         </div>
