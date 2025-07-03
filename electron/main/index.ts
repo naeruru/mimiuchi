@@ -1,22 +1,37 @@
-import path from 'node:path'
 import { createRequire } from 'node:module'
+import * as os from 'node:os'
+import * as path from 'node:path'
 import { fileURLToPath } from 'node:url'
-import os from 'node:os'
-import { BrowserWindow, app, ipcMain, shell } from 'electron'
+import { Worker } from 'node:worker_threads'
+import { app, BrowserWindow, ipcMain, shell } from 'electron'
 
-import { WebSocket, WebSocketServer } from 'ws'
 import Store from 'electron-store'
-import { emit_osc, empty_queue } from './modules/osc'
-import { initialize_wsserver } from './modules/wsserver'
-import { check_update } from './modules/check_update'
+import { WebSocket, WebSocketServer } from 'ws'
+import { check_update } from './modules/check_update.js'
+import { emit_osc, empty_queue } from './modules/osc.js'
+import { initialize_wsserver } from './modules/wsserver.js'
 
-import { TranslationPipeline } from './modules/transformers'
+interface Schema {
+  'win_bounds': object
+  'auto-open-web-app-on-launch': boolean
+}
+
+const store = new Store<Schema>({
+  schema: {
+    'win_bounds': {
+      type: 'object',
+      default: {},
+    },
+    'auto-open-web-app-on-launch': {
+      type: 'boolean',
+      default: false,
+    },
+  },
+})
 
 // import { nativeImage } from 'electron'
 // const image = nativeImage.createFromPath(`${app.getAppPath()}/public/logo-256x256.png`)
 // app.dock?.setIcon(image)
-
-const store = new Store()
 
 const require = createRequire(import.meta.url)
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
@@ -117,11 +132,12 @@ async function createWindow() {
   })
 }
 
-// const transformersWorkerPath = `file://${path.join(process.env.APP_ROOT, 'src', 'worker.mjs').replace('app.asar', 'app.asar.unpacked')}`
-// const transformersWorker = new Worker(new URL(transformersWorkerPath, import.meta.url))
+const transformersWorkerPath = `file://${path.join(__dirname, 'worker', 'translation.js').replace('app.asar', 'app.asar.unpacked')}`
+const transformersWorker = new Worker(new URL(transformersWorkerPath, import.meta.url))
 
-// const transformersPath = `file://${path.join(process.env.APP_ROOT, 'node_modules', '@xenova', 'transformers', 'src', 'transformers.js').replace('app.asar', 'app.asar.unpacked')}`
-// transformersWorker.postMessage({ type: 'transformers-init', data: transformersPath })
+transformersWorker.on('message', (x) => {
+  win.webContents.send('transformers-translate-render', x)
+})
 
 app.whenReady().then(() => {
   if (store.get('auto-open-web-app-on-launch')) {
@@ -268,7 +284,5 @@ ipcMain.on('delete-auto-open-web-app-on-launch', () => {
 // → Footer ('transformers-translate-render')
 
 ipcMain.on('transformers-translate', async (event, args) => {
-  // transformersWorker.postMessage({ type: 'transformers-translate', data: args })
-  const translator = new TranslationPipeline()
-  translator.translate(win, args)
+  transformersWorker.postMessage({ type: 'transformers-translate', data: args })
 })
