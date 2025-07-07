@@ -23,11 +23,11 @@
           activator="parent"
           open-on-click
           class="feature-tooltip feature-tooltip-persistent"
-          :open-delay="unavailableTooltip.openDelay"
+          :open-delay="unavailable_tooltip.open_delay"
           :close-on-back="true"
-          :max-width="unavailableTooltip.maxWidth"
-          :offset="unavailableTooltip.offset"
-          :interactive="unavailableTooltip.interactive"
+          :interactive="unavailable_tooltip.interactive"
+          :max-width="unavailable_tooltip.max_width"
+          :offset="unavailable_tooltip.offset"
           scroll-strategy="close"
         >
           <component :is="setting.unavailable_tooltip" />
@@ -86,11 +86,11 @@
           activator="parent"
           open-on-click
           class="feature-tooltip feature-tooltip-persistent"
-          :open-delay="unavailableTooltip.openDelay"
+          :open-delay="unavailable_tooltip.open_delay"
           :close-on-back="true"
-          :max-width="unavailableTooltip.maxWidth"
-          :offset="unavailableTooltip.offset"
-          :interactive="unavailableTooltip.interactive"
+          :interactive="unavailable_tooltip.interactive"
+          :max-width="unavailable_tooltip.max_width"
+          :offset="unavailable_tooltip.offset"
           scroll-strategy="close"
         >
           <component :is="setting.unavailable_tooltip" />
@@ -229,14 +229,14 @@ const settings_osc = computed(() => {
   ]
 })
 
-const unavailableTooltip = {
-  // openDelay is deliberately set to an absurdly high number
+const unavailable_tooltip = {
+  // open_delay is deliberately set to an absurdly high number
   // This forces the user to click the activator to open it within a reasonable amount of time
   // Essentially, the tooltip becomes an exclusively open-on-click tooltip while retaining all the features provided by open-on-hover
   // If the attribute open-on-hover is set to false, various features are lost
-  openDelay: 60000, // ms
+  open_delay: 60000, // ms
   interactive: true,
-  maxWidth: '256px',
+  max_width: '256px',
   offset: -20, // px
 }
 
