@@ -4,15 +4,16 @@
 
 # mimiuchi: speech-to-text
 
-mimiuchi is a free, customizable, OSC capable, speech-to-text application for displaying text or relaying it to other applications like VRChat. Its customizable text window is also designed to be paired with applications like OBS. It runs on the web, with little setup required beyond customization. You can try it out right now at [mimiuchi.com](https://mimiuchi.com/) with Chrome, Safari, or Edge. UI currently supports English and Japanese日本語 Chinese简体中文！
+mimiuchi is a free, customizable, OSC capable, speech-to-text application for displaying text or relaying it to other applications like OBS or VRChat. Its customizable text window is also designed to be paired with applications like OBS. It runs on the web, with little setup required beyond customization. You can try it out right now at [mimiuchi.com](https://mimiuchi.com/) with Chrome, Safari, or Edge. UI currently supports English, Spanish (España), Japanese (日本語), and Chinese (简体中文)！
 
 ### Features
 
 - Speech-to-text
 - Text-to-speech
 - On-device translations
+- OBS websocket support
 - OSC broadcasting (for apps like VRChat)
-- (WIP) Custom OSC param execution via language triggers ("turn my marker on" -> `/avatar/parameter/Marker True`)
+- Custom OSC param execution via language triggers ("turn my marker on" -> `/avatar/parameter/Marker True`)
 - ...and many settings to customize the experience!
 
 ## How to use
@@ -60,8 +61,7 @@ in no particular order...
 - VRChat text shader support (sending character data to float params)
 - ~~add ability to export settings/transcripts~~✅
 - ~~better webkit/safari support~~✅
-- Spotify support(maybe)
-- OBS websocket and 'text source' support
+- ~~OBS websocket and 'text source' support~~
 - option for second 'control panel' type screen with focus on quick switching between settings
 - better generic osc support
 - ~~translation support~~✅
@@ -80,7 +80,7 @@ See the [release page](https://github.com/naeruru/mimiuchi/releases) to install 
 
 ### Requirements
 
-- [NodeJS 20.x+](https://nodejs.org/en/)
+- [NodeJS 22.x+](https://nodejs.org/en/)
 
 ### Setup
 
@@ -92,7 +92,11 @@ Or you can use `npm run build` to build the application. It will create an exe f
 
 ## Special Thanks
 
-- fuopy for the name, mimiuchi, which lends the name from a project they made long ago!
+- [@fuwako](https://github.com/fuwako) who has done a ton of work in adding a lot of great features, updating parts of the UI, and many QOL improvements.
+- [@jeremio](https://github.com/jeremio) who has done a lot of work in standardizing and formatting the code, as well as working on some of the Transformers.js code.
+- [@gujimy](https://github.com/gujimy) for the bulk of the Chinese translations
+- [@adrianpaniagualeon](https://github.com/adrianpaniagualeon) for the bulk of the Spanish translations
+- [@fuopy](https://github.com/fuopy) for the name, mimiuchi, which lends the name from a project they made long ago!
 
 ## License
 
