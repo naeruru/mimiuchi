@@ -303,10 +303,6 @@ function handleKeyDown(event: KeyboardEvent) {
   outline-width: 1px;
 }
 
-.settings-tooltip-persistent > .v-overlay__content {
-  pointer-events: auto; /* The tooltip will persist on pointer hover */
-}
-
 .settings-disabled {
   opacity: var(--v-disabled-opacity) !important;
 }
