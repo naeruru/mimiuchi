@@ -344,8 +344,8 @@ function setProfile(selected_profile: string) {
 function displayAssignSubtitle(assign_object: any) {
   let subtitle = `set ${assign_object.type} to ${assign_object.set1}`
 
-  if (assign_object.activation === 'pulse')
-    subtitle = `${subtitle}, wait ${assign_object.pulse_duration}ms, set ${assign_object.type} to ${assign_object.set2}`
+  if (assign_object.behavior === 'pulse')
+    subtitle = `${subtitle} → wait ${assign_object.pulse_duration}ms → set ${assign_object.type} to ${assign_object.set2}`
 
   return subtitle
 }

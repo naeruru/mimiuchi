@@ -76,12 +76,13 @@
               />
             </v-col>
             <v-col :cols="4">
-              <v-text-field
+              <v-number-input
                 v-model="new_connection.websocket!.port"
-                :label="t('settings.connections.dialog.field.port')"
-                type="number"
+                control-variant="stacked"
                 hide-details
-                :rules="[rules.port]"
+                :label="t('settings.connections.dialog.field.port')"
+                :min="1"
+                :max="65535"
               />
             </v-col>
           </v-row>
@@ -98,13 +99,14 @@
               />
             </v-col>
             <v-col :cols="4">
-              <v-text-field
+              <v-number-input
                 v-model="new_connection.obs!.port"
-                :label="t('settings.connections.dialog.field.port')"
-                placeholder="4455"
-                type="number"
+                control-variant="stacked"
                 hide-details
-                :rules="[rules.port]"
+                :label="t('settings.connections.dialog.field.port')"
+                :min="1"
+                :max="65535"
+                placeholder="4455"
               />
             </v-col>
             <v-col :cols="12">
@@ -209,12 +211,6 @@ const form = ref(false)
 const rules = {
   requiredField: (value: string) => {
     return !!value || 'Required'
-  },
-  port: (value: number) => {
-    if (value >= 1 && value <= 65535)
-      return true
-
-    return (value >= 1 && value <= 65535) || 'Invalid port number'
   },
 }
 

@@ -10,13 +10,28 @@
       <v-card-text>
         <v-row>
           <v-col :cols="12" :lg="8" :sm="8">
-            <v-text-field v-model="new_trigger.ip" label="OSC IP" hide-details />
+            <v-text-field
+              v-model="new_trigger.ip"
+              label="OSC IP"
+              hide-details
+            />
           </v-col>
           <v-col :cols="12" :lg="4" :sm="4">
-            <v-text-field v-model="new_trigger.port" label="OSC port" hide-details />
+            <v-number-input
+              v-model="new_trigger.port"
+              control-variant="stacked"
+              hide-details
+              label="OSC port"
+              :min="1"
+              :max="65535"
+            />
           </v-col>
           <v-col :cols="12">
-            <v-text-field v-model="new_trigger.route" :label="t('settings.osc.triggers.trigger.address')" hide-details />
+            <v-text-field
+              v-model="new_trigger.route"
+              :label="t('settings.osc.triggers.trigger.address')"
+              hide-details
+            />
           </v-col>
         </v-row>
       </v-card-text>
@@ -83,12 +98,12 @@
               :items="value_types"
               hide-details
               :label="t('settings.osc.triggers.trigger.assign.phrases_type')"
-              @update:model-value="validateAssignValueAll"
+              @update:model-value="validate_assign_values"
             />
           </v-col>
           <v-col :cols="12" :lg="6" :sm="6">
             <v-select
-              v-model="new_assign.activation"
+              v-model="new_assign.behavior"
               :items="[
                 { name: t('settings.osc.triggers.trigger.assign.behavior_options.default'), value: 'default' },
                 { name: t('settings.osc.triggers.trigger.assign.behavior_options.pulse'), value: 'pulse' },
@@ -97,78 +112,86 @@
               item-value="value"
               hide-details
               :label="t('settings.osc.triggers.trigger.assign.behavior')"
-              @update:model-value="validateAssignValueAll"
             />
           </v-col>
         </v-row>
 
-        <!-- This row is displayed if the assign activation is "default". -->
-        <v-row v-if="new_assign.activation === 'default'">
-          <v-col :cols="12" :lg="6">
-            <v-text-field
-              v-if="new_assign.type !== 'bool'"
-              v-model="new_assign.set1"
-              hide-details
-              :label="t('settings.osc.triggers.trigger.assign.phrases_value')"
-              type="number"
-              @input="validateAssignValue1"
-            />
+        <v-row>
+          <v-col
+            :cols="12"
+            :lg="!(new_assign.behavior === 'pulse') ? 12 : 4"
+            :md="!(new_assign.behavior === 'pulse') ? 12 : 4"
+          >
             <v-select
-              v-else
-              v-model="new_assign.set1"
-              :items="['true', 'false']"
-              hide-details
-              :label="t('settings.osc.triggers.trigger.assign.phrases_value')"
-            />
-          </v-col>
-        </v-row>
-
-        <!-- This row is displayed if the assign activation is "pulse". -->
-        <v-row v-if="new_assign.activation === 'pulse'">
-          <v-col :cols="12" :lg="4" :md="4">
-            <v-text-field
-              v-if="new_assign.type !== 'bool'"
-              v-model="new_assign.set1"
-              hide-details
-              :label="`${t('settings.osc.triggers.trigger.assign.phrases_value')}1`"
-              type="number"
-              @input="validateAssignValue1"
-            />
-            <v-select
-              v-else
+              v-if="new_assign.type === 'bool'"
               v-model="new_assign.set1"
               :items="['true', 'false']"
               hide-details
               :label="`${t('settings.osc.triggers.trigger.assign.phrases_value')}1`"
             />
+            <v-number-input
+              v-if="(new_assign.type === 'int')"
+              v-model="new_assign.set1"
+              control-variant="stacked"
+              hide-details
+              :label="`${t('settings.osc.triggers.trigger.assign.phrases_value')}1`"
+              :step="1"
+            />
+            <v-number-input
+              v-if="(new_assign.type === 'float')"
+              v-model="new_assign.set1"
+              control-variant="stacked"
+              hide-details
+              :label="`${t('settings.osc.triggers.trigger.assign.phrases_value')}1`"
+              :max="+1"
+              :min="-1"
+              :precision="3"
+              :step="0.01"
+            />
           </v-col>
-
-          <v-col :cols="12" :lg="4" :md="4">
-            <v-text-field
+          <v-col
+            v-if="new_assign.behavior === 'pulse'"
+            :cols="12"
+            :lg="4"
+            :md="4">
+            <v-number-input
               v-model="new_assign.pulse_duration"
+              control-variant="stacked"
               hide-details
               :label="t('settings.osc.triggers.trigger.assign.behavior_options.pulse_wait')"
-              type="number"
               suffix="ms"
-              @input="new_assign.pulse_duration = Math.round(new_assign.pulse_duration)"
             />
           </v-col>
-
-          <v-col :cols="12" :lg="4" :md="4">
-            <v-text-field
-              v-if="new_assign.type !== 'bool'"
-              v-model="new_assign.set2"
-              hide-details
-              :label="`${t('settings.osc.triggers.trigger.assign.phrases_value')}2`"
-              type="number"
-              @input="validateAssignValue2"
-            />
+          <v-col
+            v-if="new_assign.behavior === 'pulse'"
+            :cols="12"
+            :lg="4"
+            :md="4">
             <v-select
-              v-else
+              v-if="new_assign.type === 'bool'"
               v-model="new_assign.set2"
               :items="['true', 'false']"
               hide-details
               :label="`${t('settings.osc.triggers.trigger.assign.phrases_value')}2`"
+            />
+            <v-number-input
+              v-if="(new_assign.type === 'int')"
+              v-model="new_assign.set2"
+              control-variant="stacked"
+              hide-details
+              :label="`${t('settings.osc.triggers.trigger.assign.phrases_value')}2`"
+              :step="1"
+            />
+            <v-number-input
+              v-if="(new_assign.type === 'float')"
+              v-model="new_assign.set2"
+              control-variant="stacked"
+              hide-details
+              :label="`${t('settings.osc.triggers.trigger.assign.phrases_value')}2`"
+              :max="+1"
+              :min="-1"
+              :precision="3"
+              :step="0.01"
             />
           </v-col>
         </v-row>
@@ -212,9 +235,12 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { useOSCStore } from '@/stores/osc'
+import { Assign, useOSCStore } from '@/stores/osc'
 
-const props = defineProps<{ mode: string, editingIndex: number }>()
+const props = defineProps<{
+  mode: string,
+  editingIndex: number,
+}>()
 
 const emit = defineEmits(['update:modelValue'])
 
@@ -225,15 +251,6 @@ interface Keyword {
   text: string
 }
 
-interface Assign {
-  keyword: string
-  type: string
-  set1: string // Receive user-input as a string. Parse it when finally sending a payload.
-  set2: string
-  activation: string
-  pulse_duration: number
-}
-
 const model = defineModel<boolean>()
 
 const oscStore = useOSCStore()
@@ -242,7 +259,7 @@ const trigger_phrase = ref('')
 
 const value_types = ref(['bool', 'int', 'float'])
 
-const new_assign = ref({
+const new_assign = ref<Assign>({
   keyword: '',
   type: 'bool',
   set1: 'true',
@@ -250,14 +267,14 @@ const new_assign = ref({
 
   // "default": send a value
   // "pulse": send a value, wait some time, then send a value
-  activation: 'default',
+  behavior: 'default',
   pulse_duration: 0,
 })
 
 const new_trigger = ref({
   // name: '',
   ip: '',
-  port: '',
+  port: NaN,
   route: '/avatar/parameters/',
   keywords: [] as Keyword[], // [{enabled: boolean, text: string}?],
   assigns: [] as Assign[], // [{keyword: string, type: string, set: string}?]
@@ -281,7 +298,7 @@ watch(model, (enabled) => {
       type: 'bool',
       set1: 'true',
       set2: 'false',
-      activation: 'default',
+      behavior: 'default',
       pulse_duration: 1000,
     }
 
@@ -321,104 +338,30 @@ function deleteTrigger(i: number) {
   new_trigger.value.keywords.splice(i, 1)
 }
 
-function validateAssignValue1() {
-  const assign = new_assign
-
-  switch (assign.value.type) {
-    case 'int':
-      if (assign.value.set1 === '' || Number.isNaN(Number(assign.value.set1))) { // Invalid input
-        assign.value.set1 = '0'
-      }
-      else { // Valid input.
-        // Display.
-        assign.value.set1 = String(Number.parseInt(assign.value.set1))
-      }
-
-      break
-    case 'float':
-      if (assign.value.set1 === '' || Number.isNaN(Number(assign.value.set1))) { // Invalid input
-        assign.value.set1 = '0'
-      }
-      else { // Valid input.
-        // Display.
-        assign.value.set1 = assign.value.set1.replace(/^0+(?=\d)/, '') // Remove leading zeros in front of the number
-      }
-
-      break
-    case 'bool':
-      if (assign.value.set1 !== 'true' && assign.value.set1 !== 'false') // Invalid input
-        assign.value.set1 = 'true'
-
-      break
+function validate_assign_values() {
+  if (new_assign.value.type === 'bool') {
+      new_assign.value.set1 = 'true'
+      new_assign.value.set2 = 'false'
   }
-}
-
-function validateAssignValue2() {
-  const assign = new_assign
-
-  switch (assign.value.type) {
-    case 'int':
-      if (assign.value.set2 === '' || Number.isNaN(Number(assign.value.set2))) { // Invalid input
-        assign.value.set2 = '0'
-      }
-      else { // Valid input.
-        // Display.
-        assign.value.set2 = String(Number.parseInt(assign.value.set2))
-      }
-
-      break
-    case 'float':
-      if (assign.value.set2 === '' || Number.isNaN(Number(assign.value.set2))) { // Invalid input
-        assign.value.set2 = '0'
-      }
-      else { // Valid input.
-        // Display.
-        assign.value.set2 = assign.value.set2.replace(/^0+(?=\d)/, '') // Remove leading zeros in front of the number
-      }
-
-      break
-    case 'bool':
-      if (assign.value.set2 !== 'true' && assign.value.set2 !== 'false') // Invalid input
-        assign.value.set2 = 'true'
-
-      break
-  }
-}
-
-function validateAssignValueAll() {
-  validateAssignValue1()
-
-  if (new_assign.value.activation === 'pulse')
-    validateAssignValue2()
 }
 
 function addAssign() {
   const assign = new_assign
 
-  // Validation.
+  // Validation
   if (!assign.value.keyword.trim()) // The assign keyword field is empty
     return
 
-  // Display.
-  if (assign.value.type === 'float') {
-    if (!assign.value.set1.includes('.')) { // 123 → 123.0
-      assign.value.set1 = `${assign.value.set1}.0`
-    }
-    else if (assign.value.set1.endsWith('.')) { // 123. → 123.0
-      assign.value.set1 = `${assign.value.set1}0`
-    }
-  }
-
-  // Store.
+  // Store
   new_trigger.value.assigns.push(assign.value)
 
-  // Partially reset the assign fields.
+  // Partially reset the assign fields
   new_assign.value = {
     keyword: '',
     type: assign.value.type,
     set1: assign.value.set1,
     set2: 'false',
-    activation: 'default',
+    behavior: 'default',
     pulse_duration: 1000,
   }
 }
@@ -430,8 +373,8 @@ function deleteAssign(i: number) {
 function displayAssignSubtitle(assign_object: any) {
   let subtitle = `set ${assign_object.type} to ${assign_object.set1}`
 
-  if (assign_object.activation === 'pulse')
-    subtitle = `${subtitle}, wait ${assign_object.pulse_duration}ms, set ${assign_object.type} to ${assign_object.set2}`
+  if (assign_object.behavior === 'pulse')
+    subtitle = `${subtitle} → wait ${assign_object.pulse_duration}ms → set ${assign_object.type} to ${assign_object.set2}`
 
   return subtitle
 }

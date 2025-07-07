@@ -7,10 +7,21 @@
     <v-card-text>
       <v-row>
         <v-col :cols="12" :sm="6">
-          <v-text-field v-model="oscStore.ip" :label="t('settings.osc.general.osc_ip')" hide-details />
+          <v-text-field
+            v-model="oscStore.ip"
+            hide-details
+            :label="t('settings.osc.general.osc_ip')"
+          />
         </v-col>
         <v-col :cols="12" :sm="6">
-          <v-text-field v-model="oscStore.port" :label="t('settings.osc.general.osc_port')" hide-details />
+          <v-number-input
+            v-model="oscStore.port"
+            control-variant="stacked"
+            hide-details
+            :label="t('settings.osc.general.osc_port')"
+            :min="1"
+            :max="65535"
+          />
         </v-col>
         <v-divider />
         <v-col :cols="12">

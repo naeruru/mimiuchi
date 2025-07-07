@@ -330,7 +330,7 @@ function match_osc_trigger(input: string) {
                 value: newValue,
               })
 
-              if (assign.activation === 'pulse') {
+              if (assign.behavior === 'pulse') {
                 // The value should reset after some time.
                 setTimeout(() => {
                   show_snackbar('secondary', `<code>${trigger.route} = ${assign.set2}</code>`)
