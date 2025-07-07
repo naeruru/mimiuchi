@@ -27,6 +27,7 @@
           :close-on-back="true"
           :max-width="unavailableTooltip.maxWidth"
           :offset="unavailableTooltip.offset"
+          :interactive="unavailableTooltip.interactive"
           scroll-strategy="close"
         >
           <component :is="setting.unavailable_tooltip" />
@@ -89,6 +90,7 @@
           :close-on-back="true"
           :max-width="unavailableTooltip.maxWidth"
           :offset="unavailableTooltip.offset"
+          :interactive="unavailableTooltip.interactive"
           scroll-strategy="close"
         >
           <component :is="setting.unavailable_tooltip" />
@@ -233,6 +235,7 @@ const unavailableTooltip = {
   // Essentially, the tooltip becomes an exclusively open-on-click tooltip while retaining all the features provided by open-on-hover
   // If the attribute open-on-hover is set to false, various features are lost
   openDelay: 60000, // ms
+  interactive: true,
   maxWidth: '256px',
   offset: -20, // px
   scrollStrategy: 'close',
@@ -297,7 +300,7 @@ function handleKeyDown(event: KeyboardEvent) {
   background: rgb(var(--v-theme-surface));
   color: rgb(var(--v-theme-on-surface));
   outline-style: solid;
-  outline-color: rgb(var(--v-theme-on-surface-variant));
+  outline-color: rgba(var(--v-border-color), var(--v-border-opacity));
   outline-width: 1px;
 }
 
