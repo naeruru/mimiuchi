@@ -219,7 +219,7 @@ const unavailable_tooltip_attributes = {
   // Essentially, the tooltip becomes an exclusively open-on-click tooltip while retaining all the features provided by open-on-hover
   // If the attribute open-on-hover is set to false, various features are lost
   activator: 'parent',
-  class: 'settings_tooltip settings-tooltip-persistent',
+  class: 'settings_tooltip',
   closeOnBack: true,
   interactive: true,
   maxWidth: '256px',
