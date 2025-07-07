@@ -24,6 +24,7 @@
           >
             <v-tooltip
               activator="parent"
+              class="settings_tooltip"
               location="top"
               :text="to_title_case(key.replace('_', ' '))"
             />
@@ -276,14 +277,6 @@ function set_theme(selected_theme: string) {
 </script>
 
 <style scoped>
-.v-tooltip > :deep(.v-overlay__content) {
-  background: rgb(var(--v-theme-surface));
-  color: rgb(var(--v-theme-on-surface));
-  outline-style: solid;
-  outline-color: rgba(var(--v-border-color), var(--v-border-opacity));
-  outline-width: 1px;
-}
-
 .theme_selected {
   border-color: rgba(255, 255, 255, 1) !important;
 }

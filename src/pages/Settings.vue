@@ -11,18 +11,18 @@
         @click="setting.unavailable_condition ? null : router.push({ path: `/settings/${setting.value}` })"
       >
         <template #prepend>
-          <v-icon :class="{ 'unavailable-feature': setting.unavailable_condition }">
+          <v-icon :class="{ 'settings-disabled': setting.unavailable_condition }">
             {{ setting.icon }}
           </v-icon>
         </template>
-        <v-list-item-title :class="{ 'unavailable-feature': setting.unavailable_condition }">
+        <v-list-item-title :class="{ 'settings-disabled': setting.unavailable_condition }">
           {{ setting.title }}
         </v-list-item-title>
         <v-tooltip
           v-if="setting.unavailable_condition && setting.unavailable_tooltip"
           activator="parent"
           open-on-click
-          class="feature-tooltip feature-tooltip-persistent"
+          class="settings_tooltip settings-tooltip-persistent"
           :open-delay="unavailable_tooltip.open_delay"
           :close-on-back="true"
           :interactive="unavailable_tooltip.interactive"
@@ -52,7 +52,7 @@
         {{ t('settings.osc.title') }}
         <v-tooltip
           open-on-click
-          class="feature-tooltip"
+          class="settings_tooltip"
           :text="t('settings.osc.title_tooltip')"
         >
           <template #activator="{ props }">
@@ -74,18 +74,18 @@
         @click="setting.unavailable_condition ? null : router.push({ path: `/settings/${setting.value}` })"
       >
         <template #prepend>
-          <v-icon :class="{ 'unavailable-feature': setting.unavailable_condition }">
+          <v-icon :class="{ 'settings-disabled': setting.unavailable_condition }">
             {{ setting.icon }}
           </v-icon>
         </template>
-        <v-list-item-title :class="{ 'unavailable-feature': setting.unavailable_condition }">
+        <v-list-item-title :class="{ 'settings-disabled': setting.unavailable_condition }">
           {{ setting.title }}
         </v-list-item-title>
         <v-tooltip
           v-if="setting.unavailable_condition && setting.unavailable_tooltip"
           activator="parent"
           open-on-click
-          class="feature-tooltip feature-tooltip-persistent"
+          class="settings_tooltip settings-tooltip-persistent"
           :open-delay="unavailable_tooltip.open_delay"
           :close-on-back="true"
           :interactive="unavailable_tooltip.interactive"
@@ -295,7 +295,7 @@ function handleKeyDown(event: KeyboardEvent) {
   transform: translateY(-20px);
 }
 
-.feature-tooltip > .v-overlay__content {
+.settings_tooltip > .v-overlay__content {
   background: rgb(var(--v-theme-surface));
   color: rgb(var(--v-theme-on-surface));
   outline-style: solid;
@@ -303,11 +303,11 @@ function handleKeyDown(event: KeyboardEvent) {
   outline-width: 1px;
 }
 
-.feature-tooltip-persistent > .v-overlay__content {
+.settings-tooltip-persistent > .v-overlay__content {
   pointer-events: auto; /* The tooltip will persist on pointer hover */
 }
 
-.unavailable-feature {
+.settings-disabled {
   opacity: var(--v-disabled-opacity) !important;
 }
 </style>
