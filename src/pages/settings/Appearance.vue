@@ -24,7 +24,6 @@
           >
             <v-tooltip
               activator="parent"
-              open-on-click
               location="top"
               :text="to_title_case(key.replace('_', ' '))"
             />
