@@ -20,15 +20,7 @@
         </v-list-item-title>
         <v-tooltip
           v-if="setting.unavailable_condition && setting.unavailable_tooltip"
-          activator="parent"
-          open-on-click
-          class="settings_tooltip settings-tooltip-persistent"
-          :open-delay="unavailable_tooltip.open_delay"
-          :close-on-back="true"
-          :interactive="unavailable_tooltip.interactive"
-          :max-width="unavailable_tooltip.max_width"
-          :offset="unavailable_tooltip.offset"
-          scroll-strategy="close"
+          v-bind="unavailable_tooltip_attributes"
         >
           <component :is="setting.unavailable_tooltip" />
         </v-tooltip>
@@ -83,15 +75,7 @@
         </v-list-item-title>
         <v-tooltip
           v-if="setting.unavailable_condition && setting.unavailable_tooltip"
-          activator="parent"
-          open-on-click
-          class="settings_tooltip settings-tooltip-persistent"
-          :open-delay="unavailable_tooltip.open_delay"
-          :close-on-back="true"
-          :interactive="unavailable_tooltip.interactive"
-          :max-width="unavailable_tooltip.max_width"
-          :offset="unavailable_tooltip.offset"
-          scroll-strategy="close"
+          v-bind="unavailable_tooltip_attributes"
         >
           <component :is="setting.unavailable_tooltip" />
         </v-tooltip>
@@ -229,15 +213,20 @@ const settings_osc = computed(() => {
   ]
 })
 
-const unavailable_tooltip = {
+const unavailable_tooltip_attributes = {
   // open_delay is deliberately set to an absurdly high number
   // This forces the user to click the activator to open it within a reasonable amount of time
   // Essentially, the tooltip becomes an exclusively open-on-click tooltip while retaining all the features provided by open-on-hover
   // If the attribute open-on-hover is set to false, various features are lost
-  open_delay: 60000, // ms
+  activator: 'parent',
+  class: 'settings_tooltip settings-tooltip-persistent',
+  closeOnBack: true,
   interactive: true,
-  max_width: '256px',
+  maxWidth: '256px',
   offset: -20, // px
+  openDelay: 60000, // ms
+  openOnClick: true,
+  scrollStrategy: 'close' as const,
 }
 
 onMounted(() => {
