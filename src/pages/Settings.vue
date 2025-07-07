@@ -238,7 +238,6 @@ const unavailableTooltip = {
   interactive: true,
   maxWidth: '256px',
   offset: -20, // px
-  scrollStrategy: 'close',
 }
 
 onMounted(() => {
