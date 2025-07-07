@@ -11,23 +11,16 @@
         @click="setting.unavailable_condition ? null : router.push({ path: `/settings/${setting.value}` })"
       >
         <template #prepend>
-          <v-icon :class="{ 'unavailable-feature': setting.unavailable_condition }">
+          <v-icon :class="{ 'settings-disabled': setting.unavailable_condition }">
             {{ setting.icon }}
           </v-icon>
         </template>
-        <v-list-item-title :class="{ 'unavailable-feature': setting.unavailable_condition }">
+        <v-list-item-title :class="{ 'settings-disabled': setting.unavailable_condition }">
           {{ setting.title }}
         </v-list-item-title>
         <v-tooltip
           v-if="setting.unavailable_condition && setting.unavailable_tooltip"
-          activator="parent"
-          open-on-click
-          class="feature-tooltip feature-tooltip-persistent"
-          :open-delay="unavailableTooltip.openDelay"
-          :close-on-back="true"
-          :max-width="unavailableTooltip.maxWidth"
-          :offset="unavailableTooltip.offset"
-          scroll-strategy="close"
+          v-bind="unavailable_tooltip_attributes"
         >
           <component :is="setting.unavailable_tooltip" />
         </v-tooltip>
@@ -51,7 +44,7 @@
         {{ t('settings.osc.title') }}
         <v-tooltip
           open-on-click
-          class="feature-tooltip"
+          class="settings_tooltip"
           :text="t('settings.osc.title_tooltip')"
         >
           <template #activator="{ props }">
@@ -73,23 +66,16 @@
         @click="setting.unavailable_condition ? null : router.push({ path: `/settings/${setting.value}` })"
       >
         <template #prepend>
-          <v-icon :class="{ 'unavailable-feature': setting.unavailable_condition }">
+          <v-icon :class="{ 'settings-disabled': setting.unavailable_condition }">
             {{ setting.icon }}
           </v-icon>
         </template>
-        <v-list-item-title :class="{ 'unavailable-feature': setting.unavailable_condition }">
+        <v-list-item-title :class="{ 'settings-disabled': setting.unavailable_condition }">
           {{ setting.title }}
         </v-list-item-title>
         <v-tooltip
           v-if="setting.unavailable_condition && setting.unavailable_tooltip"
-          activator="parent"
-          open-on-click
-          class="feature-tooltip feature-tooltip-persistent"
-          :open-delay="unavailableTooltip.openDelay"
-          :close-on-back="true"
-          :max-width="unavailableTooltip.maxWidth"
-          :offset="unavailableTooltip.offset"
-          scroll-strategy="close"
+          v-bind="unavailable_tooltip_attributes"
         >
           <component :is="setting.unavailable_tooltip" />
         </v-tooltip>
@@ -227,15 +213,20 @@ const settings_osc = computed(() => {
   ]
 })
 
-const unavailableTooltip = {
-  // openDelay is deliberately set to an absurdly high number
+const unavailable_tooltip_attributes = {
+  // open_delay is deliberately set to an absurdly high number
   // This forces the user to click the activator to open it within a reasonable amount of time
   // Essentially, the tooltip becomes an exclusively open-on-click tooltip while retaining all the features provided by open-on-hover
   // If the attribute open-on-hover is set to false, various features are lost
-  openDelay: 60000, // ms
+  activator: 'parent',
+  class: 'settings_tooltip',
+  closeOnBack: true,
+  interactive: true,
   maxWidth: '256px',
   offset: -20, // px
-  scrollStrategy: 'close',
+  openDelay: 60000, // ms
+  openOnClick: true,
+  scrollStrategy: 'close' as const,
 }
 
 onMounted(() => {
@@ -293,19 +284,15 @@ function handleKeyDown(event: KeyboardEvent) {
   transform: translateY(-20px);
 }
 
-.feature-tooltip > .v-overlay__content {
+.settings_tooltip > .v-overlay__content {
   background: rgb(var(--v-theme-surface));
   color: rgb(var(--v-theme-on-surface));
   outline-style: solid;
-  outline-color: rgb(var(--v-theme-on-surface-variant));
+  outline-color: rgba(var(--v-border-color), var(--v-border-opacity));
   outline-width: 1px;
 }
 
-.feature-tooltip-persistent > .v-overlay__content {
-  pointer-events: auto; /* The tooltip will persist on pointer hover */
-}
-
-.unavailable-feature {
+.settings-disabled {
   opacity: var(--v-disabled-opacity) !important;
 }
 </style>
