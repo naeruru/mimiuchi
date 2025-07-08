@@ -124,14 +124,14 @@
           >
             <v-select
               v-if="new_assign.type === 'bool'"
-              v-model="new_assign.set1"
-              :items="['true', 'false']"
+              v-model="new_assign.value_to_set1 as boolean"
+              :items="[true, false]"
               hide-details
               :label="`${t('settings.osc.triggers.trigger.assign.phrases_value')}1`"
             />
             <v-number-input
               v-if="(new_assign.type === 'int')"
-              v-model="new_assign.set1"
+              v-model="new_assign.value_to_set1 as number"
               control-variant="stacked"
               hide-details
               :label="`${t('settings.osc.triggers.trigger.assign.phrases_value')}1`"
@@ -139,7 +139,7 @@
             />
             <v-number-input
               v-if="(new_assign.type === 'float')"
-              v-model="new_assign.set1"
+              v-model="new_assign.value_to_set1 as number"
               control-variant="stacked"
               hide-details
               :label="`${t('settings.osc.triggers.trigger.assign.phrases_value')}1`"
@@ -169,14 +169,14 @@
             :md="4">
             <v-select
               v-if="new_assign.type === 'bool'"
-              v-model="new_assign.set2"
-              :items="['true', 'false']"
+              v-model="new_assign.value_to_set2 as boolean"
+              :items="[true, false]"
               hide-details
               :label="`${t('settings.osc.triggers.trigger.assign.phrases_value')}2`"
             />
             <v-number-input
               v-if="(new_assign.type === 'int')"
-              v-model="new_assign.set2"
+              v-model="new_assign.value_to_set2 as number"
               control-variant="stacked"
               hide-details
               :label="`${t('settings.osc.triggers.trigger.assign.phrases_value')}2`"
@@ -184,7 +184,7 @@
             />
             <v-number-input
               v-if="(new_assign.type === 'float')"
-              v-model="new_assign.set2"
+              v-model="new_assign.value_to_set2 as number"
               control-variant="stacked"
               hide-details
               :label="`${t('settings.osc.triggers.trigger.assign.phrases_value')}2`"
@@ -213,7 +213,7 @@
       <div v-if="new_trigger.keywords.length && new_trigger.assigns.length" class="ma-2">
         <v-list-item
           :title="`Example phrase: 'set ${new_trigger.keywords[0]?.text} to ${new_trigger.assigns[0]?.keyword}'`"
-          :subtitle="`${new_trigger.route} -> ${new_trigger.assigns[0]?.set1}`"
+          :subtitle="`${new_trigger.route} -> ${new_trigger.assigns[0]?.value_to_set1}`"
         />
       </div>
       <v-card-actions>
@@ -262,8 +262,8 @@ const value_types = ref(['bool', 'int', 'float'])
 const new_assign = ref<Assign>({
   keyword: '',
   type: 'bool',
-  set1: 'true',
-  set2: 'false',
+  value_to_set1: true,
+  value_to_set2: false,
 
   // "default": send a value
   // "pulse": send a value, wait some time, then send a value
@@ -296,8 +296,8 @@ watch(model, (enabled) => {
     new_assign.value = {
       keyword: '',
       type: 'bool',
-      set1: 'true',
-      set2: 'false',
+      value_to_set1: true,
+      value_to_set2: false,
       behavior: 'default',
       pulse_duration: 1000,
     }
@@ -340,8 +340,15 @@ function deleteTrigger(i: number) {
 
 function validate_assign_values() {
   if (new_assign.value.type === 'bool') {
-      new_assign.value.set1 = 'true'
-      new_assign.value.set2 = 'false'
+      new_assign.value.value_to_set1 = true
+      new_assign.value.value_to_set2 = false
+  }
+
+  if (['int', 'float'].includes(new_assign.value.type)) {
+    if ((typeof new_assign.value.value_to_set1 !== 'number') || (typeof new_assign.value.value_to_set2 !== 'number')) {
+      new_assign.value.value_to_set1 = 0
+      new_assign.value.value_to_set2 = 0
+    }
   }
 }
 
@@ -359,8 +366,8 @@ function addAssign() {
   new_assign.value = {
     keyword: '',
     type: assign.value.type,
-    set1: assign.value.set1,
-    set2: 'false',
+    value_to_set1: assign.value.value_to_set1,
+    value_to_set2: false,
     behavior: 'default',
     pulse_duration: 1000,
   }
@@ -371,10 +378,10 @@ function deleteAssign(i: number) {
 }
 
 function displayAssignSubtitle(assign_object: any) {
-  let subtitle = `set ${assign_object.type} to ${assign_object.set1}`
+  let subtitle = `set ${assign_object.type} to ${assign_object.value_to_set1}`
 
   if (assign_object.behavior === 'pulse')
-    subtitle = `${subtitle} → wait ${assign_object.pulse_duration}ms → set ${assign_object.type} to ${assign_object.set2}`
+    subtitle = `${subtitle} → wait ${assign_object.pulse_duration}ms → set ${assign_object.type} to ${assign_object.value_to_set2}`
 
   return subtitle
 }

@@ -15,11 +15,12 @@ interface Keyword {
   enabled: boolean
   text: string
 }
+type ValueToSet = boolean | number
 export interface Assign {
   keyword: string
   type: string
-  set1: any
-  set2: any
+  value_to_set1: ValueToSet
+  value_to_set2: ValueToSet
   behavior: string
   pulse_duration: number
 }
