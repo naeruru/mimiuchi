@@ -12,7 +12,7 @@
           <v-col :cols="12" :lg="8" :sm="8">
             <v-text-field
               v-model="new_trigger.ip"
-              label="OSC IP"
+              :label="t('settings.osc.general.osc_ip')"
               hide-details
             />
           </v-col>
@@ -21,7 +21,7 @@
               v-model="new_trigger.port"
               control-variant="stacked"
               hide-details
-              label="OSC port"
+              :label="t('settings.osc.general.osc_port')"
               :min="1"
               :max="65535"
             />
