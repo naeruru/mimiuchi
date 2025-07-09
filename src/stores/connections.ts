@@ -115,7 +115,7 @@ export const useConnectionsStore = defineStore('connections', () => {
   // Preset. Users cannot create, delete or edit it
   const core_obs_init: Connection = {
     enabled: false,
-    icon: 'mdi-transit-connection-horizontal',
+    icon: 'custom:obs',
     title: 'Open Broadcaster Software (OBS)',
     type: 'obs',
     edit_hide_title: true,

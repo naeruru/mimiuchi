@@ -3,7 +3,8 @@ import '@mdi/font/css/materialdesignicons.css'
 import 'vuetify/styles'
 
 // Vuetify
-import { createVuetify } from 'vuetify'
+import { h } from "vue"
+import { createVuetify, IconSet, IconProps } from 'vuetify'
 
 // themes
 import { midnight_purple } from '@/plugins/themes/midnight_purple'
@@ -17,6 +18,16 @@ import { forest_dark } from '@/plugins/themes/forest_dark'
 
 // additional components
 import { VIconBtn } from 'vuetify/labs/VIconBtn'
+
+// custom icons
+import obs from "@/assets/icons/obs.vue"
+const customSvgNameToComponent: any = {
+  obs,
+}
+const custom: IconSet = {
+  component: (props: IconProps) =>
+    h(props.tag, [h(customSvgNameToComponent[props.icon as string], { class: 'v-icon__svg' })]),
+}
 
 export default createVuetify({
   theme: {
@@ -34,5 +45,11 @@ export default createVuetify({
   },
   components: {
     VIconBtn,
+  },
+  icons: {
+    defaultSet: "mdi",
+    sets: {
+      custom,
+    },
   },
 })

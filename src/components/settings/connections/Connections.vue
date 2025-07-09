@@ -88,7 +88,7 @@
                 <v-icon
                   :icon="connectionsStore.core_obs.icon"
                   size="30"
-                  color="secondary"
+                  color="background-variant"
                   class="mr-4"
                 />
               </template>
