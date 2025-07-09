@@ -302,61 +302,25 @@ function match_osc_trigger(input: string) {
             const reAssign = new RegExp(assign_check, 'gi')
             const matchesAssign = reAssign.exec(input)
             if (matchesAssign) {
-              show_snackbar('secondary', `<code>${trigger.route} = ${assign.set1}</code>`)
-
-              let newValue: number | boolean | null = null
-
-              switch (assign.type) {
-                case 'int':
-                case 'float':
-                  newValue = Number(assign.set1)
-
-                  break
-                case 'bool':
-                  if (assign.set1 === 'true')
-                    newValue = true
-                  else if (assign.set1 === 'false')
-                    newValue = false
-                  else
-                    newValue = Boolean(assign.set1)
-
-                  break
-              }
+              show_snackbar('secondary', `<code>${trigger.route} = ${assign.value_to_set1}</code>`)
 
               window.ipcRenderer.send('send-osc-message', {
                 ip: trigger.ip,
                 port: trigger.port,
                 route: trigger.route,
-                value: newValue,
+                value: assign.value_to_set1,
               })
 
-              if (assign.activation === 'pulse') {
+              if (assign.behavior === 'pulse') {
                 // The value should reset after some time.
                 setTimeout(() => {
-                  show_snackbar('secondary', `<code>${trigger.route} = ${assign.set2}</code>`)
-
-                  switch (assign.type) {
-                    case 'int':
-                    case 'float':
-                      newValue = Number(assign.set2)
-
-                      break
-                    case 'bool':
-                      if (assign.set2 === 'true')
-                        newValue = true
-                      else if (assign.set2 === 'false')
-                        newValue = false
-                      else
-                        newValue = Boolean(assign.set2)
-
-                      break
-                  }
+                  show_snackbar('secondary', `<code>${trigger.route} = ${assign.value_to_set2}</code>`)
 
                   window.ipcRenderer.send('send-osc-message', {
                     ip: trigger.ip,
                     port: trigger.port,
                     route: trigger.route,
-                    value: newValue,
+                    value: assign.value_to_set2,
                   })
                 }, assign.pulse_duration)
               }

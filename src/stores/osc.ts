@@ -6,7 +6,7 @@ interface Profile {
 }
 interface Trigger {
   ip: string
-  port: string
+  port: number
   route: string
   keywords: Keyword[]
   assigns: Assign[]
@@ -15,18 +15,19 @@ interface Keyword {
   enabled: boolean
   text: string
 }
-interface Assign {
+type ValueToSet = boolean | number
+export interface Assign {
   keyword: string
   type: string
-  set1: string
-  set2: string
-  activation: string
+  value_to_set1: ValueToSet
+  value_to_set2: ValueToSet
+  behavior: string
   pulse_duration: number
 }
 
 export const useOSCStore = defineStore('osc', () => {
   const ip = ref('127.0.0.1')
-  const port = ref('9000')
+  const port = ref(9000)
   const osc_text = ref(true)
   const text_typing = ref(true)
   const stt_typing = ref(true)

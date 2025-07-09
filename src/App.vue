@@ -25,6 +25,7 @@ import { global_langs } from '@/plugins/i18n'
 import is_electron from '@/helpers/is_electron'
 
 import SystemBar from '@/components/appbars/SystemBar.vue'
+import migrate_to_v0_5_0 from '@/migration/migrate_to_v0.5.0'
 
 const { locale } = useI18n()
 
@@ -72,6 +73,13 @@ wordReplaceStore.$patch(JSON.parse(localStorage.getItem('word_replace') || '{}')
 translationStore.$patch(JSON.parse(localStorage.getItem('translation') || '{}'))
 connectionsStore.$patch(JSON.parse(localStorage.getItem('connections') || '{}'))
 oscStore.$patch(JSON.parse(localStorage.getItem('osc') || '{}'))
+
+// Migration code – start
+if (settingsStore.config_version < 1) {
+  migrate_to_v0_5_0()
+  settingsStore.config_version = 1
+}
+// Migration code – end
 
 settingsStore.languages = global_langs
 

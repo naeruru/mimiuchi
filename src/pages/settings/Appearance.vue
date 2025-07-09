@@ -82,21 +82,22 @@
           </v-autocomplete>
         </v-col>
         <v-col :cols="12" :md="4">
-          <v-text-field
+          <v-number-input
             v-model="text.font_size"
+            control-variant="stacked"
             :label="t('settings.appearance.text.font_size')"
-            type="number"
-            suffix="px"
+            variant="solo"
             hide-details
+            suffix="px"
           />
         </v-col>
         <v-col>
           <v-select
             v-model="text.new_line_delay"
+            hide-details
             :items="line_delay_options"
             :label="t('settings.appearance.text.new_line_delay.hint')"
             variant="solo"
-            hide-details
           />
         </v-col>
         <v-divider />
@@ -116,13 +117,14 @@
           </v-card>
         </v-col>
         <v-col :cols="12" :md="12">
-          <v-text-field
+          <v-number-input
             v-model="text.outline_size"
+            control-variant="stacked"
             :disabled="!text.outline"
-            :label="t('settings.appearance.text.outline.size')"
-            type="number"
-            suffix="px"
             hide-details
+            :label="t('settings.appearance.text.outline.size')"
+            suffix="px"
+            variant="solo"
           />
         </v-col>
 
@@ -142,23 +144,25 @@
           </v-card>
         </v-col>
         <v-col :cols="12" :sm="6">
-          <v-text-field
+          <v-number-input
             v-model="text.hide_after"
+            control-variant="stacked"
             :disabled="!text.enable_fade"
+            hide-details
             :label="t('settings.appearance.text.fade_after')"
             :suffix="t('settings.appearance.text.seconds')"
-            type="number"
-            hide-details
+            variant="solo"
           />
         </v-col>
         <v-col :cols="12" :sm="6">
-          <v-text-field
+          <v-number-input
             v-model="text.fade_time"
+            control-variant="stacked"
             :disabled="!text.enable_fade"
+            hide-details
             :label="t('settings.appearance.text.fade_for')"
             :suffix="t('settings.appearance.text.seconds')"
-            type="number"
-            hide-details
+            variant="solo"
           />
         </v-col>
         <v-divider />

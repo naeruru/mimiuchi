@@ -76,12 +76,10 @@
               />
             </v-col>
             <v-col :cols="4">
-              <v-text-field
+              <v-number-input
                 v-model="new_connection.websocket!.port"
-                :label="t('settings.connections.dialog.field.port')"
-                type="number"
+                v-bind="port_number_input_attributes"
                 hide-details
-                :rules="[rules.port]"
               />
             </v-col>
           </v-row>
@@ -98,13 +96,11 @@
               />
             </v-col>
             <v-col :cols="4">
-              <v-text-field
+              <v-number-input
                 v-model="new_connection.obs!.port"
-                :label="t('settings.connections.dialog.field.port')"
-                placeholder="4455"
-                type="number"
+                v-bind="port_number_input_attributes"
                 hide-details
-                :rules="[rules.port]"
+                placeholder="4455"
               />
             </v-col>
             <v-col :cols="12">
@@ -210,12 +206,13 @@ const rules = {
   requiredField: (value: string) => {
     return !!value || 'Required'
   },
-  port: (value: number) => {
-    if (value >= 1 && value <= 65535)
-      return true
+}
 
-    return (value >= 1 && value <= 65535) || 'Invalid port number'
-  },
+const port_number_input_attributes = {
+  controlVariant: 'stacked' as const,
+  label: t('settings.connections.dialog.field.port'),
+  min: 1,
+  max: 65535,
 }
 
 const new_connection = ref<Connection>(new Connection()) // Actually initialized by watcher
