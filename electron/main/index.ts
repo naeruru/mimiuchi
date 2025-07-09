@@ -2,7 +2,6 @@ import { createRequire } from 'node:module'
 import * as os from 'node:os'
 import * as path from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { Worker } from 'node:worker_threads'
 import { app, BrowserWindow, ipcMain, shell } from 'electron'
 
 import Store from 'electron-store'
@@ -119,26 +118,29 @@ async function createWindow() {
   })
   // win.webContents.on('will-navigate', (event, url) => { }) #344
 
-  win.on('maximize', () => win.webContents.send('maximized_state', true))
-  win.on('unmaximize', () => win.webContents.send('maximized_state', false))
-  win.on('close', () => {
-    const update_obj = {}
-    Object.assign(update_obj, { isMaximized: win.isMaximized() }, win.getNormalBounds())
-    store.set('win_bounds', update_obj)
-  })
+  if (win) {
+    win.on('maximize', () => {
+      if (win)
+        win.webContents.send('maximized_state', true)
+    })
+    win.on('unmaximize', () => {
+      if (win)
+        win.webContents.send('maximized_state', false)
+    })
+    win.on('close', () => {
+      if (win) {
+        const update_obj = {}
+        Object.assign(update_obj, { isMaximized: win.isMaximized() }, win.getNormalBounds())
+        store.set('win_bounds', update_obj)
+      }
+    })
+  }
   win.webContents.once('dom-ready', () => {
     // the window is never maximized on load
     // if (window_config.isMaximized)
     //   win.webContents.send('maximized_state', true)
   })
 }
-
-const transformersWorkerPath = `file://${path.join(__dirname, 'worker', 'translation.js').replace('app.asar', 'app.asar.unpacked')}`
-const transformersWorker = new Worker(new URL(transformersWorkerPath, import.meta.url))
-
-transformersWorker.on('message', (x) => {
-  win.webContents.send('transformers-translate-render', x)
-})
 
 app.whenReady().then(() => {
   if (store.get('auto-open-web-app-on-launch')) {
@@ -196,11 +198,13 @@ ipcMain.on('close_app', () => {
 })
 // event for toggling maximized
 ipcMain.on('toggle_maximize', () => {
-  win.isMaximized() ? win.unmaximize() : win.maximize()
+  if (win)
+    win.isMaximized() ? win.unmaximize() : win.maximize()
 })
 // event for minimizing
 ipcMain.on('minimize', () => {
-  win.minimize()
+  if (win)
+    win.minimize()
 })
 
 // event for text typing indicator
@@ -209,11 +213,12 @@ ipcMain.on('typing-text-event', (event, args) => {
 })
 
 // event for sending text
-let text_queue = []
+const text_queue: string[] = []
 ipcMain.on('send-text-event', (event, args) => {
   args = JSON.parse(args)
   const new_text = args.transcript.includes(' ') ? args.transcript.match(/.{1,140}(\s|$)/g) : args.transcript.match(/.{1,140}/g)
-  text_queue = [...text_queue, ...new_text]
+  if (new_text)
+    text_queue.push(...new_text)
   if (text_queue.length >= 1)
     empty_queue(text_queue, args.hide_ui, args.sfx)
 })
@@ -223,24 +228,29 @@ ipcMain.on('send-osc-message', (event, args) => {
   emit_osc([args.route, args.value], args.ip, args.port)
 })
 
-let wsserver: WebSocketServer = null
+let wsserver: WebSocketServer | null = null
 // websocket events
 ipcMain.on('start-mimiuchi-websocketserver', (event, args) => {
   wsserver = new WebSocketServer({ port: args })
 
-  initialize_wsserver(win, wsserver)
-    .then(() => {
-      win.webContents.send('mimiuchi-websocketserver-started')
-    })
-    .catch((error) => {
-      win.webContents.send('mimiuchi-websocketserver-error', error)
-    })
+  if (win) {
+    initialize_wsserver(win, wsserver)
+      .then(() => {
+        if (win)
+          win.webContents.send('mimiuchi-websocketserver-started')
+      })
+      .catch((error) => {
+        if (win)
+          win.webContents.send('mimiuchi-websocketserver-error', error)
+      })
+  }
 })
 
 ipcMain.on('close-mimiuchi-websocketserver', () => {
   if (!wsserver) return
 
-  win.webContents.send('mimiuchi-websocketserver-close')
+  if (win)
+    win.webContents.send('mimiuchi-websocketserver-close')
 
   wsserver.clients.forEach((client) => {
     if (client.readyState === WebSocket.OPEN)
@@ -248,7 +258,8 @@ ipcMain.on('close-mimiuchi-websocketserver', () => {
   })
 
   wsserver.close(() => {
-    win.webContents.send('mimiuchi-websocketserver-closed')
+    if (win)
+      win.webContents.send('mimiuchi-websocketserver-closed')
   })
 
   wsserver.removeAllListeners()
@@ -258,7 +269,8 @@ ipcMain.on('close-mimiuchi-websocketserver', () => {
 
 ipcMain.on('update-check', async () => {
   const latest = await check_update()
-  win.webContents.send('update-check', latest)
+  if (win)
+    win.webContents.send('update-check', latest)
 })
 
 // Setting: Open web app on app launch
@@ -279,11 +291,4 @@ ipcMain.on('delete-auto-open-web-app-on-launch', () => {
 // Footer (user submission)
 // → Speech Store
 // → [Condition: translations are enabled]
-// → Electron ('transformers-translate')
-// → Worker (worker thread)
-// → Electron ('transformers-translate-output')
 // → Footer ('transformers-translate-render')
-
-ipcMain.on('transformers-translate', async (event, args) => {
-  transformersWorker.postMessage({ type: 'transformers-translate', data: args })
-})
