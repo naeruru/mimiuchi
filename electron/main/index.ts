@@ -133,7 +133,7 @@ async function createWindow() {
   })
 }
 
-const transformersWorkerPath = `file://${path.join(__dirname, 'worker', 'translation.js').replace('app.asar', 'app.asar.unpacked')}`
+const transformersWorkerPath = `file://${path.join(__dirname, 'worker', 'translation.js')}`
 const transformersWorker = new Worker(new URL(transformersWorkerPath, import.meta.url))
 
 transformersWorker.on('message', (x) => {
